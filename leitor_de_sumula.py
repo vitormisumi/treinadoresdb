@@ -100,9 +100,9 @@ class Sumula:
             line_break_index = text.find('\n', coach_start_index)
             dash_index = text.find('-', coach_start_index)
             if dash_index == -1 or dash_index >= line_break_index:
-                return text[coach_start_index: line_break_index].title()
+                return text[coach_start_index: line_break_index].title().strip()
             elif dash_index < line_break_index:
-                return text[coach_start_index: dash_index].title()
+                return text[coach_start_index: dash_index].title().strip()
 
     def away_coach(self):
         text = self.second_page
@@ -117,9 +117,9 @@ class Sumula:
             line_break_index = text.find('\n', coach_start_index)
             dash_index = text.find('-', coach_start_index)
             if dash_index == -1 or dash_index >= line_break_index:
-                return text[coach_start_index: line_break_index].title()
+                return text[coach_start_index: line_break_index].title().strip()
             elif dash_index < line_break_index:
-                return text[coach_start_index: dash_index].title()
+                return text[coach_start_index: dash_index].title().strip()
 
     def date(self):
         text = self.first_page
@@ -262,4 +262,4 @@ for url in urls:
     pdf.write(response.content)
     pdf.close()
     p = Sumula(pdf_file_name)
-    print(p.first_away_sub())
+    print(p.home_coach())
