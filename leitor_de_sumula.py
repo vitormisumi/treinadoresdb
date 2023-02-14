@@ -2,10 +2,15 @@ from PyPDF2 import PdfReader
 from requests import get
 from re import finditer
 
-urls = ['https://conteudo.cbf.com.br/sumulas/2022/142374se.pdf',
+urls = ['https://conteudo.cbf.com.br/sumulas/2015/42452se.pdf',
+        'https://conteudo.cbf.com.br/sumulas/2017/142371se.pdf',
+        'https://conteudo.cbf.com.br/sumulas/2022/142374se.pdf',
+        'https://conteudo.cbf.com.br/sumulas/2014/242372se.pdf',
         'https://conteudo.cbf.com.br/sumulas/2022/342181se.pdf',
+        'https://conteudo.cbf.com.br/sumulas/2018/342186se.pdf',
         'https://conteudo.cbf.com.br/sumulas/2022/342216se.pdf',
         'https://conteudo.cbf.com.br/sumulas/2022/424121se.pdf',
+        'https://conteudo.cbf.com.br/sumulas/2015/424158se.pdf',
         'https://conteudo.cbf.com.br/sumulas/2017/542250se.pdf']
 
 
@@ -46,7 +51,18 @@ class Sumula:
         for i in range(0, 2):
             game_start_index = text.find(game_string, game_start_index + 1)
         x_index = text.find(' X', game_start_index)
-        return text[game_start_index + len(game_string): x_index]
+        home_team = text[game_start_index + len(game_string): x_index]
+        return home_team.split(sep='/')[0].strip()
+
+    def home_team_state(self):
+        text = self.first_page
+        game_string = 'Jogo: '
+        game_start_index = -1
+        for i in range(0, 2):
+            game_start_index = text.find(game_string, game_start_index + 1)
+        x_index = text.find(' X', game_start_index)
+        home_team = text[game_start_index + len(game_string): x_index]
+        return home_team.split(sep='/')[1].strip()
 
     def away_team(self):
         text = self.first_page
@@ -56,13 +72,27 @@ class Sumula:
             game_start_index = text.find(game_string, game_start_index + 1)
         x_index = text.find('X', game_start_index) + 2
         line_break_index = text.find('\n', x_index)
-        return text[x_index: line_break_index]
+        away_team = text[x_index: line_break_index]
+        return away_team.split(sep='/')[0].strip()
+
+    def away_team_state(self):
+        text = self.first_page
+        game_string = 'Jogo: '
+        game_start_index = -1
+        for i in range(0, 2):
+            game_start_index = text.find(game_string, game_start_index + 1)
+        x_index = text.find('X', game_start_index) + 2
+        line_break_index = text.find('\n', x_index)
+        away_team = text[x_index: line_break_index]
+        return away_team.split(sep='/')[1].strip()
 
     def home_coach(self):
         text = self.second_page
+        text = text.replace('Tecnico', 'Técnico')
         coach_string = '\nTécnico: '
         coach_string_index = text.find(coach_string, text.find(
-            self.home_team()), text.find(self.away_team()))
+            self.home_team() + ' / ' + self.home_team_state()),
+            text.find(self.away_team() + ' / ' + self.away_team_state()))
         coach_start_index = coach_string_index + len(coach_string)
         if coach_string_index == -1:
             return None
@@ -70,15 +100,16 @@ class Sumula:
             line_break_index = text.find('\n', coach_start_index)
             dash_index = text.find('-', coach_start_index)
             if dash_index == -1 or dash_index >= line_break_index:
-                return text[coach_start_index: line_break_index]
+                return text[coach_start_index: line_break_index].title()
             elif dash_index < line_break_index:
-                return text[coach_start_index: dash_index]
+                return text[coach_start_index: dash_index].title()
 
     def away_coach(self):
         text = self.second_page
+        text = text.replace('Tecnico', 'Técnico')
         coach_string = '\nTécnico: '
         coach_string_index = text.find(coach_string, text.find(
-            self.away_team()), text.find('Gols'))
+            self.away_team() + ' / ' + self.away_team_state()), text.find('Gols'))
         coach_start_index = coach_string_index + len(coach_string)
         if coach_string_index == -1:
             return None
@@ -86,9 +117,9 @@ class Sumula:
             line_break_index = text.find('\n', coach_start_index)
             dash_index = text.find('-', coach_start_index)
             if dash_index == -1 or dash_index >= line_break_index:
-                return text[coach_start_index: line_break_index]
+                return text[coach_start_index: line_break_index].title()
             elif dash_index < line_break_index:
-                return text[coach_start_index: dash_index]
+                return text[coach_start_index: dash_index].title()
 
     def date(self):
         text = self.first_page
@@ -121,18 +152,18 @@ class Sumula:
         else:
             return text[stadium_start_index: line_break_index]
 
-    def home_goals(self):
+    def home_score(self):
         text = self.first_page
         goal_string = 'Resultado Final: '
         goal_string_index = text.find(goal_string)
         goal_start_index = goal_string_index + len(goal_string)
-        line_break_index = text.find(' ', goal_start_index)
+        space_index = text.find(' ', goal_start_index)
         if goal_string_index == -1:
             return None
         else:
-            return text[goal_start_index: line_break_index]
+            return text[goal_start_index: space_index]
 
-    def away_goals(self):
+    def away_score(self):
         text = self.first_page
         goal_string = 'Resultado Final: '
         goal_string_index = text.find(goal_string)
@@ -145,46 +176,33 @@ class Sumula:
 
     def home_yellow_cards(self):
         text = self.second_page
-        home_team = self.home_team().split(sep='/')
-        home_team = home_team[0].strip() + '/' + home_team[1].strip()
-        return text.count(home_team, text.find('Cartões Amarelos'), text.find('Cartões Vermelhos'))
+        return text.count(self.home_team(), text.find('Cartões Amarelos'), text.find('Cartões Vermelhos'))
 
     def away_yellow_cards(self):
         text = self.second_page
-        away_team = self.away_team().split(sep='/')
-        away_team = away_team[0].strip() + '/' + away_team[1].strip()
-        return text.count(away_team, text.find('Cartões Amarelos'), text.find('Cartões Vermelhos'))
+        return text.count(self.away_team(), text.find('Cartões Amarelos'), text.find('Cartões Vermelhos'))
 
     def home_red_cards(self):
         text = self.second_page
-        home_team = self.home_team().split(sep='/')
-        home_team = home_team[0].strip() + '/' + home_team[1].strip()
-        return text.count(home_team, text.find('Cartões Vermelhos'))
+        return text.count(self.home_team(), text.find('Cartões Vermelhos'))
 
     def away_red_cards(self):
         text = self.second_page
-        away_team = self.away_team().split(sep='/')
-        away_team = away_team[0].strip() + '/' + away_team[1].strip()
-        return text.count(away_team, text.find('Cartões Vermelhos'))
+        return text.count(self.away_team(), text.find('Cartões Vermelhos'))
 
     def home_subs(self):
         text = self.third_page
-        home_team = self.home_team().split(sep='/')
-        home_team = home_team[0].strip() + '/' + home_team[1].strip()
-        return text.count(home_team, text.find('Substituições'))
+        return text.count(self.home_team(), text.find('Substituições'))
 
     def away_subs(self):
         text = self.third_page
-        away_team = self.away_team().split(sep='/')
-        away_team = away_team[0].strip() + '/' + away_team[1].strip()
-        return text.count(away_team, text.find('Substituições'))
+        return text.count(self.away_team(), text.find('Substituições'))
 
     def first_home_sub(self):
         if self.home_subs == 0:
             return None
         text = self.third_page
-        home_team = self.home_team().split(sep='/')
-        home_team = home_team[0].strip() + '/' + home_team[1].strip()
+        home_team = self.home_team()
         first_half_indices = finditer(
             pattern='1T{}'.format(home_team), string=text)
         first_half_sub_minutes = [
@@ -212,8 +230,7 @@ class Sumula:
         if self.away_subs == 0:
             return None
         text = self.third_page
-        away_team = self.away_team().split(sep='/')
-        away_team = away_team[0].strip() + '/' + away_team[1].strip()
+        away_team = self.away_team()
         first_half_indices = finditer(
             pattern='1T{}'.format(away_team), string=text)
         first_half_sub_minutes = [
@@ -240,9 +257,9 @@ class Sumula:
 
 for url in urls:
     response = get(url)
-    pdf_file_name = '{}'.format(url[-12:])
+    pdf_file_name = '{}'.format(url.split(sep='/')[-1])
     pdf = open(pdf_file_name, 'wb')
     pdf.write(response.content)
     pdf.close()
     p = Sumula(pdf_file_name)
-    print(p.first_home_sub())
+    print(p.first_away_sub())
