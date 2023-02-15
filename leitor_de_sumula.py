@@ -42,7 +42,7 @@ class Sumula:
         if competition_string_index == -1:
             return None
         else:
-            return text[competition_start_index: end_string_index].split(sep='/')[1].strip()
+            return int(text[competition_start_index: end_string_index].split(sep='/')[1].strip())
 
     def home_team(self):
         text = self.first_page
@@ -129,7 +129,10 @@ class Sumula:
         if date_string_index == -1:
             return None
         else:
-            return text[date_start_index: date_start_index + 10]
+            year = text[date_start_index + 6: date_start_index + 10]
+            month = text[date_start_index + 3: date_start_index + 5]
+            day = text[date_start_index: date_start_index + 2]
+            return '{}-{}-{}'.format(year, month, day)
 
     def time(self):
         text = self.first_page
@@ -139,7 +142,7 @@ class Sumula:
         if time_string_index == -1:
             return None
         else:
-            return text[time_start_index: time_start_index + 5]
+            return text[time_start_index: time_start_index + 5] + ':00'
 
     def stadium(self):
         text = self.first_page
@@ -262,4 +265,4 @@ for url in urls:
     pdf.write(response.content)
     pdf.close()
     p = Sumula(pdf_file_name)
-    print(p.home_coach())
+    print(p.time())
