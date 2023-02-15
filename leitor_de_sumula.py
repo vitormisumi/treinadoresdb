@@ -164,7 +164,7 @@ class Sumula:
         if goal_string_index == -1:
             return None
         else:
-            return text[goal_start_index: space_index]
+            return int(text[goal_start_index: space_index])
 
     def away_score(self):
         text = self.first_page
@@ -175,7 +175,7 @@ class Sumula:
         if goal_string_index == -1:
             return None
         else:
-            return text[goal_start_index: line_break_index].split(sep=' ')[2]
+            return int(text[goal_start_index: line_break_index].split(sep=' ')[2])
 
     def home_yellow_cards(self):
         text = self.second_page
@@ -258,11 +258,11 @@ class Sumula:
             return [min(second_half_sub_minutes), '2T']
 
 
-for url in urls:
-    response = get(url)
-    pdf_file_name = '{}'.format(url.split(sep='/')[-1])
-    pdf = open(pdf_file_name, 'wb')
-    pdf.write(response.content)
-    pdf.close()
-    p = Sumula(pdf_file_name)
-    print(p.time())
+# for url in urls:
+#     response = get(url)
+#     pdf_file_name = '{}'.format(url.split(sep='/')[-1])
+#     pdf = open(pdf_file_name, 'wb')
+#     pdf.write(response.content)
+#     pdf.close()
+#     p = Sumula(pdf_file_name)
+#     print(p.time())
