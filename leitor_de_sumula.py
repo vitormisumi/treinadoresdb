@@ -221,65 +221,95 @@ class Sumula:
     def first_home_sub(self):
         if self.home_subs() == 0:
             return None
-        home_team = self.home_team()
+        text = self.text[self.text.find('Substituições'):]
+        text = text.replace(' ', '')
+        home_team = self.home_team().replace(' ', '')
         first_half_indices = finditer(
-            pattern='1T{}'.format(home_team), string=self.text)
+            pattern='1T{}/{}'.format(home_team, self.home_team_state()), string=text)
         first_half_sub_minutes = [
-            self.text[index.start() - 6: index.start() - 4] for index in first_half_indices]
-        half_time_indices = finditer(
-            pattern='INT{}'.format(home_team), string=self.text)
-        half_time_sub_minutes = [self.text[index.start() - 6: index.start() - 4]
-                                 for index in half_time_indices]
-        second_half_indices = finditer(
-            pattern='2T{}'.format(home_team), string=self.text)
-        second_half_sub_minutes = [
-            self.text[index.start() - 6: index.start() - 4] for index in second_half_indices]
+            text[index.start() - 5: index.start() - 2] for index in first_half_indices]
         if first_half_sub_minutes:
             first_half_sub_minutes = [
-                45 + int(x[1:]) if '+' in x else int(x) for x in first_half_sub_minutes]
+                x.replace(':', '') for x in first_half_sub_minutes]
+            first_half_sub_minutes = [
+                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in first_half_sub_minutes]
             return [min(first_half_sub_minutes), '1T']
-        elif half_time_sub_minutes:
-            return [45, 'INT']
-        elif second_half_sub_minutes:
+        half_time_indices = finditer(
+            pattern='INT{}/{}'.format(home_team, self.home_team_state()), string=text)
+        half_time_sub_minutes = [
+            text[index.start() - 5: index.start() - 2] for index in half_time_indices]
+        if half_time_sub_minutes:
+            half_time_sub_minutes = [
+                x.replace(':', '') for x in half_time_sub_minutes]
+            half_time_sub_minutes = [
+                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in half_time_sub_minutes]
+            return [min(half_time_sub_minutes), 'INT']
+        second_half_indices = finditer(
+            pattern='2T{}/{}'.format(home_team, self.home_team_state()), string=text)
+        second_half_sub_minutes = [
+            text[index.start() - 5: index.start() - 2] for index in second_half_indices]
+        if second_half_sub_minutes:
             second_half_sub_minutes = [
-                45 + int(x[1:]) if '+' in x else int(x) for x in second_half_sub_minutes]
+                x.replace(':', '') for x in second_half_sub_minutes]
+            second_half_sub_minutes = [
+                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in second_half_sub_minutes]
             return [min(second_half_sub_minutes), '2T']
-        else:
-            no_half_indices = finditer(pattern=home_team, string=self.text)
+        no_half_indices = finditer(
+            pattern='{}/{}'.format(home_team, self.home_team_state()), string=text)
+        no_half_sub_minutes = [
+            text[index.start() - 5: index.start() - 2] for index in no_half_indices]
+        if no_half_sub_minutes:
             no_half_sub_minutes = [
-                self.text[index.start() - 6: index.start() - 4] for index in no_half_indices]
+                x.replace(':', '') for x in no_half_sub_minutes]
+            no_half_sub_minutes = [
+                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in no_half_sub_minutes]
             return [min(no_half_sub_minutes), '2T']
 
     def first_away_sub(self):
         if self.away_subs() == 0:
             return None
-        away_team = self.away_team()
+        text = self.text[self.text.find('Substituições'):]
+        text = text.replace(' ', '')
+        away_team = self.away_team().replace(' ', '')
         first_half_indices = finditer(
-            pattern='1T{}'.format(away_team), string=self.text)
+            pattern='1T{}/{}'.format(away_team, self.away_team_state()), string=text)
         first_half_sub_minutes = [
-            self.text[index.start() - 6: index.start() - 4] for index in first_half_indices]
-        half_time_indices = finditer(
-            pattern='INT{}'.format(away_team), string=self.text)
-        half_time_sub_minutes = [self.text[index.start() - 6: index.start() - 4]
-                                 for index in half_time_indices]
-        second_half_indices = finditer(
-            pattern='2T{}'.format(away_team), string=self.text)
-        second_half_sub_minutes = [
-            self.text[index.start() - 6: index.start() - 4] for index in second_half_indices]
+            text[index.start() - 5: index.start() - 2] for index in first_half_indices]
         if first_half_sub_minutes:
             first_half_sub_minutes = [
-                45 + int(x[1:]) if '+' in x else int(x) for x in first_half_sub_minutes]
+                x.replace(':', '') for x in first_half_sub_minutes]
+            first_half_sub_minutes = [
+                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in first_half_sub_minutes]
             return [min(first_half_sub_minutes), '1T']
-        elif half_time_sub_minutes:
-            return [45, 'INT']
-        elif second_half_sub_minutes:
+        half_time_indices = finditer(
+            pattern='INT{}/{}'.format(away_team, self.away_team_state()), string=text)
+        half_time_sub_minutes = [
+            text[index.start() - 5: index.start() - 2] for index in half_time_indices]
+        if half_time_sub_minutes:
+            half_time_sub_minutes = [
+                x.replace(':', '') for x in half_time_sub_minutes]
+            half_time_sub_minutes = [
+                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in half_time_sub_minutes]
+            return [min(half_time_sub_minutes), 'INT']
+        second_half_indices = finditer(
+            pattern='2T{}/{}'.format(away_team, self.away_team_state()), string=text)
+        second_half_sub_minutes = [
+            text[index.start() - 5: index.start() - 2] for index in second_half_indices]
+        if second_half_sub_minutes:
             second_half_sub_minutes = [
-                45 + int(x[1:]) if '+' in x else int(x) for x in second_half_sub_minutes]
+                x.replace(':', '') for x in second_half_sub_minutes]
+            second_half_sub_minutes = [
+                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in second_half_sub_minutes]
             return [min(second_half_sub_minutes), '2T']
-        else:
-            no_half_indices = finditer(pattern=away_team, string=self.text)
+        no_half_indices = finditer(
+            pattern='{}/{}'.format(away_team, self.away_team_state()), string=text)
+        no_half_sub_minutes = [
+            text[index.start() - 5: index.start() - 2] for index in no_half_indices]
+        if no_half_sub_minutes:
             no_half_sub_minutes = [
-                self.text[index.start() - 6: index.start() - 4] for index in no_half_indices]
+                x.replace(':', '') for x in no_half_sub_minutes]
+            no_half_sub_minutes = [
+                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in no_half_sub_minutes]
             return [min(no_half_sub_minutes), '2T']
 
 
@@ -426,7 +456,6 @@ class Connection:
             print('Match already in database')
             return
         else:
-            print(self.p.away_subs())
             first_home_sub = self.p.first_home_sub()
             first_away_sub = self.p.first_away_sub()
             if first_home_sub is None:
@@ -506,31 +535,31 @@ def insert_into_database(url):
         print('File does not exist')
         return
     connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
-    connect.insert_home_coach()
-    connect.insert_away_coach()
-    connect.insert_home_team()
-    connect.insert_away_team()
-    connect.insert_competition()
-    connect.insert_match()
-    connect.close_connection()
+    # connect.insert_home_coach()
+    # connect.insert_away_coach()
+    # connect.insert_home_team()
+    # connect.insert_away_team()
+    # connect.insert_competition()
+    # connect.insert_match()
+    # connect.close_connection()
     return
 
 
-competition_codes={'Campeonato Brasileiro - Série A': 142,
+competition_codes = {'Campeonato Brasileiro - Série A': 142,
                      'Campeonato Brasileiro - Série B': 242,
                      'Campeonato Brasileiro - Série C': 342,
                      'Campeonato Brasileiro - Série D': 542,
                      'Copa do Brasil - Profissional': 424}
 
-match_exceptions = ['201454280']
+match_exceptions = ['201454280', '2016142378']
 
-for x in range(2014, 2024):
-    for y in competition_codes.values():
-        for z in range(1, 400):
-            if '{}{}{}'.format(x, y, z) not in match_exceptions:
-                url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
-                    x, y, z)
-                insert_into_database(url)
+# for x in range(2016, 2024):
+#     for y in competition_codes.values():
+#         for z in range(1, 400):
+#             if '{}{}{}'.format(x, y, z) not in match_exceptions:
+#                 url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
+#                     x, y, z)
+#                 insert_into_database(url)
 
-# url = 'https://conteudo.cbf.com.br/sumulas/2015/4241se.pdf'
-# insert_into_database(url)
+url = 'https://conteudo.cbf.com.br/sumulas/2014/242179se.pdf'
+insert_into_database(url)
