@@ -2,6 +2,7 @@ from PyPDF2 import PdfReader
 import requests
 from re import finditer
 import mysql.connector
+from os import path
 
 
 class PDF:
@@ -10,17 +11,21 @@ class PDF:
         self.file_name = url.split(sep='/')[-1]
         self.year = url.split(sep='/')[-2]
 
-    def pdf_download(self):
-        response = requests.get(self.url)
-        if response.status_code == requests.codes.ok:
-            pdf = open('sumulas/{}/{}'.format(self.year,
-                       self.file_name), 'wb')
-            pdf.write(response.content)
-            pdf.close()
-            print('PDF file {} downloaded'.format(self.file_name))
+    def download(self):
+        if path.exists('sumulas/{}/{}'.format(self.year, self.file_name)):
+            print('File already downloaded')
             return
         else:
-            raise Exception
+            response = requests.get(self.url)
+            if response.status_code == requests.codes.ok:
+                pdf = open('sumulas/{}/{}'.format(self.year,
+                                                  self.file_name), 'wb')
+                pdf.write(response.content)
+                pdf.close()
+                print('PDF file {} downloaded'.format(self.file_name))
+                return
+            else:
+                raise Exception
 
 
 class Sumula:
@@ -441,7 +446,7 @@ class Connection:
                   first_away_sub_half,
                   self.file_name)
         self.cur.execute(
-            "SELECT * FROM matches WHERE file_name = %s", [self.file_name])
+            "SELECT * FROM matches WHERE pdf_file_name = %s", [self.file_name])
         result = self.cur.fetchall()
         if result:
             print('Match already in database')
@@ -468,7 +473,7 @@ class Connection:
                     first_home_sub_half, 
                     first_away_sub_minute, 
                     first_away_sub_half, 
-                    file_name) 
+                    pdf_file_name) 
                     VALUES (%s, %s, %s, %s, %s, 
                     %s, %s, %s, %s, %s, 
                     %s, %s, %s, %s, %s, 
@@ -487,7 +492,7 @@ class Connection:
 def insert_into_database(url):
     pdf = PDF(url)
     try:
-        pdf.pdf_download()
+        pdf.download()
     except:
         print('File does not exist')
         return
