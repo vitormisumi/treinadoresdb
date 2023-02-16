@@ -463,29 +463,29 @@ class Connection:
                       self.file_name)
             self.cur.execute(
                 """INSERT INTO matches (
-                    competition_id, 
-                    date_time, 
-                    stadium, 
-                    home_coach_id, 
-                    home_team_id, 
-                    home_score, 
-                    away_score, 
+                    competition_id,
+                    date_time,
+                    stadium,
+                    home_coach_id,
+                    home_team_id,
+                    home_score,
+                    away_score,
                     away_team_id,
-                    away_coach_id, 
-                    home_yellow_cards, 
-                    home_red_cards, 
-                    away_yellow_cards, 
+                    away_coach_id,
+                    home_yellow_cards,
+                    home_red_cards,
+                    away_yellow_cards,
                     away_red_cards,
-                    home_subs, 
-                    away_subs, 
-                    first_home_sub_minute, 
-                    first_home_sub_half, 
-                    first_away_sub_minute, 
-                    first_away_sub_half, 
-                    pdf_file_name) 
-                    VALUES (%s, %s, %s, %s, %s, 
-                    %s, %s, %s, %s, %s, 
-                    %s, %s, %s, %s, %s, 
+                    home_subs,
+                    away_subs,
+                    first_home_sub_minute,
+                    first_home_sub_half,
+                    first_away_sub_minute,
+                    first_away_sub_half,
+                    pdf_file_name)
+                    VALUES (%s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s,
+                    %s, %s, %s, %s, %s,
                     %s, %s, %s, %s, %s)""",
                 values)
             self.cnx.commit()
@@ -505,7 +505,7 @@ def insert_into_database(url):
     except:
         print('File does not exist')
         return
-    connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name)))
+    connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
     connect.insert_home_coach()
     connect.insert_away_coach()
     connect.insert_home_team()
@@ -516,7 +516,7 @@ def insert_into_database(url):
     return
 
 
-competition_codes = {'Campeonato Brasileiro - Série A': 142,
+competition_codes={'Campeonato Brasileiro - Série A': 142,
                      'Campeonato Brasileiro - Série B': 242,
                      'Campeonato Brasileiro - Série C': 342,
                      'Campeonato Brasileiro - Série D': 542,
