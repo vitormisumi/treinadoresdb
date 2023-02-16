@@ -65,9 +65,9 @@ class Sumula:
         for i in range(0, 2):
             game_start_index = self.text.find(
                 find_string, game_start_index + 1)
-        x_index = self.text.find(' X', game_start_index)
+        x_index = self.text.find(' X ', game_start_index)
         home_team = self.text[game_start_index + len(find_string): x_index]
-        return home_team.split(sep='/')[0].strip()
+        return home_team.split(sep='/')[0].strip().title()
 
     def home_team_state(self):
         find_string = 'Jogo: '
@@ -75,7 +75,7 @@ class Sumula:
         for i in range(0, 2):
             game_start_index = self.text.find(
                 find_string, game_start_index + 1)
-        x_index = self.text.find(' X', game_start_index)
+        x_index = self.text.find(' X ', game_start_index)
         home_team = self.text[game_start_index + len(find_string): x_index]
         return home_team.split(sep='/')[1].strip()
 
@@ -85,10 +85,10 @@ class Sumula:
         for i in range(0, 2):
             game_start_index = self.text.find(
                 find_string, game_start_index + 1)
-        x_index = self.text.find('X', game_start_index) + 2
+        x_index = self.text.find(' X ', game_start_index) + 3
         line_break_index = self.text.find('\n', x_index)
         away_team = self.text[x_index: line_break_index]
-        return away_team.split(sep='/')[0].strip()
+        return away_team.split(sep='/')[0].strip().title()
 
     def away_team_state(self):
         find_string = 'Jogo: '
@@ -96,7 +96,7 @@ class Sumula:
         for i in range(0, 2):
             game_start_index = self.text.find(
                 find_string, game_start_index + 1)
-        x_index = self.text.find('X', game_start_index) + 2
+        x_index = self.text.find(' X ', game_start_index) + 3
         line_break_index = self.text.find('\n', x_index)
         away_team = self.text[x_index: line_break_index]
         return away_team.split(sep='/')[1].strip()
@@ -219,7 +219,7 @@ class Sumula:
         return self.text.count(team_string, self.text.find('Substituições'))
 
     def first_home_sub(self):
-        if self.home_subs == 0:
+        if self.home_subs() == 0:
             return None
         home_team = self.home_team()
         first_half_indices = finditer(
@@ -251,7 +251,7 @@ class Sumula:
             return [min(no_half_sub_minutes), '2T']
 
     def first_away_sub(self):
-        if self.away_subs == 0:
+        if self.away_subs() == 0:
             return None
         away_team = self.away_team()
         first_half_indices = finditer(
@@ -419,32 +419,6 @@ class Connection:
             return result[0]
 
     def insert_match(self):
-        first_home_sub = self.p.first_home_sub()
-        first_away_sub = self.p.first_away_sub()
-        first_home_sub_minute = first_home_sub[0]
-        first_home_sub_half = first_home_sub[1]
-        first_away_sub_minute = first_away_sub[0]
-        first_away_sub_half = first_away_sub[1]
-        values = (self.competition_id(),
-                  self.p.date() + ' ' + self.p.time(),
-                  self.p.stadium(),
-                  self.home_coach_id(),
-                  self.home_team_id(),
-                  self.p.home_score(),
-                  self.p.away_score(),
-                  self.away_team_id(),
-                  self.away_coach_id(),
-                  self.p.home_yellow_cards(),
-                  self.p.home_red_cards(),
-                  self.p.away_yellow_cards(),
-                  self.p.away_red_cards(),
-                  self.p.home_subs(),
-                  self.p.away_subs(),
-                  first_home_sub_minute,
-                  first_home_sub_half,
-                  first_away_sub_minute,
-                  first_away_sub_half,
-                  self.file_name)
         self.cur.execute(
             "SELECT * FROM matches WHERE pdf_file_name = %s", [self.file_name])
         result = self.cur.fetchall()
@@ -452,6 +426,41 @@ class Connection:
             print('Match already in database')
             return
         else:
+            print(self.p.away_subs())
+            first_home_sub = self.p.first_home_sub()
+            first_away_sub = self.p.first_away_sub()
+            if first_home_sub is None:
+                first_home_sub_minute = None
+                first_home_sub_half = None
+            else:
+                first_home_sub_minute = first_home_sub[0]
+                first_home_sub_half = first_home_sub[1]
+            if first_away_sub is None:
+                first_away_sub_minute = None
+                first_away_sub_half = None
+            else:
+                first_away_sub_minute = first_away_sub[0]
+                first_away_sub_half = first_away_sub[1]
+            values = (self.competition_id(),
+                      self.p.date() + ' ' + self.p.time(),
+                      self.p.stadium(),
+                      self.home_coach_id(),
+                      self.home_team_id(),
+                      self.p.home_score(),
+                      self.p.away_score(),
+                      self.away_team_id(),
+                      self.away_coach_id(),
+                      self.p.home_yellow_cards(),
+                      self.p.home_red_cards(),
+                      self.p.away_yellow_cards(),
+                      self.p.away_red_cards(),
+                      self.p.home_subs(),
+                      self.p.away_subs(),
+                      first_home_sub_minute,
+                      first_home_sub_half,
+                      first_away_sub_minute,
+                      first_away_sub_half,
+                      self.file_name)
             self.cur.execute(
                 """INSERT INTO matches (
                     competition_id, 
@@ -496,7 +505,7 @@ def insert_into_database(url):
     except:
         print('File does not exist')
         return
-    connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
+    connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name)))
     connect.insert_home_coach()
     connect.insert_away_coach()
     connect.insert_home_team()
@@ -513,9 +522,15 @@ competition_codes = {'Campeonato Brasileiro - Série A': 142,
                      'Campeonato Brasileiro - Série D': 542,
                      'Copa do Brasil - Profissional': 424}
 
+match_exceptions = ['201454280']
+
 for x in range(2014, 2024):
     for y in competition_codes.values():
         for z in range(1, 400):
-            url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
-                x, y, z)
-            insert_into_database(url)
+            if '{}{}{}'.format(x, y, z) not in match_exceptions:
+                url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
+                    x, y, z)
+                insert_into_database(url)
+
+# url = 'https://conteudo.cbf.com.br/sumulas/2015/4241se.pdf'
+# insert_into_database(url)
