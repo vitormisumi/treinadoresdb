@@ -38,7 +38,7 @@ class Sumula:
                 break
 
     def competition(self):
-        find_string = '\nCampeonato: '
+        find_string = '\nCampeonato:'
         competition_string_index = self.text.find(find_string)
         competition_start_index = competition_string_index + \
             len(find_string)
@@ -49,7 +49,7 @@ class Sumula:
             return self.text[competition_start_index: end_string_index].split(sep='/')[0].strip()
 
     def competition_year(self):
-        find_string = '\nCampeonato: '
+        find_string = '\nCampeonato:'
         competition_string_index = self.text.find(find_string)
         competition_start_index = competition_string_index + \
             len(find_string)
@@ -60,7 +60,7 @@ class Sumula:
             return int(self.text[competition_start_index: end_string_index].split(sep='/')[1].strip())
 
     def home_team(self):
-        find_string = 'Jogo: '
+        find_string = 'Jogo:'
         game_start_index = -1
         for i in range(0, 2):
             game_start_index = self.text.find(
@@ -70,7 +70,7 @@ class Sumula:
         return home_team.split(sep='/')[0].strip().title()
 
     def home_team_state(self):
-        find_string = 'Jogo: '
+        find_string = 'Jogo:'
         game_start_index = -1
         for i in range(0, 2):
             game_start_index = self.text.find(
@@ -80,7 +80,7 @@ class Sumula:
         return home_team.split(sep='/')[1].strip()
 
     def away_team(self):
-        find_string = 'Jogo: '
+        find_string = 'Jogo:'
         game_start_index = -1
         for i in range(0, 2):
             game_start_index = self.text.find(
@@ -91,7 +91,7 @@ class Sumula:
         return away_team.split(sep='/')[0].strip().title()
 
     def away_team_state(self):
-        find_string = 'Jogo: '
+        find_string = 'Jogo:'
         game_start_index = -1
         for i in range(0, 2):
             game_start_index = self.text.find(
@@ -136,28 +136,33 @@ class Sumula:
                 return text[coach_start_index: dash_index].title().strip()
 
     def date(self):
-        find_string = '\nData: '
+        find_string = '\nData:'
         date_string_index = self.text.find(find_string)
         date_start_index = date_string_index + len(find_string)
         if date_string_index == -1:
             return None
         else:
-            year = self.text[date_start_index + 6: date_start_index + 10]
-            month = self.text[date_start_index + 3: date_start_index + 5]
-            day = self.text[date_start_index: date_start_index + 2]
-            return '{}-{}-{}'.format(year, month, day)
+            if self.text[date_start_index: date_start_index + 1] == ' ':
+                date = self.text[date_start_index + 1: date_start_index + 11]
+            else:
+                date = self.text[date_start_index: date_start_index + 10]
+        date = date.split(sep='/')
+        return '{}-{}-{}'.format(date[2], date[1], date[0])
 
     def time(self):
-        find_string = 'Horário: '
+        find_string = 'Horário:'
         time_string_index = self.text.find(find_string)
         time_start_index = time_string_index + len(find_string)
         if time_string_index == -1:
             return None
         else:
-            return self.text[time_start_index: time_start_index + 5] + ':00'
+            if self.text[time_start_index: time_start_index + 1] == ' ':
+                return self.text[time_start_index + 1: time_start_index + 6] + ':00'
+            else:
+                return self.text[time_start_index: time_start_index + 5] + ':00'
 
     def stadium(self):
-        find_string = 'Estádio: '
+        find_string = 'Estádio:'
         stadium_string_index = self.text.find(find_string)
         stadium_start_index = stadium_string_index + len(find_string)
         line_break_index = self.text.find('\n', stadium_start_index)
@@ -535,13 +540,13 @@ def insert_into_database(url):
         print('File does not exist')
         return
     connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
-    # connect.insert_home_coach()
-    # connect.insert_away_coach()
-    # connect.insert_home_team()
-    # connect.insert_away_team()
-    # connect.insert_competition()
-    # connect.insert_match()
-    # connect.close_connection()
+    connect.insert_home_coach()
+    connect.insert_away_coach()
+    connect.insert_home_team()
+    connect.insert_away_team()
+    connect.insert_competition()
+    connect.insert_match()
+    connect.close_connection()
     return
 
 
@@ -553,13 +558,13 @@ competition_codes = {'Campeonato Brasileiro - Série A': 142,
 
 match_exceptions = ['201454280', '2016142378']
 
-# for x in range(2016, 2024):
-#     for y in competition_codes.values():
-#         for z in range(1, 400):
-#             if '{}{}{}'.format(x, y, z) not in match_exceptions:
-#                 url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
-#                     x, y, z)
-#                 insert_into_database(url)
+for x in range(2018, 2024):
+    for y in competition_codes.values():
+        for z in range(1, 400):
+            if '{}{}{}'.format(x, y, z) not in match_exceptions:
+                url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
+                    x, y, z)
+                insert_into_database(url)
 
-url = 'https://conteudo.cbf.com.br/sumulas/2014/242179se.pdf'
-insert_into_database(url)
+# url = 'https://conteudo.cbf.com.br/sumulas/2019/142343se.pdf'
+# insert_into_database(url)
