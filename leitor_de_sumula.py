@@ -317,6 +317,83 @@ class Sumula:
                 45 + int(x.replace('+', '')) if '+' in x else int(x) for x in no_half_sub_minutes]
             return [min(no_half_sub_minutes), '2T']
 
+    def home_goal_minutes(self):
+        if self.home_score == 0:
+            return {'1T': [], '2T': []}
+        else:
+            goals_string = self.text[self.text.find(
+                'Gols\n'): self.text.find('Cartões Amarelos\n')]
+            goals_lines = goals_string.split(sep='\n')
+            home_team = '{}/{}'.format(self.home_team(),
+                                       self.home_team_state())
+            goal_minutes = {'1T': [], '2T': []}
+            for line in goals_lines:
+                if line[- len(home_team):] == home_team:
+                    minute = int(line[0: 2])
+                    if line[0] == '+':
+                        extra_time = line.split(sep=' ')
+                        minute = int(extra_time[0][1:]) + 45
+                    if '1T' in line:
+                        goal_minutes['1T'].append(minute)
+                    elif '2T' in line:
+                        goal_minutes['2T'].append(minute)
+            return goal_minutes
+
+    def away_goal_minutes(self):
+        if self.away_score == 0:
+            return {'1T': [], '2T': []}
+        else:
+            goals_string = self.text[self.text.find(
+                'Gols\n'): self.text.find('Cartões Amarelos\n')]
+            print(goals_string)
+            goals_lines = goals_string.split(sep='\n')
+            home_team = '{}/{}'.format(self.away_team(),
+                                       self.away_team_state())
+            goal_minutes = {'1T': [], '2T': []}
+            for line in goals_lines:
+                if line[- len(home_team):] == home_team:
+                    minute = int(line[0: 2])
+                    if line[0] == '+':
+                        extra_time = line.split(sep=' ')
+                        minute = int(extra_time[0][1:]) + 45
+                    if '1T' in line:
+                        goal_minutes['1T'].append(minute)
+                    elif '2T' in line:
+                        goal_minutes['2T'].append(minute)
+            return goal_minutes
+
+    def home_score_before_home_sub(self):
+        if self.first_home_sub()[1] == '1T':
+            return sum([minute < self.first_home_sub()[0] for minute in self.home_goal_minutes()['1T']])
+        elif self.first_home_sub()[1] == 'INT':
+            return len(self.home_goal_minutes()['1T'])
+        else:
+            return len(self.home_goal_minutes()['1T']) + sum([minute < self.first_home_sub()[0] for minute in self.home_goal_minutes()['2T']])
+    
+    def away_score_before_home_sub(self):
+        if self.first_home_sub()[1] == '1T':
+            return sum([minute < self.first_home_sub()[0] for minute in self.away_goal_minutes()['1T']])
+        elif self.first_home_sub()[1] == 'INT':
+            return len(self.away_goal_minutes()['1T'])
+        else:
+            return len(self.away_goal_minutes()['1T']) + sum([minute < self.first_home_sub()[0] for minute in self.away_goal_minutes()['2T']])
+        
+    def home_score_before_away_sub(self):
+        if self.first_away_sub()[1] == '1T':
+            return sum([minute < self.first_away_sub()[0] for minute in self.home_goal_minutes()['1T']])
+        elif self.first_away_sub()[1] == 'INT':
+            return len(self.home_goal_minutes()['1T'])
+        else:
+            return len(self.home_goal_minutes()['1T']) + sum([minute < self.first_away_sub()[0] for minute in self.home_goal_minutes()['2T']])
+    
+    def away_score_before_away_sub(self):
+        if self.first_away_sub()[1] == '1T':
+            return sum([minute < self.first_away_sub()[0] for minute in self.away_goal_minutes()['1T']])
+        elif self.first_away_sub()[1] == 'INT':
+            return len(self.away_goal_minutes()['1T'])
+        else:
+            return len(self.away_goal_minutes()['1T']) + sum([minute < self.first_away_sub()[0] for minute in self.away_goal_minutes()['2T']])
+
 
 class Connection:
     def __init__(self, file_name):
@@ -556,15 +633,23 @@ competition_codes = {'Campeonato Brasileiro - Série A': 142,
                      'Campeonato Brasileiro - Série D': 542,
                      'Copa do Brasil - Profissional': 424}
 
-match_exceptions = ['201454280', '2016142378']
+match_exceptions = ['201454280', '2016142378', '2020242135', '202054242']
 
-for x in range(2018, 2024):
-    for y in competition_codes.values():
-        for z in range(1, 400):
-            if '{}{}{}'.format(x, y, z) not in match_exceptions:
-                url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
-                    x, y, z)
-                insert_into_database(url)
+for year in range(2014, 2023):
+    for code in competition_codes.values():
+        for n in range(1, 400):
+            if '{}{}{}'.format(year, code, n) not in match_exceptions:
+                # url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
+                #     x, y, z)
+                pdf = 'sumulas/{}/{}{}se.pdf'.format(year, code, n)
+                p = Sumula(pdf)
+                print(pdf)
+                print(p.home_score_before_home_sub())
 
-# url = 'https://conteudo.cbf.com.br/sumulas/2019/142343se.pdf'
+# url = 'https://conteudo.cbf.com.br/sumulas/2020/54242se.pdf'
 # insert_into_database(url)
+
+
+# pdf = 'sumulas/2021/1424se.pdf'
+# p = Sumula(pdf)
+# p.home_goal_minutes()
