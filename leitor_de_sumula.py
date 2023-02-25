@@ -3,6 +3,8 @@ import requests
 from re import finditer
 import mysql.connector
 from os import path
+import smtplib
+import ssl
 
 
 class PDF:
@@ -308,7 +310,7 @@ class Sumula:
                                        self.away_team_state())
             goal_minutes = {'1T': [], '2T': []}
             for line in goals_lines:
-                if line[- len(home_team):] == home_team:
+                if line[- len(home_team):] == home_team and 'CT' not in line:
                     minute = int(line[0: 2])
                     if line[0] == '+':
                         extra_time = line.split(sep=' ')
@@ -317,7 +319,7 @@ class Sumula:
                         goal_minutes['1T'].append(minute)
                     elif '2T' in line:
                         goal_minutes['2T'].append(minute)
-                elif line[- len(away_team):] == away_team and 'CT' in line:
+                elif 'CT' in line and line[- len(away_team):] == away_team:
                     minute = int(line[0: 2])
                     if line[0] == '+':
                         extra_time = line.split(sep=' ')
@@ -341,7 +343,7 @@ class Sumula:
                                        self.away_team_state())
             goal_minutes = {'1T': [], '2T': []}
             for line in goals_lines:
-                if line[- len(away_team):] == away_team:
+                if line[- len(away_team):] == away_team and 'CT' not in line:
                     minute = int(line[0: 2])
                     if line[0] == '+':
                         extra_time = line.split(sep=' ')
@@ -350,7 +352,7 @@ class Sumula:
                         goal_minutes['1T'].append(minute)
                     elif '2T' in line:
                         goal_minutes['2T'].append(minute)
-                elif line[- len(home_team):] == home_team and 'CT' in line:
+                elif 'CT' in line and line[- len(home_team):] == home_team:
                     minute = int(line[0: 2])
                     if line[0] == '+':
                         extra_time = line.split(sep=' ')
@@ -436,13 +438,11 @@ class Connection:
                 "SELECT name FROM coaches WHERE name = %s", home_coach)
             result = self.cur.fetchall()
             if result:
-                print('Coach already in database')
                 return
             else:
                 self.cur.execute(
                     "INSERT INTO coaches (name) VALUES (%s)", home_coach)
                 self.cnx.commit()
-                print('Home coach inserted')
                 return
 
     def insert_away_coach(self):
@@ -454,13 +454,11 @@ class Connection:
                 "SELECT name FROM coaches WHERE name = %s", away_coach)
             result = self.cur.fetchall()
             if result:
-                print('Coach already in database')
                 return
             else:
                 self.cur.execute(
                     "INSERT INTO coaches (name) VALUES (%s)", away_coach)
                 self.cnx.commit()
-                print('Away coach inserted')
                 return
 
     def insert_competition(self):
@@ -469,13 +467,11 @@ class Connection:
             "SELECT * FROM competitions WHERE name = %s AND year = %s", values)
         result = self.cur.fetchall()
         if result:
-            print('Competition already in database')
             return
         else:
             self.cur.execute(
                 "INSERT INTO competitions (name, year) VALUES (%s, %s)", values)
             self.cnx.commit()
-            print('Competition inserted')
             return
 
     def insert_home_team(self):
@@ -484,13 +480,11 @@ class Connection:
             "SELECT * FROM teams WHERE name = %s AND state = %s", values)
         result = self.cur.fetchall()
         if result:
-            print('Home team already in database')
             return
         else:
             self.cur.execute(
                 "INSERT INTO teams (name, state) VALUES (%s, %s)", values)
             self.cnx.commit()
-            print('Home team inserted')
             return
 
     def insert_away_team(self):
@@ -499,13 +493,11 @@ class Connection:
             "SELECT * FROM teams WHERE name = %s AND state = %s", values)
         result = self.cur.fetchall()
         if result:
-            print('Away team already in database')
             return
         else:
             self.cur.execute(
                 "INSERT INTO teams (name, state) VALUES (%s, %s)", values)
             self.cnx.commit()
-            print('Away team inserted')
             return
 
     def competition_id(self):
@@ -554,7 +546,6 @@ class Connection:
             "SELECT * FROM matches WHERE pdf_file_name = %s", [self.file_name])
         result = self.cur.fetchall()
         if result:
-            print('Match already in database')
             return
         else:
             first_home_sub = self.p.first_home_sub()
@@ -634,7 +625,6 @@ class Connection:
                     %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                 values)
             self.cnx.commit()
-            print('Match inserted')
             return
 
     def close_connection(self):
@@ -644,6 +634,7 @@ class Connection:
 
 
 coach_errors, team_errors, competitions_errors, match_errors = [], [], [], []
+coaches_inserted, teams_inserted, competitions_inserted, matches_inserted = 0, 0, 0, 0
 
 
 def insert_into_database(url):
@@ -656,28 +647,34 @@ def insert_into_database(url):
     connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
     try:
         connect.insert_home_coach()
+        coaches_inserted += 1
     except:
-        coach_errors.append(pdf.file_name)
+        coach_errors.append('{}/{}'.format(pdf.year, pdf.file_name))
     try:
         connect.insert_away_coach()
+        coaches_inserted += 1
     except:
-        coach_errors.append(pdf.file_name)
+        coach_errors.append('{}/{}'.format(pdf.year, pdf.file_name))
     try:
         connect.insert_home_team()
+        teams_inserted += 1
     except:
-        team_errors.append(pdf.file_name)
+        team_errors.append('{}/{}'.format(pdf.year, pdf.file_name))
     try:
         connect.insert_away_team()
+        teams_inserted += 1
     except:
-        team_errors.append(pdf.file_name)
+        team_errors.append('{}/{}'.format(pdf.year, pdf.file_name))
     try:
         connect.insert_competition()
+        competitions_inserted += 1
     except:
-        competitions_errors.append(pdf.file_name)
+        competitions_errors.append('{}/{}'.format(pdf.year, pdf.file_name))
     try:
         connect.insert_match()
+        matches_inserted += 1
     except:
-        match_errors.append(pdf.file_name)
+        match_errors.append('{}/{}'.format(pdf.year, pdf.file_name))
     connect.close_connection()
     return
 
@@ -695,9 +692,42 @@ for year in range(2014, 2024):
                 year, code, n)
             insert_into_database(url)
 
-print(coach_errors)
-print(team_errors)
-print(competitions_errors)
-print(match_errors)
-# url = 'https://conteudo.cbf.com.br/sumulas/2014/1422se.pdf'
-# insert_into_database(url)
+port = 587
+smtp_server = "smtp.gmail.com"
+sender_email = "vitormisumi@gmail.com"
+receiver_email = "vitormisumi@gmail.com"
+password = 'V5F6j86APiY*gn5@'
+if coach_errors or team_errors or competitions_errors or match_errors:
+    message = """\
+    Subject: Database insertion
+
+    Here is a summary of the latest database insertions.
+    A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
+
+    The following games had problems:
+    Coach insertion problems: {}
+    Team insertion problems: {}
+    Competition insertion problems: {}
+    Match insertion problems: {}
+
+    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted, 
+               coach_errors, team_errors, competitions_errors, match_errors)
+else:
+    message = """\
+    Subject: Database insertion
+
+    Here is a summary of the latest database insertions.
+    A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
+
+    There were no problems this time!
+
+    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted)
+
+
+context = ssl.create_default_context()
+with smtplib.SMTP(smtp_server, port) as server:
+    server.ehlo()
+    server.starttls(context=context)
+    server.ehlo()
+    server.login(sender_email, password)
+    server.sendmail(sender_email, receiver_email, message)
