@@ -13,7 +13,7 @@ class PDF:
 
     def download(self):
         if path.exists('sumulas/{}/{}'.format(self.year, self.file_name)):
-            print('File already downloaded')
+            print('File {}/{} already downloaded'.format(self.year, self.file_name))
             return
         else:
             response = requests.get(self.url)
@@ -22,7 +22,7 @@ class PDF:
                                                   self.file_name), 'wb')
                 pdf.write(response.content)
                 pdf.close()
-                print('PDF file {} downloaded'.format(self.file_name))
+                print('PDF file {}/{} downloaded'.format(self.year, self.file_name))
                 return
             else:
                 raise Exception
@@ -226,96 +226,70 @@ class Sumula:
     def first_home_sub(self):
         if self.home_subs() == 0:
             return None
+        sub_minutes = []
         text = self.text[self.text.find('Substituições'):]
         text = text.replace(' ', '')
+        lines = text.split(sep='\n')
         home_team = self.home_team().replace(' ', '')
-        first_half_indices = finditer(
-            pattern='1T{}/{}'.format(home_team, self.home_team_state()), string=text)
-        first_half_sub_minutes = [
-            text[index.start() - 5: index.start() - 2] for index in first_half_indices]
-        if first_half_sub_minutes:
-            first_half_sub_minutes = [
-                x.replace(':', '') for x in first_half_sub_minutes]
-            first_half_sub_minutes = [
-                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in first_half_sub_minutes]
-            return [min(first_half_sub_minutes), '1T']
-        half_time_indices = finditer(
-            pattern='INT{}/{}'.format(home_team, self.home_team_state()), string=text)
-        half_time_sub_minutes = [
-            text[index.start() - 5: index.start() - 2] for index in half_time_indices]
-        if half_time_sub_minutes:
-            half_time_sub_minutes = [
-                x.replace(':', '') for x in half_time_sub_minutes]
-            half_time_sub_minutes = [
-                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in half_time_sub_minutes]
-            return [min(half_time_sub_minutes), 'INT']
-        second_half_indices = finditer(
-            pattern='2T{}/{}'.format(home_team, self.home_team_state()), string=text)
-        second_half_sub_minutes = [
-            text[index.start() - 5: index.start() - 2] for index in second_half_indices]
-        if second_half_sub_minutes:
-            second_half_sub_minutes = [
-                x.replace(':', '') for x in second_half_sub_minutes]
-            second_half_sub_minutes = [
-                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in second_half_sub_minutes]
-            return [min(second_half_sub_minutes), '2T']
-        no_half_indices = finditer(
-            pattern='{}/{}'.format(home_team, self.home_team_state()), string=text)
-        no_half_sub_minutes = [
-            text[index.start() - 5: index.start() - 2] for index in no_half_indices]
-        if no_half_sub_minutes:
-            no_half_sub_minutes = [
-                x.replace(':', '') for x in no_half_sub_minutes]
-            no_half_sub_minutes = [
-                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in no_half_sub_minutes]
-            return [min(no_half_sub_minutes), '2T']
+        home_subs = [line for line in lines if home_team in line]
+        first_half_subs = [sub for sub in home_subs if '1T' in sub]
+        if first_half_subs:
+            for sub in first_half_subs:
+                sub = sub.split(sep='1T')
+                sub_time = sub[0]
+                if sub_time[0] == '+':
+                    sub_time = int(sub_time[1:]) + 45
+                    sub_minutes.append(sub_time)
+                else:
+                    sub_minutes.append(int(sub_time[: 2]))
+            return [min(sub_minutes), '1T']
+        half_time_subs = [sub for sub in home_subs if 'INT' in sub]
+        if half_time_subs:
+            return [45, 'INT']
+        second_half_subs = [sub for sub in home_subs if '2T' in sub]
+        for sub in second_half_subs:
+            sub = sub.split(sep='2T')
+            sub_time = sub[0]
+            if sub_time[0] == '+':
+                sub_time = int(sub_time[1:]) + 45
+                sub_minutes.append(sub_time)
+            else:
+                sub_minutes.append(int(sub_time[: 2]))
+        return [min(sub_minutes), '2T']
 
     def first_away_sub(self):
         if self.away_subs() == 0:
             return None
+        sub_minutes = []
         text = self.text[self.text.find('Substituições'):]
         text = text.replace(' ', '')
+        lines = text.split(sep='\n')
         away_team = self.away_team().replace(' ', '')
-        first_half_indices = finditer(
-            pattern='1T{}/{}'.format(away_team, self.away_team_state()), string=text)
-        first_half_sub_minutes = [
-            text[index.start() - 5: index.start() - 2] for index in first_half_indices]
-        if first_half_sub_minutes:
-            first_half_sub_minutes = [
-                x.replace(':', '') for x in first_half_sub_minutes]
-            first_half_sub_minutes = [
-                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in first_half_sub_minutes]
-            return [min(first_half_sub_minutes), '1T']
-        half_time_indices = finditer(
-            pattern='INT{}/{}'.format(away_team, self.away_team_state()), string=text)
-        half_time_sub_minutes = [
-            text[index.start() - 5: index.start() - 2] for index in half_time_indices]
-        if half_time_sub_minutes:
-            half_time_sub_minutes = [
-                x.replace(':', '') for x in half_time_sub_minutes]
-            half_time_sub_minutes = [
-                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in half_time_sub_minutes]
-            return [min(half_time_sub_minutes), 'INT']
-        second_half_indices = finditer(
-            pattern='2T{}/{}'.format(away_team, self.away_team_state()), string=text)
-        second_half_sub_minutes = [
-            text[index.start() - 5: index.start() - 2] for index in second_half_indices]
-        if second_half_sub_minutes:
-            second_half_sub_minutes = [
-                x.replace(':', '') for x in second_half_sub_minutes]
-            second_half_sub_minutes = [
-                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in second_half_sub_minutes]
-            return [min(second_half_sub_minutes), '2T']
-        no_half_indices = finditer(
-            pattern='{}/{}'.format(away_team, self.away_team_state()), string=text)
-        no_half_sub_minutes = [
-            text[index.start() - 5: index.start() - 2] for index in no_half_indices]
-        if no_half_sub_minutes:
-            no_half_sub_minutes = [
-                x.replace(':', '') for x in no_half_sub_minutes]
-            no_half_sub_minutes = [
-                45 + int(x.replace('+', '')) if '+' in x else int(x) for x in no_half_sub_minutes]
-            return [min(no_half_sub_minutes), '2T']
+        away_subs = [line for line in lines if away_team in line]
+        first_half_subs = [sub for sub in away_subs if '1T' in sub]
+        if first_half_subs:
+            for sub in first_half_subs:
+                sub = sub.split(sep='1T')
+                sub_time = sub[0]
+                if sub_time[0] == '+':
+                    sub_time = int(sub_time[1:]) + 45
+                    sub_minutes.append(sub_time)
+                else:
+                    sub_minutes.append(int(sub_time[: 2]))
+            return [min(sub_minutes), '1T']
+        half_time_subs = [sub for sub in away_subs if 'INT' in sub]
+        if half_time_subs:
+            return [45, 'INT']
+        second_half_subs = [sub for sub in away_subs if '2T' in sub]
+        for sub in second_half_subs:
+            sub = sub.split(sep='2T')
+            sub_time = sub[0]
+            if sub_time[0] == '+':
+                sub_time = int(sub_time[1:]) + 45
+                sub_minutes.append(sub_time)
+            else:
+                sub_minutes.append(int(sub_time[: 2]))
+        return [min(sub_minutes), '2T']
 
     def home_goal_minutes(self):
         if self.home_score == 0:
@@ -345,7 +319,6 @@ class Sumula:
         else:
             goals_string = self.text[self.text.find(
                 'Gols\n'): self.text.find('Cartões Amarelos\n')]
-            print(goals_string)
             goals_lines = goals_string.split(sep='\n')
             home_team = '{}/{}'.format(self.away_team(),
                                        self.away_team_state())
@@ -363,36 +336,56 @@ class Sumula:
             return goal_minutes
 
     def home_score_before_home_sub(self):
-        if self.first_home_sub()[1] == '1T':
+        if self.home_subs() == 0:
+            return self.home_score()
+        elif self.first_home_sub()[1] == '1T':
             return sum([minute < self.first_home_sub()[0] for minute in self.home_goal_minutes()['1T']])
         elif self.first_home_sub()[1] == 'INT':
             return len(self.home_goal_minutes()['1T'])
         else:
             return len(self.home_goal_minutes()['1T']) + sum([minute < self.first_home_sub()[0] for minute in self.home_goal_minutes()['2T']])
-    
+
     def away_score_before_home_sub(self):
-        if self.first_home_sub()[1] == '1T':
+        if self.home_subs() == 0:
+            return self.away_score()
+        elif self.first_home_sub()[1] == '1T':
             return sum([minute < self.first_home_sub()[0] for minute in self.away_goal_minutes()['1T']])
         elif self.first_home_sub()[1] == 'INT':
             return len(self.away_goal_minutes()['1T'])
         else:
             return len(self.away_goal_minutes()['1T']) + sum([minute < self.first_home_sub()[0] for minute in self.away_goal_minutes()['2T']])
-        
+
     def home_score_before_away_sub(self):
-        if self.first_away_sub()[1] == '1T':
+        if self.away_subs() == 0:
+            return self.home_score()
+        elif self.first_away_sub()[1] == '1T':
             return sum([minute < self.first_away_sub()[0] for minute in self.home_goal_minutes()['1T']])
         elif self.first_away_sub()[1] == 'INT':
             return len(self.home_goal_minutes()['1T'])
         else:
             return len(self.home_goal_minutes()['1T']) + sum([minute < self.first_away_sub()[0] for minute in self.home_goal_minutes()['2T']])
-    
+
     def away_score_before_away_sub(self):
-        if self.first_away_sub()[1] == '1T':
+        if self.away_subs() == 0:
+            return self.away_score()
+        elif self.first_away_sub()[1] == '1T':
             return sum([minute < self.first_away_sub()[0] for minute in self.away_goal_minutes()['1T']])
         elif self.first_away_sub()[1] == 'INT':
             return len(self.away_goal_minutes()['1T'])
         else:
             return len(self.away_goal_minutes()['1T']) + sum([minute < self.first_away_sub()[0] for minute in self.away_goal_minutes()['2T']])
+
+    def home_score_after_home_sub(self):
+        return self.home_score() - self.home_score_before_home_sub()
+
+    def away_score_after_home_sub(self):
+        return self.away_score() - self.away_score_before_home_sub()
+
+    def home_score_after_away_sub(self):
+        return self.home_score() - self.home_score_before_away_sub()
+
+    def away_score_after_away_sub(self):
+        return self.away_score() - self.home_score_before_away_sub()
 
 
 class Connection:
@@ -406,6 +399,8 @@ class Connection:
         )
         self.cur = self.cnx.cursor()
         self.p = Sumula(file_name)
+        print(self.p.first_home_sub())
+        print(self.p.first_away_sub())
         self.file_name = file_name
 
     def insert_home_coach(self):
@@ -571,6 +566,14 @@ class Connection:
                       first_home_sub_half,
                       first_away_sub_minute,
                       first_away_sub_half,
+                      self.p.home_score_before_home_sub(),
+                      self.p.away_score_before_home_sub(),
+                      self.p.home_score_before_away_sub(),
+                      self.p.away_score_before_away_sub(),
+                      self.p.home_score_after_home_sub(),
+                      self.p.away_score_after_home_sub(),
+                      self.p.home_score_after_away_sub(),
+                      self.p.away_score_after_away_sub(),
                       self.file_name)
             self.cur.execute(
                 """INSERT INTO matches (
@@ -593,11 +596,18 @@ class Connection:
                     first_home_sub_half,
                     first_away_sub_minute,
                     first_away_sub_half,
+                    home_score_before_home_sub,
+                    away_score_before_home_sub,
+                    home_score_before_away_sub,
+                    away_score_before_away_sub,
+                    home_score_after_home_sub,
+                    away_score_after_home_sub,
+                    home_score_after_away_sub,
+                    away_score_after_away_sub,
                     pdf_file_name)
-                    VALUES (%s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s,
-                    %s, %s, %s, %s, %s)""",
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                 values)
             self.cnx.commit()
             print('Match inserted')
@@ -633,23 +643,17 @@ competition_codes = {'Campeonato Brasileiro - Série A': 142,
                      'Campeonato Brasileiro - Série D': 542,
                      'Copa do Brasil - Profissional': 424}
 
-match_exceptions = ['201454280', '2016142378', '2020242135', '202054242']
+# Include last three manually
+match_exceptions = ['201454280', '2016142378',
+                    '2017142367', '2020242135', '202054242']
 
-for year in range(2014, 2023):
-    for code in competition_codes.values():
-        for n in range(1, 400):
-            if '{}{}{}'.format(year, code, n) not in match_exceptions:
-                # url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
-                #     x, y, z)
-                pdf = 'sumulas/{}/{}{}se.pdf'.format(year, code, n)
-                p = Sumula(pdf)
-                print(pdf)
-                print(p.home_score_before_home_sub())
+# for year in range(2017, 2024):
+#     for code in competition_codes.values():
+#         for n in range(1, 400):
+#             if '{}{}{}'.format(year, code, n) not in match_exceptions:
+#                 url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
+#                     year, code, n)
+#                 insert_into_database(url)
 
-# url = 'https://conteudo.cbf.com.br/sumulas/2020/54242se.pdf'
-# insert_into_database(url)
-
-
-# pdf = 'sumulas/2021/1424se.pdf'
-# p = Sumula(pdf)
-# p.home_goal_minutes()
+url = 'https://conteudo.cbf.com.br/sumulas/2018/342172se.pdf'
+insert_into_database(url)
