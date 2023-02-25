@@ -236,6 +236,7 @@ class Sumula:
         if first_half_subs:
             for sub in first_half_subs:
                 sub = sub.split(sep='1T')
+                sub = sub[0].split(sep=':')
                 sub_time = sub[0]
                 if sub_time[0] == '+':
                     sub_time = int(sub_time[1:]) + 45
@@ -249,6 +250,7 @@ class Sumula:
         second_half_subs = [sub for sub in home_subs if '2T' in sub]
         for sub in second_half_subs:
             sub = sub.split(sep='2T')
+            sub = sub[0].split(sep=':')
             sub_time = sub[0]
             if sub_time[0] == '+':
                 sub_time = int(sub_time[1:]) + 45
@@ -270,6 +272,7 @@ class Sumula:
         if first_half_subs:
             for sub in first_half_subs:
                 sub = sub.split(sep='1T')
+                sub = sub[0].split(sep=':')
                 sub_time = sub[0]
                 if sub_time[0] == '+':
                     sub_time = int(sub_time[1:]) + 45
@@ -283,6 +286,7 @@ class Sumula:
         second_half_subs = [sub for sub in away_subs if '2T' in sub]
         for sub in second_half_subs:
             sub = sub.split(sep='2T')
+            sub = sub[0].split(sep=':')
             sub_time = sub[0]
             if sub_time[0] == '+':
                 sub_time = int(sub_time[1:]) + 45
@@ -300,9 +304,20 @@ class Sumula:
             goals_lines = goals_string.split(sep='\n')
             home_team = '{}/{}'.format(self.home_team(),
                                        self.home_team_state())
+            away_team = '{}/{}'.format(self.away_team(),
+                                       self.away_team_state())
             goal_minutes = {'1T': [], '2T': []}
             for line in goals_lines:
                 if line[- len(home_team):] == home_team:
+                    minute = int(line[0: 2])
+                    if line[0] == '+':
+                        extra_time = line.split(sep=' ')
+                        minute = int(extra_time[0][1:]) + 45
+                    if '1T' in line:
+                        goal_minutes['1T'].append(minute)
+                    elif '2T' in line:
+                        goal_minutes['2T'].append(minute)
+                elif line[- len(away_team):] == away_team and 'CT' in line:
                     minute = int(line[0: 2])
                     if line[0] == '+':
                         extra_time = line.split(sep=' ')
@@ -320,11 +335,22 @@ class Sumula:
             goals_string = self.text[self.text.find(
                 'Gols\n'): self.text.find('Cartões Amarelos\n')]
             goals_lines = goals_string.split(sep='\n')
-            home_team = '{}/{}'.format(self.away_team(),
+            home_team = '{}/{}'.format(self.home_team(),
+                                       self.home_team_state())
+            away_team = '{}/{}'.format(self.away_team(),
                                        self.away_team_state())
             goal_minutes = {'1T': [], '2T': []}
             for line in goals_lines:
-                if line[- len(home_team):] == home_team:
+                if line[- len(away_team):] == away_team:
+                    minute = int(line[0: 2])
+                    if line[0] == '+':
+                        extra_time = line.split(sep=' ')
+                        minute = int(extra_time[0][1:]) + 45
+                    if '1T' in line:
+                        goal_minutes['1T'].append(minute)
+                    elif '2T' in line:
+                        goal_minutes['2T'].append(minute)
+                elif line[- len(home_team):] == home_team and 'CT' in line:
                     minute = int(line[0: 2])
                     if line[0] == '+':
                         extra_time = line.split(sep=' ')
@@ -385,7 +411,7 @@ class Sumula:
         return self.home_score() - self.home_score_before_away_sub()
 
     def away_score_after_away_sub(self):
-        return self.away_score() - self.home_score_before_away_sub()
+        return self.away_score() - self.away_score_before_away_sub()
 
 
 class Connection:
@@ -399,8 +425,6 @@ class Connection:
         )
         self.cur = self.cnx.cursor()
         self.p = Sumula(file_name)
-        print(self.p.first_home_sub())
-        print(self.p.first_away_sub())
         self.file_name = file_name
 
     def insert_home_coach(self):
@@ -619,6 +643,9 @@ class Connection:
         return
 
 
+coach_errors, team_errors, competitions_errors, match_errors = [], [], [], []
+
+
 def insert_into_database(url):
     pdf = PDF(url)
     try:
@@ -627,12 +654,30 @@ def insert_into_database(url):
         print('File does not exist')
         return
     connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
-    connect.insert_home_coach()
-    connect.insert_away_coach()
-    connect.insert_home_team()
-    connect.insert_away_team()
-    connect.insert_competition()
-    connect.insert_match()
+    try:
+        connect.insert_home_coach()
+    except:
+        coach_errors.append(pdf.file_name)
+    try:
+        connect.insert_away_coach()
+    except:
+        coach_errors.append(pdf.file_name)
+    try:
+        connect.insert_home_team()
+    except:
+        team_errors.append(pdf.file_name)
+    try:
+        connect.insert_away_team()
+    except:
+        team_errors.append(pdf.file_name)
+    try:
+        connect.insert_competition()
+    except:
+        competitions_errors.append(pdf.file_name)
+    try:
+        connect.insert_match()
+    except:
+        match_errors.append(pdf.file_name)
     connect.close_connection()
     return
 
@@ -643,17 +688,16 @@ competition_codes = {'Campeonato Brasileiro - Série A': 142,
                      'Campeonato Brasileiro - Série D': 542,
                      'Copa do Brasil - Profissional': 424}
 
-# Include last three manually
-match_exceptions = ['201454280', '2016142378',
-                    '2017142367', '2020242135', '202054242']
+for year in range(2014, 2024):
+    for code in competition_codes.values():
+        for n in range(1, 400):
+            url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
+                year, code, n)
+            insert_into_database(url)
 
-# for year in range(2017, 2024):
-#     for code in competition_codes.values():
-#         for n in range(1, 400):
-#             if '{}{}{}'.format(year, code, n) not in match_exceptions:
-#                 url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
-#                     year, code, n)
-#                 insert_into_database(url)
-
-url = 'https://conteudo.cbf.com.br/sumulas/2018/342172se.pdf'
-insert_into_database(url)
+print(coach_errors)
+print(team_errors)
+print(competitions_errors)
+print(match_errors)
+# url = 'https://conteudo.cbf.com.br/sumulas/2014/1422se.pdf'
+# insert_into_database(url)
