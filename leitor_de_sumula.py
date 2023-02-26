@@ -3,8 +3,6 @@ import requests
 from re import finditer
 import mysql.connector
 from os import path
-import smtplib
-import ssl
 
 
 class PDF:
@@ -692,13 +690,9 @@ for year in range(2014, 2024):
                 year, code, n)
             insert_into_database(url)
 
-port = 587
-smtp_server = "smtp.gmail.com"
-sender_email = "vitormisumi@gmail.com"
-receiver_email = "vitormisumi@gmail.com"
-password = 'V5F6j86APiY*gn5@'
+
 if coach_errors or team_errors or competitions_errors or match_errors:
-    message = """\
+    print("""\
     Subject: Database insertion
 
     Here is a summary of the latest database insertions.
@@ -711,9 +705,9 @@ if coach_errors or team_errors or competitions_errors or match_errors:
     Match insertion problems: {}
 
     """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted, 
-               coach_errors, team_errors, competitions_errors, match_errors)
+               coach_errors, team_errors, competitions_errors, match_errors))
 else:
-    message = """\
+    print("""\
     Subject: Database insertion
 
     Here is a summary of the latest database insertions.
@@ -721,13 +715,4 @@ else:
 
     There were no problems this time!
 
-    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted)
-
-
-context = ssl.create_default_context()
-with smtplib.SMTP(smtp_server, port) as server:
-    server.ehlo()
-    server.starttls(context=context)
-    server.ehlo()
-    server.login(sender_email, password)
-    server.sendmail(sender_email, receiver_email, message)
+    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted))
