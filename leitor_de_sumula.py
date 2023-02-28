@@ -1,3 +1,6 @@
+import smtplib
+import ssl
+from email.message import EmailMessage
 from PyPDF2 import PdfReader
 import requests
 from re import finditer
@@ -692,7 +695,7 @@ for year in range(2014, 2024):
 
 
 if coach_errors or team_errors or competitions_errors or match_errors:
-    print("""\
+    body = """\
     Subject: Database insertion
 
     Here is a summary of the latest database insertions.
@@ -705,9 +708,9 @@ if coach_errors or team_errors or competitions_errors or match_errors:
     Match insertion problems: {}
 
     """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted, 
-               coach_errors, team_errors, competitions_errors, match_errors))
+               coach_errors, team_errors, competitions_errors, match_errors)
 else:
-    print("""\
+    body = """\
     Subject: Database insertion
 
     Here is a summary of the latest database insertions.
@@ -715,4 +718,23 @@ else:
 
     There were no problems this time!
 
-    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted))
+    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted)
+
+
+user = 'treineiros.db@gmail.com'
+password = 'hwtkijmkcaepaojl'
+receiver = 'vitormisumi@gmail.com'
+
+subject = 'Test'
+
+em = EmailMessage()
+em['From'] = user
+em['To'] = receiver
+em['Subject'] = subject
+em.set_content(body)
+
+context = ssl.create_default_context()
+
+with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+    smtp.login(user, password)
+    smtp.sendmail(user, receiver, em.as_string())
