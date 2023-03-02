@@ -39,50 +39,50 @@ class Sumula:
                 self.text += PdfReader(pdf).pages[x].extract_text()
             except:
                 break
-        self.text = self.text.replace('1T', '1T ').replace('2T', '2T ').replace(
-            'INT', 'INT ').replace('Tecnico', 'Técnico')
-        self.lower = self.text.lower()
+        self.staff = self.text.replace('Tecnico', 'Técnico').lower()
+        self.sub = self.text.replace('1T', '1T ').replace(
+            '2T', '2T ').replace('INT', 'INT ').lower()
 
     def competition(self):
-        find_string = '\ncampeonato:'
-        competition_string_index = self.lower.find(find_string)
+        find_string = '\nCampeonato:'
+        competition_string_index = self.text.find(find_string)
         competition_start_index = competition_string_index + \
             len(find_string)
-        end_string_index = self.lower.find(' rodada:', competition_start_index)
+        end_string_index = self.text.find(' Rodada:', competition_start_index)
         if competition_string_index == -1:
             return None
         else:
-            return self.lower[competition_start_index: end_string_index].split(sep='/')[0].strip().title()
+            return self.text[competition_start_index: end_string_index].split(sep='/')[0].strip().title()
 
     def competition_year(self):
-        find_string = '\ncampeonato:'
-        competition_string_index = self.lower.find(find_string)
+        find_string = '\nCampeonato:'
+        competition_string_index = self.text.find(find_string)
         competition_start_index = competition_string_index + \
             len(find_string)
-        end_string_index = self.lower.find(' rodada:', competition_start_index)
+        end_string_index = self.text.find(' Rodada:', competition_start_index)
         if competition_string_index == -1:
             return None
         else:
-            return int(self.lower[competition_start_index: end_string_index].split(sep='/')[1].strip())
+            return int(self.text[competition_start_index: end_string_index].split(sep='/')[1].strip())
 
     def home_team(self):
-        find_string = 'jogo:'
+        find_string = 'Jogo:'
         game_start_index = -1
         for i in range(0, 2):
-            game_start_index = self.lower.find(
+            game_start_index = self.text.find(
                 find_string, game_start_index + 1)
-        x_index = self.lower.find(' x ', game_start_index)
-        home_team = self.lower[game_start_index + len(find_string): x_index]
+        x_index = self.text.find(' X ', game_start_index)
+        home_team = self.text[game_start_index + len(find_string): x_index]
         return home_team.split(sep='/')[0].strip().title()
 
     def home_team_state(self):
-        find_string = 'jogo:'
+        find_string = 'Jogo:'
         game_start_index = -1
         for i in range(0, 2):
-            game_start_index = self.lower.find(
+            game_start_index = self.text.find(
                 find_string, game_start_index + 1)
-        x_index = self.lower.find(' x ', game_start_index)
-        home_team = self.lower[game_start_index + len(find_string): x_index]
+        x_index = self.text.find(' X ', game_start_index)
+        home_team = self.text[game_start_index + len(find_string): x_index]
         return home_team.split(sep='/')[1].strip().upper()
 
     def home_team_no_space(self):
@@ -92,25 +92,25 @@ class Sumula:
         return '{} / {}'.format(self.home_team().lower(), self.home_team_state().lower())
 
     def away_team(self):
-        find_string = 'jogo:'
+        find_string = 'Jogo:'
         game_start_index = -1
         for i in range(0, 2):
-            game_start_index = self.lower.find(
+            game_start_index = self.text.find(
                 find_string, game_start_index + 1)
-        x_index = self.lower.find(' x ', game_start_index) + 3
-        line_break_index = self.lower.find('\n', x_index)
-        away_team = self.lower[x_index: line_break_index]
+        x_index = self.text.find(' X ', game_start_index) + 3
+        line_break_index = self.text.find('\n', x_index)
+        away_team = self.text[x_index: line_break_index]
         return away_team.split(sep='/')[0].strip().title()
 
     def away_team_state(self):
-        find_string = 'jogo:'
+        find_string = 'Jogo:'
         game_start_index = -1
         for i in range(0, 2):
-            game_start_index = self.lower.find(
+            game_start_index = self.text.find(
                 find_string, game_start_index + 1)
-        x_index = self.lower.find(' x ', game_start_index) + 3
-        line_break_index = self.lower.find('\n', x_index)
-        away_team = self.lower[x_index: line_break_index]
+        x_index = self.text.find(' X ', game_start_index) + 3
+        line_break_index = self.text.find('\n', x_index)
+        away_team = self.text[x_index: line_break_index]
         return away_team.split(sep='/')[1].strip().upper()
 
     def away_team_no_space(self):
@@ -120,7 +120,7 @@ class Sumula:
         return '{} / {}'.format(self.away_team().lower(), self.away_team_state().lower())
 
     def home_coach(self):
-        text = self.lower[self.lower.find('comissão técnica\n'):]
+        text = self.staff[self.staff.find('comissão técnica\n'):]
         find_string = '\ntécnico: '
         coach_string_index = text.find(
             find_string, text.find(self.home_team_space()), text.find(self.away_team_space()))
@@ -136,7 +136,7 @@ class Sumula:
                 return text[coach_start_index: dash_index].strip().title()
 
     def away_coach(self):
-        text = self.lower[self.lower.find('comissão técnica\n'):]
+        text = self.staff[self.staff.find('comissão técnica\n'):]
         find_string = '\ntécnico: '
         coach_string_index = text.find(
             find_string, text.find(self.away_team_space()), text.find('\ngols\n'))
@@ -152,96 +152,96 @@ class Sumula:
                 return text[coach_start_index: dash_index].strip().title()
 
     def date(self):
-        find_string = '\ndata:'
-        date_string_index = self.lower.find(find_string)
+        find_string = '\nData:'
+        date_string_index = self.text.find(find_string)
         date_start_index = date_string_index + len(find_string)
         if date_string_index == -1:
             return None
         else:
-            if self.lower[date_start_index: date_start_index + 1] == ' ':
-                date = self.lower[date_start_index + 1: date_start_index + 11]
+            if self.text[date_start_index: date_start_index + 1] == ' ':
+                date = self.text[date_start_index + 1: date_start_index + 11]
             else:
-                date = self.lower[date_start_index: date_start_index + 10]
+                date = self.text[date_start_index: date_start_index + 10]
         date = date.split(sep='/')
         return '{}-{}-{}'.format(date[2], date[1], date[0])
 
     def time(self):
-        find_string = 'horário:'
-        time_string_index = self.lower.find(find_string)
+        find_string = 'Horário:'
+        time_string_index = self.text.find(find_string)
         time_start_index = time_string_index + len(find_string)
         if time_string_index == -1:
             return None
         else:
-            if self.lower[time_start_index: time_start_index + 1] == ' ':
-                return self.lower[time_start_index + 1: time_start_index + 6] + ':00'
+            if self.text[time_start_index: time_start_index + 1] == ' ':
+                return self.text[time_start_index + 1: time_start_index + 6] + ':00'
             else:
-                return self.lower[time_start_index: time_start_index + 5] + ':00'
+                return self.text[time_start_index: time_start_index + 5] + ':00'
 
     def stadium(self):
-        find_string = 'estádio:'
-        stadium_string_index = self.lower.find(find_string)
+        find_string = 'Estádio:'
+        stadium_string_index = self.text.find(find_string)
         stadium_start_index = stadium_string_index + len(find_string)
-        line_break_index = self.lower.find('\n', stadium_start_index)
+        line_break_index = self.text.find('\n', stadium_start_index)
         if stadium_string_index == -1:
             return None
         else:
-            return self.lower[stadium_start_index: line_break_index].title().strip()
+            return self.text[stadium_start_index: line_break_index].title().strip()
 
     def home_score(self):
-        find_string = 'resultado final: '
-        goal_string_index = self.lower.find(find_string)
+        find_string = 'Resultado Final: '
+        goal_string_index = self.text.find(find_string)
         if goal_string_index != -1:
             goal_start_index = goal_string_index + len(find_string)
         else:
-            find_string = 'resultado do 2º tempo: '
-            goal_string_index = self.lower.find(find_string)
+            find_string = 'Resultado do 2º Tempo: '
+            goal_string_index = self.text.find(find_string)
             goal_start_index = goal_string_index + len(find_string)
-        space_index = self.lower.find(' ', goal_start_index)
-        return int(self.lower[goal_start_index: space_index])
+        space_index = self.text.find(' ', goal_start_index)
+        return int(self.text[goal_start_index: space_index])
 
     def away_score(self):
-        find_string = 'resultado final: '
-        goal_string_index = self.lower.find(find_string)
+        find_string = 'Resultado Final: '
+        goal_string_index = self.text.find(find_string)
         if goal_string_index != -1:
             goal_start_index = goal_string_index + len(find_string)
         else:
-            find_string = 'resultado do 2º tempo: '
-            goal_string_index = self.lower.find(find_string)
+            find_string = 'resultado do 2º Tempo: '
+            goal_string_index = self.text.find(find_string)
             goal_start_index = goal_string_index + len(find_string)
-        line_break_index = self.lower.find('\n', goal_start_index)
-        return int(self.lower[goal_start_index: line_break_index].split(sep=' ')[2])
+        line_break_index = self.text.find('\n', goal_start_index)
+        return int(self.text[goal_start_index: line_break_index].split(sep=' ')[2])
 
     def home_yellow_cards(self):
-        return self.lower.count(self.home_team_no_space(),
-                                self.lower.find('\ncartões amarelos\n'),
-                                self.lower.find('\ncartões vermelhos\n'))
+        return self.text.count('{}/{}'.format(self.home_team(), self.home_team_state()),
+                               self.text.find('\nCartões Amarelos\n'),
+                               self.text.find('\nCartões Vermelhos\n'))
 
     def away_yellow_cards(self):
-        return self.lower.count(self.away_team_no_space(),
-                                self.lower.find('\ncartões amarelos\n'),
-                                self.lower.find('\ncartões vermelhos\n'))
+        return self.text.count('{}/{}'.format(self.away_team(), self.away_team_state()),
+                               self.text.find('\nCartões Amarelos\n'),
+                               self.text.find('\nCartões Vermelhos\n'))
 
     def home_red_cards(self):
-        return self.lower.count(self.home_team_no_space(),
-                                self.lower.find('\ncartões vermelhos\n'),
-                                self.lower.find('ocorrências / observações'))
+        return self.text.count('{}/{}'.format(self.home_team(), self.home_team_state()),
+                               self.text.find('\nCartões Vermelhos\n'),
+                               self.text.find('Ocorrências / Observações'))
 
     def away_red_cards(self):
-        return self.lower.count(self.away_team_no_space(),
-                                self.lower.find('\ncartões vermelhos\n'),
-                                self.lower.find('ocorrências / observações'))
+        return self.text.count('{}/{}'.format(self.away_team(), self.away_team_state()),
+                               self.text.find('\nCartões Vermelhos\n'),
+                               self.text.find('Ocorrências / Observações'))
 
     def home_subs(self):
-        return self.lower.count(self.home_team_no_space(), self.lower.find('\nsubstituições\n'))
+        return self.sub.count(self.home_team_no_space(), self.sub.find('\nsubstituições\n'))
 
     def away_subs(self):
-        return self.lower.count(self.away_team_no_space(), self.lower.find('\nsubstituições\n'))
+        return self.sub.count(self.away_team_no_space(), self.sub.find('\nsubstituições\n'))
 
     def first_home_sub(self):
         if self.home_subs() == 0:
             return None
         sub_minutes = []
-        text = self.lower[self.lower.find('\nsubstituições\n'):]
+        text = self.sub[self.sub.find('\nsubstituições\n'):]
         lines = text.split(sep='\n')
         home_subs = [
             line for line in lines if self.home_team_no_space() in line]
@@ -276,7 +276,7 @@ class Sumula:
         if self.away_subs() == 0:
             return None
         sub_minutes = []
-        text = self.lower[self.lower.find('\nsubstituições\n'):]
+        text = self.sub[self.sub.find('\nsubstituições\n'):]
         lines = text.split(sep='\n')
         away_subs = [
             line for line in lines if self.away_team_no_space() in line]
@@ -364,7 +364,7 @@ class Sumula:
                     elif '2T' in line:
                         goal_minutes['2T'].append(minute)
             return goal_minutes
-        
+
     def home_score_before_home_sub(self):
         if self.home_subs() == 0:
             return self.home_score()
@@ -684,47 +684,52 @@ competition_codes = {'Campeonato Brasileiro - Série A': 142,
                      'Campeonato Brasileiro - Série D': 542,
                      'Copa do Brasil - Profissional': 424}
 
-for year in range(2014, 2024):
-    for code in competition_codes.values():
-        for n in range(1, 400):
-            url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
-                year, code, n)
-            insert_into_database(url)
+# for year in range(2014, 2024):
+#     for code in competition_codes.values():
+#         for n in range(1, 400):
+#             url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
+#                 year, code, n)
+#             insert_into_database(url)
 
-if coach_errors or team_errors or competitions_errors or match_errors:
-    subject = 'Database import summary {} - Errors'.format(date.today())
-    body = """\
-    Here is a summary of the latest database insertions:
-    A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
+url = 'https://conteudo.cbf.com.br/sumulas/2014/342120se.pdf'
+pdf = PDF(url)
+connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
+print(connect.p.away_score_before_home_sub())
 
-    The following games had problems:
-    Coach insertion problems: {}
-    Team insertion problems: {}
-    Competition insertion problems: {}
-    Match insertion problems: {}
-    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted,
-               coach_errors, team_errors, competitions_errors, match_errors)
-else:
-    subject = 'Database import summary {} - No errors'.format(date.today())
-    body = """\
-    Here is a summary of the latest database insertions:
-    A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
+# if coach_errors or team_errors or competitions_errors or match_errors:
+#     subject = 'Database import summary {} - Errors'.format(date.today())
+#     body = """\
+#     Here is a summary of the latest database insertions:
+#     A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
 
-    There were no problems this time!
-    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted)
+#     The following games had problems:
+#     Coach insertion problems: {}
+#     Team insertion problems: {}
+#     Competition insertion problems: {}
+#     Match insertion problems: {}
+#     """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted,
+#                coach_errors, team_errors, competitions_errors, match_errors)
+# else:
+#     subject = 'Database import summary {} - No errors'.format(date.today())
+#     body = """\
+#     Here is a summary of the latest database insertions:
+#     A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
 
-user = 'treineiros.db@gmail.com'
-password = 'hwtkijmkcaepaojl'
-receiver = 'vitormisumi@gmail.com'
+#     There were no problems this time!
+#     """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted)
 
-em = EmailMessage()
-em['From'] = user
-em['To'] = receiver
-em['Subject'] = subject
-em.set_content(body)
+# user = 'treineiros.db@gmail.com'
+# password = 'hwtkijmkcaepaojl'
+# receiver = 'vitormisumi@gmail.com'
 
-context = ssl.create_default_context()
+# em = EmailMessage()
+# em['From'] = user
+# em['To'] = receiver
+# em['Subject'] = subject
+# em.set_content(body)
 
-with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-    smtp.login(user, password)
-    smtp.sendmail(user, receiver, em.as_string())
+# context = ssl.create_default_context()
+
+# with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+#     smtp.login(user, password)
+#     smtp.sendmail(user, receiver, em.as_string())
