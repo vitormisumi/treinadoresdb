@@ -262,24 +262,25 @@ class Sumula:
 
     def home_red_cards(self):
         count = 0
-        text = self.text[self.text.find('\nCartões Vermelhos\n'):
-                         self.text.find('Ocorrências / Observações')].split(sep='\n')
-        home_team = self.home_team()
-        home_team_state = '/' + self.home_team_state()
+        text = self.text[self.text.find('\ncartões vermelhos\n'):
+                         self.text.find('ocorrências / observações')].split(sep='\n')
+        home_team = self.home_team().lower()
+        home_team_state = '/' + self.home_team_state().lower()
         for line in text:
-            if home_team in line and home_team_state in line:
-                print(home_team, home_team_state, line)
+            team = line.split(sep='-')
+            if home_team in team[-1] and home_team_state in team[-1]:
                 count += 1
         return count
 
     def away_red_cards(self):
         count = 0
-        text = self.text[self.text.find('\nCartões Vermelhos\n'):
-                         self.text.find('Ocorrências / Observações')].split(sep='\n')
-        away_team = self.away_team()
-        away_team_state = '/' + self.away_team_state()
+        text = self.lower[self.lower.find('\ncartões vermelhos\n'):
+                          self.lower.find('ocorrências / observações')].split(sep='\n')
+        away_team = self.away_team().lower()
+        away_team_state = '/' + self.away_team_state().lower()
         for line in text:
-            if away_team in line and away_team_state in line:
+            team = line.split(sep='-')
+            if away_team in team[-1] and away_team_state in team[-1]:
                 count += 1
         return count
 
@@ -746,7 +747,7 @@ competition_codes = {'Campeonato Brasileiro - Série A': 142,
 url = 'https://conteudo.cbf.com.br/sumulas/2016/3421se.pdf'
 pdf = PDF(url)
 connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
-print(connect.p.home_red_cards())
+print(connect.p.away_red_cards())
 
 # if coach_errors or team_errors or competitions_errors or match_errors:
 #     subject = 'Database import summary {} - Errors'.format(date.today())
