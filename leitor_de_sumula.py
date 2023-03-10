@@ -10,11 +10,18 @@ from datetime import date
 
 class PDF:
     def __init__(self, url):
+        """Initializes PDF instance with URL, file name and year.
+        """
         self.url = url
         self.file_name = url.split(sep='/')[-1]
         self.year = url.split(sep='/')[-2]
 
     def download(self):
+        """Downloads PDF from CBF website if given URL contains a PDF file and saves in appropriate folder. 
+
+        Raises:
+            Exception: no file is found.
+        """
         if path.exists('sumulas/{}/{}'.format(self.year, self.file_name)):
             print('PDF file {}/{} already downloaded'.format(self.year, self.file_name))
             return
@@ -33,17 +40,29 @@ class PDF:
 
 class Sumula:
     def __init__(self, pdf):
+        """Initializes sumula instance to retrieve information from PDF file.
+
+        Args:
+            pdf (str): PDF path to be read.
+
+        Returns:
+            str: text from all pages of the PDF to be used by other functions in the class.
+        """
         self.text = ''
         for x in range(6):
             try:
                 self.text += PdfReader(pdf).pages[x].extract_text()
             except:
                 break
-        self.staff = self.text.replace('Tecnico', 'Técnico').lower()
-        self.sub = self.text.replace('1T', '1T ').replace(
+        self.lower = self.text.replace('Tecnico', 'Técnico').replace('1T', '1T ').replace(
             '2T', '2T ').replace('INT', 'INT ').lower()
 
     def competition(self):
+        """Retrieves competition name from sumula.
+
+        Returns:
+            str: name of competition.
+        """
         find_string = '\nCampeonato:'
         competition_string_index = self.text.find(find_string)
         competition_start_index = competition_string_index + \
@@ -55,6 +74,11 @@ class Sumula:
             return self.text[competition_start_index: end_string_index].split(sep='/')[0].strip().title()
 
     def competition_year(self):
+        """Retrieves competition year from sumula.
+
+        Returns:
+            int: competition year.
+        """
         find_string = '\nCampeonato:'
         competition_string_index = self.text.find(find_string)
         competition_start_index = competition_string_index + \
@@ -66,6 +90,11 @@ class Sumula:
             return int(self.text[competition_start_index: end_string_index].split(sep='/')[1].strip())
 
     def home_team(self):
+        """Retrieves home team name.
+
+        Returns:
+            str: home team name.
+        """
         find_string = 'Jogo:'
         game_start_index = -1
         for i in range(0, 2):
@@ -76,6 +105,11 @@ class Sumula:
         return home_team.split(sep='/')[0].strip().title()
 
     def home_team_state(self):
+        """Retrieves home team state abbreviation.
+
+        Returns:
+            str: two letter state abbreviation.
+        """
         find_string = 'Jogo:'
         game_start_index = -1
         for i in range(0, 2):
@@ -86,6 +120,11 @@ class Sumula:
         return home_team.split(sep='/')[1].strip().upper()
 
     def home_team_no_space(self):
+        """Joins team name and state to be used in other functions.
+
+        Returns:
+            str: 'home team name/home team state'
+        """
         return '{}/{}'.format(self.home_team().lower(), self.home_team_state().lower())
 
     def home_team_space(self):
@@ -120,7 +159,7 @@ class Sumula:
         return '{} / {}'.format(self.away_team().lower(), self.away_team_state().lower())
 
     def home_coach(self):
-        text = self.staff[self.staff.find('comissão técnica\n'):]
+        text = self.lower[self.lower.find('comissão técnica\n'):]
         find_string = '\ntécnico: '
         coach_string_index = text.find(
             find_string, text.find(self.home_team_space()), text.find(self.away_team_space()))
@@ -136,7 +175,7 @@ class Sumula:
                 return text[coach_start_index: dash_index].strip().title()
 
     def away_coach(self):
-        text = self.staff[self.staff.find('comissão técnica\n'):]
+        text = self.lower[self.lower.find('comissão técnica\n'):]
         find_string = '\ntécnico: '
         coach_string_index = text.find(
             find_string, text.find(self.away_team_space()), text.find('\ngols\n'))
@@ -212,14 +251,14 @@ class Sumula:
         return int(self.text[goal_start_index: line_break_index].split(sep=' ')[2])
 
     def home_yellow_cards(self):
-        return self.text.count('{}/{}'.format(self.home_team(), self.home_team_state()),
-                               self.text.find('\nCartões Amarelos\n'),
-                               self.text.find('\nCartões Vermelhos\n'))
+        return self.lower.count(self.home_team_no_space(),
+                                self.lower.find('\ncartões amarelos\n'),
+                                self.lower.find('\ncartões vermelhos\n'))
 
     def away_yellow_cards(self):
-        return self.text.count('{}/{}'.format(self.away_team(), self.away_team_state()),
-                               self.text.find('\nCartões Amarelos\n'),
-                               self.text.find('\nCartões Vermelhos\n'))
+        return self.lower.count(self.away_team_no_space(),
+                                self.lower.find('\ncartões amarelos\n'),
+                                self.lower.find('\ncartões vermelhos\n'))
 
     def home_red_cards(self):
         count = 0
@@ -228,7 +267,8 @@ class Sumula:
         home_team = self.home_team()
         home_team_state = '/' + self.home_team_state()
         for line in text:
-            if home_team and home_team_state in line:
+            if home_team in line and home_team_state in line:
+                print(home_team, home_team_state, line)
                 count += 1
         return count
 
@@ -236,24 +276,24 @@ class Sumula:
         count = 0
         text = self.text[self.text.find('\nCartões Vermelhos\n'):
                          self.text.find('Ocorrências / Observações')].split(sep='\n')
-        home_team = self.away_team()
-        home_team_state = '/' + self.away_team_state()
+        away_team = self.away_team()
+        away_team_state = '/' + self.away_team_state()
         for line in text:
-            if home_team and home_team_state in line:
+            if away_team in line and away_team_state in line:
                 count += 1
         return count
 
     def home_subs(self):
-        return self.sub.count(self.home_team_no_space(), self.sub.find('\nsubstituições\n'))
+        return self.lower.count(self.home_team_no_space(), self.lower.find('\nsubstituições\n'))
 
     def away_subs(self):
-        return self.sub.count(self.away_team_no_space(), self.sub.find('\nsubstituições\n'))
+        return self.lower.count(self.away_team_no_space(), self.lower.find('\nsubstituições\n'))
 
     def first_home_sub(self):
         if self.home_subs() == 0:
             return None
         sub_minutes = []
-        text = self.sub[self.sub.find('\nsubstituições\n'):]
+        text = self.lower[self.lower.find('\nsubstituições\n'):]
         lines = text.split(sep='\n')
         home_subs = [
             line for line in lines if self.home_team_no_space() in line]
@@ -288,7 +328,7 @@ class Sumula:
         if self.away_subs() == 0:
             return None
         sub_minutes = []
-        text = self.sub[self.sub.find('\nsubstituições\n'):]
+        text = self.lower[self.lower.find('\nsubstituições\n'):]
         lines = text.split(sep='\n')
         away_subs = [
             line for line in lines if self.away_team_no_space() in line]
@@ -696,52 +736,52 @@ competition_codes = {'Campeonato Brasileiro - Série A': 142,
                      'Campeonato Brasileiro - Série D': 542,
                      'Copa do Brasil - Profissional': 424}
 
-for year in range(2014, 2024):
-    for code in competition_codes.values():
-        for n in range(1, 400):
-            url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
-                year, code, n)
-            insert_into_database(url)
+# for year in range(2014, 2024):
+#     for code in competition_codes.values():
+#         for n in range(1, 400):
+#             url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
+#                 year, code, n)
+#             insert_into_database(url)
 
-# url = 'https://conteudo.cbf.com.br/sumulas/2014/4241se.pdf'
-# pdf = PDF(url)
-# connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
-# print(connect.p.away_red_cards())
+url = 'https://conteudo.cbf.com.br/sumulas/2016/3421se.pdf'
+pdf = PDF(url)
+connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
+print(connect.p.home_red_cards())
 
-if coach_errors or team_errors or competitions_errors or match_errors:
-    subject = 'Database import summary {} - Errors'.format(date.today())
-    body = """\
-    Here is a summary of the latest database insertions:
-    A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
+# if coach_errors or team_errors or competitions_errors or match_errors:
+#     subject = 'Database import summary {} - Errors'.format(date.today())
+#     body = """\
+#     Here is a summary of the latest database insertions:
+#     A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
 
-    The following games had problems:
-    Coach insertion problems: {}
-    Team insertion problems: {}
-    Competition insertion problems: {}
-    Match insertion problems: {}
-    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted,
-               coach_errors, team_errors, competitions_errors, match_errors)
-else:
-    subject = 'Database import summary {} - No errors'.format(date.today())
-    body = """\
-    Here is a summary of the latest database insertions:
-    A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
+#     The following games had problems:
+#     Coach insertion problems: {}
+#     Team insertion problems: {}
+#     Competition insertion problems: {}
+#     Match insertion problems: {}
+#     """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted,
+#                coach_errors, team_errors, competitions_errors, match_errors)
+# else:
+#     subject = 'Database import summary {} - No errors'.format(date.today())
+#     body = """\
+#     Here is a summary of the latest database insertions:
+#     A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
 
-    There were no problems this time!
-    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted)
+#     There were no problems this time!
+#     """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted)
 
-user = 'treineiros.db@gmail.com'
-password = 'hwtkijmkcaepaojl'
-receiver = 'vitormisumi@gmail.com'
+# user = 'treineiros.db@gmail.com'
+# password = 'hwtkijmkcaepaojl'
+# receiver = 'vitormisumi@gmail.com'
 
-em = EmailMessage()
-em['From'] = user
-em['To'] = receiver
-em['Subject'] = subject
-em.set_content(body)
+# em = EmailMessage()
+# em['From'] = user
+# em['To'] = receiver
+# em['Subject'] = subject
+# em.set_content(body)
 
-context = ssl.create_default_context()
+# context = ssl.create_default_context()
 
-with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-    smtp.login(user, password)
-    smtp.sendmail(user, receiver, em.as_string())
+# with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+#     smtp.login(user, password)
+#     smtp.sendmail(user, receiver, em.as_string())
