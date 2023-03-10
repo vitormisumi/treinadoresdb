@@ -222,14 +222,26 @@ class Sumula:
                                self.text.find('\nCartões Vermelhos\n'))
 
     def home_red_cards(self):
-        return self.text.count('{}/{}'.format(self.home_team(), self.home_team_state()),
-                               self.text.find('\nCartões Vermelhos\n'),
-                               self.text.find('Ocorrências / Observações'))
+        count = 0
+        text = self.text[self.text.find('\nCartões Vermelhos\n'):
+                         self.text.find('Ocorrências / Observações')].split(sep='\n')
+        home_team = self.home_team()
+        home_team_state = '/' + self.home_team_state()
+        for line in text:
+            if home_team and home_team_state in line:
+                count += 1
+        return count
 
     def away_red_cards(self):
-        return self.text.count('{}/{}'.format(self.away_team(), self.away_team_state()),
-                               self.text.find('\nCartões Vermelhos\n'),
-                               self.text.find('Ocorrências / Observações'))
+        count = 0
+        text = self.text[self.text.find('\nCartões Vermelhos\n'):
+                         self.text.find('Ocorrências / Observações')].split(sep='\n')
+        home_team = self.away_team()
+        home_team_state = '/' + self.away_team_state()
+        for line in text:
+            if home_team and home_team_state in line:
+                count += 1
+        return count
 
     def home_subs(self):
         return self.sub.count(self.home_team_no_space(), self.sub.find('\nsubstituições\n'))
@@ -325,7 +337,7 @@ class Sumula:
                         goal_minutes['1T'].append(minute)
                     elif '2T' in line:
                         goal_minutes['2T'].append(minute)
-                elif line.lower().endswith(self.home_team_no_space()) and 'CT' in line:
+                elif line.lower().endswith(self.away_team_no_space()) and 'CT' in line:
                     minute = int(line[0: 2])
                     if line[0] == '+':
                         extra_time = line.split(sep=' ')
@@ -354,7 +366,7 @@ class Sumula:
                         goal_minutes['1T'].append(minute)
                     elif '2T' in line:
                         goal_minutes['2T'].append(minute)
-                elif line.lower().endswith(self.away_team_no_space()) and 'CT' in line:
+                elif line.lower().endswith(self.home_team_no_space()) and 'CT' in line:
                     minute = int(line[0: 2])
                     if line[0] == '+':
                         extra_time = line.split(sep=' ')
@@ -684,52 +696,52 @@ competition_codes = {'Campeonato Brasileiro - Série A': 142,
                      'Campeonato Brasileiro - Série D': 542,
                      'Copa do Brasil - Profissional': 424}
 
-# for year in range(2014, 2024):
-#     for code in competition_codes.values():
-#         for n in range(1, 400):
-#             url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
-#                 year, code, n)
-#             insert_into_database(url)
+for year in range(2014, 2024):
+    for code in competition_codes.values():
+        for n in range(1, 400):
+            url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
+                year, code, n)
+            insert_into_database(url)
 
-url = 'https://conteudo.cbf.com.br/sumulas/2014/342120se.pdf'
-pdf = PDF(url)
-connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
-print(connect.p.away_score_before_home_sub())
+# url = 'https://conteudo.cbf.com.br/sumulas/2014/4241se.pdf'
+# pdf = PDF(url)
+# connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
+# print(connect.p.away_red_cards())
 
-# if coach_errors or team_errors or competitions_errors or match_errors:
-#     subject = 'Database import summary {} - Errors'.format(date.today())
-#     body = """\
-#     Here is a summary of the latest database insertions:
-#     A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
+if coach_errors or team_errors or competitions_errors or match_errors:
+    subject = 'Database import summary {} - Errors'.format(date.today())
+    body = """\
+    Here is a summary of the latest database insertions:
+    A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
 
-#     The following games had problems:
-#     Coach insertion problems: {}
-#     Team insertion problems: {}
-#     Competition insertion problems: {}
-#     Match insertion problems: {}
-#     """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted,
-#                coach_errors, team_errors, competitions_errors, match_errors)
-# else:
-#     subject = 'Database import summary {} - No errors'.format(date.today())
-#     body = """\
-#     Here is a summary of the latest database insertions:
-#     A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
+    The following games had problems:
+    Coach insertion problems: {}
+    Team insertion problems: {}
+    Competition insertion problems: {}
+    Match insertion problems: {}
+    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted,
+               coach_errors, team_errors, competitions_errors, match_errors)
+else:
+    subject = 'Database import summary {} - No errors'.format(date.today())
+    body = """\
+    Here is a summary of the latest database insertions:
+    A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
 
-#     There were no problems this time!
-#     """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted)
+    There were no problems this time!
+    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted)
 
-# user = 'treineiros.db@gmail.com'
-# password = 'hwtkijmkcaepaojl'
-# receiver = 'vitormisumi@gmail.com'
+user = 'treineiros.db@gmail.com'
+password = 'hwtkijmkcaepaojl'
+receiver = 'vitormisumi@gmail.com'
 
-# em = EmailMessage()
-# em['From'] = user
-# em['To'] = receiver
-# em['Subject'] = subject
-# em.set_content(body)
+em = EmailMessage()
+em['From'] = user
+em['To'] = receiver
+em['Subject'] = subject
+em.set_content(body)
 
-# context = ssl.create_default_context()
+context = ssl.create_default_context()
 
-# with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-#     smtp.login(user, password)
-#     smtp.sendmail(user, receiver, em.as_string())
+with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+    smtp.login(user, password)
+    smtp.sendmail(user, receiver, em.as_string())
