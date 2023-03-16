@@ -9,8 +9,17 @@ from datetime import date
 
 
 class PDF:
+    """Class for PDF instances.
+
+    Attributes:
+        url: the URL address of the file to be downloaded.
+        file_name: name of PDF file.
+        year: the year of the match, as matches are separated in directories for each year in CBF website.
+    """
     def __init__(self, url):
-        """Initializes PDF instance with URL, file name and year.
+        """Initializes PDF instance.
+
+        Args: URL of file in CBF website.
         """
         self.url = url
         self.file_name = url.split(sep='/')[-1]
@@ -39,14 +48,17 @@ class PDF:
 
 
 class Sumula:
+    """Class for retrieving information from sumulas.
+
+    Attributes:
+        text: joined text of all PDF pages.
+        lower: text turned into lowercase format with a few text replacements for functions to properly read some of the data.
+    """
     def __init__(self, pdf):
-        """Initializes sumula instance to retrieve information from PDF file.
+        """Initializes sumula instance.
 
         Args:
             pdf (str): PDF path to be read.
-
-        Returns:
-            str: text from all pages of the PDF to be used by other functions in the class.
         """
         self.text = ''
         for x in range(6):
@@ -93,7 +105,7 @@ class Sumula:
         """Retrieves home team name.
 
         Returns:
-            str: home team name.
+            str: home team name in titlecase format.
         """
         find_string = 'Jogo:'
         game_start_index = -1
@@ -108,7 +120,7 @@ class Sumula:
         """Retrieves home team state abbreviation.
 
         Returns:
-            str: two letter state abbreviation.
+            str: two letter state abbreviation in uppercase.
         """
         find_string = 'Jogo:'
         game_start_index = -1
@@ -120,7 +132,7 @@ class Sumula:
         return home_team.split(sep='/')[1].strip().upper()
 
     def home_team_no_space(self):
-        """Joins team name and state to be used in other functions.
+        """Joins team name and state to be used in other functions without space between the slash and the team name and state..
 
         Returns:
             str: 'home team name/home team state'
@@ -128,9 +140,19 @@ class Sumula:
         return '{}/{}'.format(self.home_team().lower(), self.home_team_state().lower())
 
     def home_team_space(self):
+        """Joins team name and state to be used in other functions with space between the slash and the team name and state.
+
+        Returns:
+            str: 'home team name / home team state'
+        """
         return '{} / {}'.format(self.home_team().lower(), self.home_team_state().lower())
 
     def away_team(self):
+        """Retrieves away team name.
+
+        Returns:
+            str: away team name in titlecase format.
+        """
         find_string = 'Jogo:'
         game_start_index = -1
         for i in range(0, 2):
@@ -142,6 +164,11 @@ class Sumula:
         return away_team.split(sep='/')[0].strip().title()
 
     def away_team_state(self):
+        """Retrieves away team state abbreviation.
+
+        Returns:
+            str: two letter state abbreviation in uppercase.
+        """
         find_string = 'Jogo:'
         game_start_index = -1
         for i in range(0, 2):
@@ -153,12 +180,27 @@ class Sumula:
         return away_team.split(sep='/')[1].strip().upper()
 
     def away_team_no_space(self):
+        """Joins team name and state to be used in other functions without space between the slash and the team name and state..
+
+        Returns:
+            str: 'away team name/away team state'
+        """
         return '{}/{}'.format(self.away_team().lower(), self.away_team_state().lower())
 
     def away_team_space(self):
+        """Joins team name and state to be used in other functions with space between the slash and the team name and state.
+
+        Returns:
+            str: 'home team name / home team state'
+        """
         return '{} / {}'.format(self.away_team().lower(), self.away_team_state().lower())
 
     def home_coach(self):
+        """Retrieves home coach name.
+
+        Returns:
+            str: home coach name in titlecase.
+        """
         text = self.lower[self.lower.find('comissão técnica\n'):]
         find_string = '\ntécnico: '
         coach_string_index = text.find(
@@ -175,6 +217,11 @@ class Sumula:
                 return text[coach_start_index: dash_index].strip().title()
 
     def away_coach(self):
+        """Retrieves away coach name.
+
+        Returns:
+            str: away coach name in titlecase.
+        """
         text = self.lower[self.lower.find('comissão técnica\n'):]
         find_string = '\ntécnico: '
         coach_string_index = text.find(
@@ -191,6 +238,11 @@ class Sumula:
                 return text[coach_start_index: dash_index].strip().title()
 
     def date(self):
+        """Retrieves date of the match.
+
+        Returns:
+            str: date in format YYYY-MM-DD.
+        """
         find_string = '\nData:'
         date_string_index = self.text.find(find_string)
         date_start_index = date_string_index + len(find_string)
@@ -205,6 +257,11 @@ class Sumula:
         return '{}-{}-{}'.format(date[2], date[1], date[0])
 
     def time(self):
+        """Retrieves time of match.
+
+        Returns:
+            str: time in format HH:MM:SS.
+        """
         find_string = 'Horário:'
         time_string_index = self.text.find(find_string)
         time_start_index = time_string_index + len(find_string)
@@ -217,6 +274,11 @@ class Sumula:
                 return self.text[time_start_index: time_start_index + 5] + ':00'
 
     def stadium(self):
+        """Retrieves stadium name and city.
+
+        Returns:
+            str: 'stadium name / city' in titlecase format.
+        """
         find_string = 'Estádio:'
         stadium_string_index = self.text.find(find_string)
         stadium_start_index = stadium_string_index + len(find_string)
@@ -227,6 +289,11 @@ class Sumula:
             return self.text[stadium_start_index: line_break_index].title().strip()
 
     def home_score(self):
+        """Retrieves home score.
+
+        Returns:
+            int: number of home goals scored.
+        """
         find_string = 'Resultado Final: '
         goal_string_index = self.text.find(find_string)
         if goal_string_index != -1:
@@ -239,6 +306,11 @@ class Sumula:
         return int(self.text[goal_start_index: space_index])
 
     def away_score(self):
+        """Retrieves away score.
+
+        Returns:
+            int: number of away goals scored.
+        """
         find_string = 'Resultado Final: '
         goal_string_index = self.text.find(find_string)
         if goal_string_index != -1:
@@ -251,16 +323,31 @@ class Sumula:
         return int(self.text[goal_start_index: line_break_index].split(sep=' ')[2])
 
     def home_yellow_cards(self):
+        """Retrieves number of yellow cards given to home team.
+
+        Returns:
+            int: number of yellow cards given to home team.
+        """
         return self.lower.count(self.home_team_no_space(),
                                 self.lower.find('\ncartões amarelos\n'),
                                 self.lower.find('\ncartões vermelhos\n'))
 
     def away_yellow_cards(self):
+        """Retrieves number of yellow cards given to away team.
+
+        Returns:
+            int: number of yellow cards given to away team.
+        """
         return self.lower.count(self.away_team_no_space(),
                                 self.lower.find('\ncartões amarelos\n'),
                                 self.lower.find('\ncartões vermelhos\n'))
 
     def home_red_cards(self):
+        """Retrieves number of red cards given to home team.
+
+        Returns:
+            int: number of red cards given to home team.
+        """
         count = 0
         text = self.lower[self.lower.find('\ncartões vermelhos\n'):
                          self.lower.find('ocorrências / observações')].split(sep='\n')
@@ -273,6 +360,11 @@ class Sumula:
         return count
 
     def away_red_cards(self):
+        """Retrieves number of red cards given to away team.
+
+        Returns:
+            int: number of red cards given to away team.
+        """
         count = 0
         text = self.lower[self.lower.find('\ncartões vermelhos\n'):
                           self.lower.find('ocorrências / observações')].split(sep='\n')
@@ -285,12 +377,27 @@ class Sumula:
         return count
 
     def home_subs(self):
+        """Retrieves number of substitutions home team made.
+
+        Returns:
+            int: number of substitutions by home team.
+        """
         return self.lower.count(self.home_team_no_space(), self.lower.find('\nsubstituições\n'))
 
     def away_subs(self):
+        """Retrieves number of substitutions away team made.
+
+        Returns:
+            int: number of substitutions by away team.
+        """
         return self.lower.count(self.away_team_no_space(), self.lower.find('\nsubstituições\n'))
 
     def first_home_sub(self):
+        """Retrieves moment of first home substitution.
+
+        Returns:
+            list: [minute, half]
+        """
         if self.home_subs() == 0:
             return None
         sub_minutes = []
@@ -326,6 +433,11 @@ class Sumula:
         return [min(sub_minutes), '2T']
 
     def first_away_sub(self):
+        """Retrieves moment of first away substitution.
+
+        Returns:
+            list: [minute, half]
+        """
         if self.away_subs() == 0:
             return None
         sub_minutes = []
@@ -361,6 +473,11 @@ class Sumula:
         return [min(sub_minutes), '2T']
 
     def home_goal_minutes(self):
+        """Retrieves minutes of each home goal scored.
+
+        Returns:
+            dict: {'1T': [int of minutes of first half goals], '2T': [int of minutes of second half goals]}
+        """
         if self.home_score == 0:
             return {'1T': [], '2T': []}
         else:
@@ -390,6 +507,11 @@ class Sumula:
             return goal_minutes
 
     def away_goal_minutes(self):
+        """Retrieves minutes of each away goal scored.
+
+        Returns:
+            dict: {'1T': [int of minutes of first half goals], '2T': [int of minutes of second half goals]}
+        """
         if self.away_score == 0:
             return {'1T': [], '2T': []}
         else:
@@ -419,6 +541,11 @@ class Sumula:
             return goal_minutes
 
     def home_score_before_home_sub(self):
+        """Retrieves the number of goals scored by home team before their first substitution in the game.
+
+        Returns:
+            int: number of home goals before first home substitution.
+        """
         if self.home_subs() == 0:
             return self.home_score()
         elif self.first_home_sub()[1] == '1T':
@@ -429,6 +556,11 @@ class Sumula:
             return len(self.home_goal_minutes()['1T']) + sum([minute < self.first_home_sub()[0] for minute in self.home_goal_minutes()['2T']])
 
     def away_score_before_home_sub(self):
+        """Retrieves the number of goals scored by away team before first home team substitution in the game.
+
+        Returns:
+            int: number of away goals before first home substitution.
+        """
         if self.home_subs() == 0:
             return self.away_score()
         elif self.first_home_sub()[1] == '1T':
@@ -439,6 +571,11 @@ class Sumula:
             return len(self.away_goal_minutes()['1T']) + sum([minute < self.first_home_sub()[0] for minute in self.away_goal_minutes()['2T']])
 
     def home_score_before_away_sub(self):
+        """Retrieves the number of goals scored by home team before first away team substitution in the game.
+
+        Returns:
+            int: number of home goals before first away substitution.
+        """
         if self.away_subs() == 0:
             return self.home_score()
         elif self.first_away_sub()[1] == '1T':
@@ -449,6 +586,11 @@ class Sumula:
             return len(self.home_goal_minutes()['1T']) + sum([minute < self.first_away_sub()[0] for minute in self.home_goal_minutes()['2T']])
 
     def away_score_before_away_sub(self):
+        """Retrieves the number of goals scored by away team before their first substitution in the game.
+
+        Returns:
+            int: number of away goals before first away substitution.
+        """
         if self.away_subs() == 0:
             return self.away_score()
         elif self.first_away_sub()[1] == '1T':
@@ -459,20 +601,53 @@ class Sumula:
             return len(self.away_goal_minutes()['1T']) + sum([minute < self.first_away_sub()[0] for minute in self.away_goal_minutes()['2T']])
 
     def home_score_after_home_sub(self):
+        """Retrieves the number of goals scored by home team after their first substitution in the game.
+
+        Returns:
+            int: number of home goals after first home substitution.
+        """
         return self.home_score() - self.home_score_before_home_sub()
 
     def away_score_after_home_sub(self):
+        """Retrieves the number of goals scored by away team after first home team substitution in the game.
+
+        Returns:
+            int: number of away goals after first home substitution.
+        """
         return self.away_score() - self.away_score_before_home_sub()
 
     def home_score_after_away_sub(self):
+        """Retrieves the number of goals scored by home team after first away substitution in the game.
+
+        Returns:
+            int: number of home goals after first away substitution.
+        """
         return self.home_score() - self.home_score_before_away_sub()
 
     def away_score_after_away_sub(self):
+        """Retrieves the number of goals scored by away team after their first substitution in the game.
+
+        Returns:
+            int: number of away goals after first away substitution.
+        """
         return self.away_score() - self.away_score_before_away_sub()
 
 
 class Connection:
+    """Class for registering sumula data into database.
+
+    Attributes:
+        cnx: connector to database.
+        cur: cursor to query database.
+        p: sumula instance.
+        file_name: name of PDF file.
+    """
     def __init__(self, file_name):
+        """Initializes connection instance to register information from PDF file into database.
+
+        Args:
+            file_name (str): name of PDF file to be passed to Sumula class.
+        """
         self.cnx = mysql.connector.connect(
             host='127.0.0.1',
             port='3306',
@@ -485,6 +660,8 @@ class Connection:
         self.file_name = file_name
 
     def insert_home_coach(self):
+        """Inserts home coach name into database if name not already registered.
+        """
         if self.p.home_coach() is None:
             return None
         else:
@@ -501,6 +678,8 @@ class Connection:
                 return 1
 
     def insert_away_coach(self):
+        """Inserts away coach name into database if name not already registered.
+        """
         if self.p.away_coach() is None:
             return None
         else:
@@ -517,6 +696,8 @@ class Connection:
                 return 1
 
     def insert_competition(self):
+        """Inserts competition name into database if name not already registered.
+        """
         values = (self.p.competition(), self.p.competition_year())
         self.cur.execute(
             "SELECT * FROM competitions WHERE name = %s AND year = %s", values)
@@ -530,6 +711,8 @@ class Connection:
             return 1
 
     def insert_home_team(self):
+        """Inserts home team name into database if name not already registered.
+        """
         values = (self.p.home_team(), self.p.home_team_state())
         self.cur.execute(
             "SELECT * FROM teams WHERE name = %s AND state = %s", values)
@@ -543,6 +726,8 @@ class Connection:
             return 1
 
     def insert_away_team(self):
+        """Inserts away team name into database if name not already registered.
+        """
         values = (self.p.away_team(), self.p.away_team_state())
         self.cur.execute(
             "SELECT * FROM teams WHERE name = %s AND state = %s", values)
@@ -556,6 +741,8 @@ class Connection:
             return 1
 
     def competition_id(self):
+        """Queries competition id from competitions table in database to insert into matches table entry.
+        """
         values = (self.p.competition(), self.p.competition_year())
         self.cur.execute(
             "SELECT competition_id FROM competitions WHERE name = %s AND year = %s", values)
@@ -563,6 +750,8 @@ class Connection:
         return result[0]
 
     def home_team_id(self):
+        """Queries home team id from teams table in database to insert into matches table entry.
+        """
         team_values = (self.p.home_team(), self.p.home_team_state())
         self.cur.execute(
             "SELECT team_id FROM teams WHERE name = %s AND state = %s", team_values)
@@ -570,6 +759,8 @@ class Connection:
         return result[0]
 
     def away_team_id(self):
+        """Queries away team id from teams table in database to insert into matches table entry.
+        """
         team_values = (self.p.away_team(), self.p.away_team_state())
         self.cur.execute(
             "SELECT team_id FROM teams WHERE name = %s AND state = %s", team_values)
@@ -577,6 +768,8 @@ class Connection:
         return result[0]
 
     def home_coach_id(self):
+        """Queries home coach id from coaches table in database to insert into matches table entry.
+        """
         if self.p.home_coach() is None:
             return None
         else:
@@ -587,6 +780,8 @@ class Connection:
             return result[0]
 
     def away_coach_id(self):
+        """Queries away coach id from coaches table in database to insert into matches table entry.
+        """
         if self.p.away_coach() is None:
             return None
         else:
@@ -597,6 +792,8 @@ class Connection:
             return result[0]
 
     def insert_match(self):
+        """Inserts match into database if match not already registered.
+        """
         self.cur.execute(
             "SELECT * FROM matches WHERE pdf_file_name = %s", [self.file_name])
         result = self.cur.fetchall()
@@ -737,52 +934,52 @@ competition_codes = {'Campeonato Brasileiro - Série A': 142,
                      'Campeonato Brasileiro - Série D': 542,
                      'Copa do Brasil - Profissional': 424}
 
-# for year in range(2014, 2024):
-#     for code in competition_codes.values():
-#         for n in range(1, 400):
-#             url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
-#                 year, code, n)
-#             insert_into_database(url)
+for year in range(2014, 2024):
+    for code in competition_codes.values():
+        for n in range(1, 400):
+            url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
+                year, code, n)
+            insert_into_database(url)
 
-url = 'https://conteudo.cbf.com.br/sumulas/2017/4241se.pdf'
-pdf = PDF(url)
-connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
-print(connect.p.home_red_cards())
+# url = 'https://conteudo.cbf.com.br/sumulas/2017/4241se.pdf'
+# pdf = PDF(url)
+# connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
+# print(connect.p.home_red_cards())
 
-# if coach_errors or team_errors or competitions_errors or match_errors:
-#     subject = 'Database import summary {} - Errors'.format(date.today())
-#     body = """\
-#     Here is a summary of the latest database insertions:
-#     A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
+if coach_errors or team_errors or competitions_errors or match_errors:
+    subject = 'Database import summary {} - Errors'.format(date.today())
+    body = """\
+    Here is a summary of the latest database insertions:
+    A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
 
-#     The following games had problems:
-#     Coach insertion problems: {}
-#     Team insertion problems: {}
-#     Competition insertion problems: {}
-#     Match insertion problems: {}
-#     """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted,
-#                coach_errors, team_errors, competitions_errors, match_errors)
-# else:
-#     subject = 'Database import summary {} - No errors'.format(date.today())
-#     body = """\
-#     Here is a summary of the latest database insertions:
-#     A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
+    The following games had problems:
+    Coach insertion problems: {}
+    Team insertion problems: {}
+    Competition insertion problems: {}
+    Match insertion problems: {}
+    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted,
+               coach_errors, team_errors, competitions_errors, match_errors)
+else:
+    subject = 'Database import summary {} - No errors'.format(date.today())
+    body = """\
+    Here is a summary of the latest database insertions:
+    A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
 
-#     There were no problems this time!
-#     """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted)
+    There were no problems this time!
+    """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted)
 
-# user = 'treineiros.db@gmail.com'
-# password = 'hwtkijmkcaepaojl'
-# receiver = 'vitormisumi@gmail.com'
+user = 'treineiros.db@gmail.com'
+password = 'hwtkijmkcaepaojl'
+receiver = 'vitormisumi@gmail.com'
 
-# em = EmailMessage()
-# em['From'] = user
-# em['To'] = receiver
-# em['Subject'] = subject
-# em.set_content(body)
+em = EmailMessage()
+em['From'] = user
+em['To'] = receiver
+em['Subject'] = subject
+em.set_content(body)
 
-# context = ssl.create_default_context()
+context = ssl.create_default_context()
 
-# with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-#     smtp.login(user, password)
-#     smtp.sendmail(user, receiver, em.as_string())
+with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+    smtp.login(user, password)
+    smtp.sendmail(user, receiver, em.as_string())
