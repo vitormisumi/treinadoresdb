@@ -262,8 +262,8 @@ class Sumula:
 
     def home_red_cards(self):
         count = 0
-        text = self.text[self.text.find('\ncartões vermelhos\n'):
-                         self.text.find('ocorrências / observações')].split(sep='\n')
+        text = self.lower[self.lower.find('\ncartões vermelhos\n'):
+                         self.lower.find('ocorrências / observações')].split(sep='\n')
         home_team = self.home_team().lower()
         home_team_state = '/' + self.home_team_state().lower()
         for line in text:
@@ -744,10 +744,10 @@ competition_codes = {'Campeonato Brasileiro - Série A': 142,
 #                 year, code, n)
 #             insert_into_database(url)
 
-url = 'https://conteudo.cbf.com.br/sumulas/2016/3421se.pdf'
+url = 'https://conteudo.cbf.com.br/sumulas/2017/4241se.pdf'
 pdf = PDF(url)
 connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
-print(connect.p.away_red_cards())
+print(connect.p.home_red_cards())
 
 # if coach_errors or team_errors or competitions_errors or match_errors:
 #     subject = 'Database import summary {} - Errors'.format(date.today())
