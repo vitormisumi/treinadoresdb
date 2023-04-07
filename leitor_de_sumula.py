@@ -649,11 +649,11 @@ class Connection:
             file_name (str): name of PDF file to be passed to Sumula class.
         """
         self.cnx = mysql.connector.connect(
-            host='127.0.0.1',
-            port='3306',
+            host='containers-us-west-35.railway.app',
+            port='6058',
             user='root',
-            password='8A*EWji7iofvy2Ym',
-            database='treineiros'
+            password='wx8vG4YqewXLCoxFTLZ5',
+            database='railway'
         )
         self.cur = self.cnx.cursor()
         self.p = Sumula(file_name)
@@ -934,7 +934,7 @@ competition_codes = {'Campeonato Brasileiro - Série A': 142,
                      'Campeonato Brasileiro - Série D': 542,
                      'Copa do Brasil - Profissional': 424}
 
-for year in range(2014, 2024):
+for year in range(2023, 2024):
     for code in competition_codes.values():
         for n in range(1, 400):
             url = 'https://conteudo.cbf.com.br/sumulas/{}/{}{}se.pdf'.format(
@@ -953,12 +953,13 @@ if coach_errors or team_errors or competitions_errors or match_errors:
     A total of {} coaches, {} teams, {} competitions and {} matches were added to the database.
 
     The following games had problems:
-    Coach insertion problems: {}
-    Team insertion problems: {}
-    Competition insertion problems: {}
-    Match insertion problems: {}
+    {} coach insertion problems: {}
+    {} team insertion problems: {}
+    {} competition insertion problems: {}
+    {} match insertion problems: {}
     """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted,
-               coach_errors, team_errors, competitions_errors, match_errors)
+               len(coach_errors), coach_errors, len(team_errors), team_errors, 
+               len(competitions_errors), competitions_errors, len(match_errors), match_errors)
 else:
     subject = 'Database import summary {} - No errors'.format(date.today())
     body = """\

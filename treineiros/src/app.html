@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt">
+	<head>
+		<meta charset="utf-8" />
+		<title>Treineiros.com</title>
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+		<link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
+		<link href='https://fonts.googleapis.com/css?family=Russo One' rel='stylesheet'>
+		<link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+		<script src="https://kit.fontawesome.com/3ddbf3be69.js" crossorigin="anonymous"></script>
+		<meta name="viewport" content="width=device-width" />
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>
+
+<style>
+	:root {
+		--accent-color: #de1a1a;
+		--background-color: #272932;
+		--main-color: #e5e5e5;
+	}
+
+	body {
+		background-color: var(--background-color);
+		margin: 0 0 0 0;
+	}
+
+	h2 {
+		color: var(--main-color);
+		margin: auto;
+		padding-bottom: 4vw;
+		grid-column: 1 / 4;
+		grid-row: 1 / 2;
+		font-family: "Inter";
+		font-style: normal;
+		font-weight: 600;
+		font-size: clamp(1.25rem, 4vw, 3.5rem);
+		text-align: center;
+		letter-spacing: -0.03em;
+	}
+</style>
