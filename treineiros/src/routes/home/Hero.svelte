@@ -11,7 +11,7 @@
   #hero {
     display: grid;
     position: relative;
-    grid-template-columns: 1fr 8fr 1fr;
+    grid-template-columns: max(15px, 5vw) 8fr max(15px, 5vw);
     grid-template-rows: min(5vh, 20px) auto;
   }
 
@@ -76,9 +76,8 @@
   @media (min-width: 768px) {
     #hero {
       display: grid;
-      grid-template-columns: repeat(2, 4.5fr) 1fr;
+      grid-template-columns: repeat(2, 4.5fr) max(15px, 5vw);
       grid-template-rows: max(10vh, 40px) auto;
-      margin: 0 0 10vw 0;
     }
 
     #field-img {

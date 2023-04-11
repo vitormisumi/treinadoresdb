@@ -23,8 +23,8 @@
     <tbody>
       <tr>
         <th />
-        <th>Dados Gerais</th>
-        <td />
+        <th class="col2">Dados Gerais</th>
+        <th />
       </tr>
       {#each Object.entries(generalData) as [key, value]}
         <tr>
@@ -39,8 +39,8 @@
     <tbody>
       <tr>
         <th />
-        <th>Confrontos</th>
-        <td />
+        <th class="col2">Confrontos</th>
+        <th />
       </tr>
       {#each Object.entries(h2h) as [key, value]}
         <tr>
@@ -51,31 +51,73 @@
       {/each}
     </tbody>
   </table>
+  <p id="asterisk">
+    *Considerando apenas jogos das Séries A, B, C e D e da Copa do Brasil desde
+    2014. <a href="/sobre">Clique aqui</a> para mais informações.
+  </p>
 </section>
 
 <style>
   #comparison {
-    margin: min(5vw, 50px);
+    margin: max(15px, 5vw);
   }
+
   .table {
     width: 100%;
+    border-collapse: collapse;
+    margin: 5vh 0;
   }
 
   .col1 {
     width: 30%;
+    font-weight: var(--bold);
   }
 
   .col2 {
     text-align: center;
     width: 40%;
+    background-color: var(--table-background);
+  }
+
+  .table tr:first-child th {
+    border-radius: 1vw 1vw 0 0;
+  }
+
+  .table tr:last-child td {
+    border-radius: 0 0 1vw 1vw;
+    border: 0;
   }
 
   .col3 {
     text-align: right;
     width: 30%;
+    font-weight: var(--bold);
+  }
+
+  tr {
+    height: clamp(30px, 5vh, 50px);
+  }
+
+  th {
+    font-family: var(--main-font);
+    font-size: clamp(1rem, 3.5vw, 2rem);
+    font-weight: var(--bold);
+    color: var(--main-color);
+    border: 1px solid;
+    border-color: var(--background-color) var(--background-color) #e5e5e525;
   }
 
   td {
-    color: aliceblue;
+    font-family: var(--main-font);
+    font-size: clamp(0.75rem, 3vw, 1.5rem);
+    color: var(--main-color);
+    border: 1px solid;
+    border-color: var(--background-color) var(--background-color) #e5e5e525;
+  }
+
+  #asterisk {
+    font-family: var(--main-font);
+    font-size: clamp(0.75rem, 1.5vw, 1rem);
+    color: var(--main-color);
   }
 </style>

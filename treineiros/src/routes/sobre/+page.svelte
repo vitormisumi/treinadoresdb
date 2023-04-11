@@ -1,8 +1,5 @@
 <script>
-    import Navbar from "../home/Navbar.svelte";
-
+  import About from "./About.svelte";
 </script>
 
-<Navbar />
-
-<p>Sobre</p>
+<About />

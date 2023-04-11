@@ -5,7 +5,9 @@
 		<title>Treineiros.com</title>
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-		<link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 		<link href='https://fonts.googleapis.com/css?family=Russo One' rel='stylesheet'>
 		<link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
 		<script src="https://kit.fontawesome.com/3ddbf3be69.js" crossorigin="anonymous"></script>
@@ -22,6 +24,10 @@
 		--accent-color: #de1a1a;
 		--background-color: #272932;
 		--main-color: #e5e5e5;
+		--main-font: "Roboto Condensed";
+		--bold: 700;
+		--title-font: "Inter";
+		--table-background: #ffffff15
 	}
 
 	body {
@@ -35,11 +41,17 @@
 		padding-bottom: 4vw;
 		grid-column: 1 / 4;
 		grid-row: 1 / 2;
-		font-family: "Inter";
+		font-family: var(--title-font);
 		font-style: normal;
 		font-weight: 600;
 		font-size: clamp(1.25rem, 4vw, 3.5rem);
 		text-align: center;
 		letter-spacing: -0.03em;
+		text-transform: uppercase;
+	}
+
+	a {
+		color: var(--accent-color);
+		text-decoration: none;
 	}
 </style>

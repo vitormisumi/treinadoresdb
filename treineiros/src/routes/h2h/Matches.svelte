@@ -1,35 +1,26 @@
 <script>
-  let tableHeaders = [
-    "Data",
-    "Local",
-    "Competição",
-    "Mandante",
-    "Resultado",
-    "Visitante",
-  ];
-
   let matchData = [
-    [
-      "06/04/2023",
-      "Maracanã",
-      "Brasileiro Série A",
-      "Internacional",
-      "2x3",
-      "Palmeiras",
-    ],
-    [
-      "06/04/2023",
-      "Maracanã",
-      "Brasileiro Série A",
-      "Internacional",
-      "2x3",
-      "Palmeiras",
-    ],
+    {
+      Data: "06/04/2023",
+      Estádio: "Maracanã",
+      Competição: "Brasileiro Série A",
+      Mandante: "Internacional",
+      Resultado: "2x3",
+      Visitante: "Palmeiras",
+    },
+    {
+      Data: "06/04/2023",
+      Estádio: "Maracanã",
+      Competição: "Brasileiro Série A",
+      Mandante: "Internacional",
+      Resultado: "2x3",
+      Visitante: "Palmeiras",
+    },
   ];
 
   let teams = ["Palmeiras", "Internacional"];
   let seasons = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
-  let competitions = [
+  const competitions = [
     "Brasileiro Série A",
     "Brasileiro Série B",
     "Brasileiro Série C",
@@ -59,20 +50,52 @@
       <option value={competition}>{competition}</option>
     {/each}
   </select>
-  <table>
-    <tbody>
-      <tr>
-        {#each tableHeaders as header}
-          <th>{header}</th>
-        {/each}
-      </tr>
-      {#each matchData as matches}
+  <div id="table">
+    <table id="matches-table">
+      <tbody>
         <tr>
-          {#each matches as match}
-            <td>{match}</td>
+          {#each Object.entries(matchData[0]) as [key, value]}
+            <th class="headers">{key}</th>
           {/each}
         </tr>
-      {/each}
-    </tbody>
-  </table>
+        {#each matchData as match}
+          <tr>
+            {#each Object.entries(match) as [key, value]}
+              <td class="data">{value}</td>
+            {/each}
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
 </section>
+
+<style>
+  #matches {
+    margin: max(15px, 5vw);
+  }
+
+  #table {
+    overflow-x: auto;
+  }
+
+  #matches-table {
+    background-color: #ffffff15;
+    color: var(--main-color);
+    width: 100%;
+  }
+  
+  .headers {
+    text-transform: uppercase;
+    font-family: var(--main-font);
+    font-weight: var(--bold);
+    font-size: clamp(0.75rem, 2.5vw, 1.5rem);
+  }
+  
+  .data {
+    padding: 0 10px;
+    text-align: center;
+    font-family: var(--main-font);
+    font-size: clamp(0.75rem, 2.5vw, 1.5rem);
+  }
+</style>

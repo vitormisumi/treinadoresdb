@@ -19,7 +19,7 @@
       #272932 0%,
       rgba(255, 255, 255, 1) 100%
     );
-    padding: 10vw;
+    padding: max(15px, 5vw);
   }
 
   #numbers-title {
@@ -33,21 +33,21 @@
 
   .number-item {
     margin: 0vw 0 10vw 0;
-    font-family: "Roboto Condensed";
-    font-style: normal;
-    font-weight: 700;
+    font-family: var(--main-font);
+    font-weight: 400;
     font-size: clamp(1.5rem, 2vw, 2rem);
     color: var(--background-color);
   }
 
   .over {
     font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 700;
     color: var(--accent-color);
   }
 
   #asterisk {
     color: var(--background-color);
-    font-family: "Roboto Condensed";
+    font-family: var(--main-font);
     font-size: clamp(1rem, 2vw, 1.5rem);
     text-align: center;
   }
@@ -56,7 +56,7 @@
     .numbers {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      margin: 3vw 3vw 1vw 3vw;
+      margin: 0;
     }
     
     .number-item {

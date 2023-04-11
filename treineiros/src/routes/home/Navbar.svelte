@@ -97,14 +97,17 @@
   }
 
   .menu-item {
-    color: var(--background-color);
     padding: clamp(10px, 2vw, 20px);
     font-family: "Roboto Condensed";
     font-size: clamp(1.5rem, 5vw, 2.5rem);
     text-transform: uppercase;
   }
 
-  .menu-item:hover {
+  a {
+    color: var(--background-color);
+  }
+
+  a:hover {
     color: var(--accent-color);
   }
 

@@ -48,7 +48,7 @@
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: auto max(40px, 10vh) auto;
     gap: 2.5vw;
-    margin: 5vw;
+    margin: max(15px, 5vw);
     min-width: 200px;
   }
 
@@ -82,8 +82,8 @@
     border: 0.3vw solid var(--main-color);
     border-radius: 2vw;
     justify-items: center;
-    font-family: "Roboto Condensed";
-    font-weight: 900;
+    font-family: var(--main-font);
+    font-weight: 400;
     font-size: clamp(0.5rem, 3.5vw, 2.25rem);
     color: var(--main-color);
     margin: 0;
@@ -112,7 +112,6 @@
       grid-template-columns: 1fr 3fr;
       grid-template-rows: auto 15vw 15vw 15vw;
       gap: 2vw;
-      margin: 10vw;
     }
 
     #title {

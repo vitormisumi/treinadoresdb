@@ -55,6 +55,7 @@
     padding: 10vw;
     text-align: center;
     background-color: #ffffff;
+    padding: max(15px, 5vw);
   }
 
   #matches-title {
