@@ -1,10 +1,5 @@
 import { redirect } from '@sveltejs/kit';
 import { createConnection } from 'mysql2';
-import { DB_HOST } from '$env/static/private';
-import { DB_PORT } from '$env/static/private';
-import { DB_USER } from '$env/static/private';
-import { DB_PASSWORD } from '$env/static/private';
-import { DATABASE } from '$env/static/private';
 
 export function load() {
     throw redirect(301, '/home');
@@ -12,11 +7,11 @@ export function load() {
 
 // create the connection to database
 const connection = createConnection({
-  host: DB_HOST,
-  port: DB_PORT,
-  user: DB_USER,
-  password: DB_PASSWORD,
-  database: DATABASE,
+  host: "containers-us-west-35.railway.app",
+  port: "6058",
+  user: "root",
+  password: "wx8vG4YqewXLCoxFTLZ5",
+  database: "railway",
 });
 
 // with placeholder
