@@ -1,7 +1,7 @@
 <script>
     import Navbar from "../../home/Navbar.svelte";
-    import Match from "../Match.svelte";
+    import Matches from "./Matches.svelte";
 </script>
 
 <Navbar />
-<Match />
+<Matches />
