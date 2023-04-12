@@ -11,8 +11,15 @@
 </script>
 
 <Navbar />
-<Profile coach={data.coach} />
+<Profile
+  coach={data.coach}
+  lastClub={data.lastClub}
+  numberOfClubs={data.numberOfClubs}
+  numberOfMatches={data.numberOfMatches}
+  mostMatches={data.mostMatches}
+  percentage={data.percentage}
+/>
 <History />
-<Matches />
+<Matches matches={data.matches} />
 <Performance />
 <H2H />

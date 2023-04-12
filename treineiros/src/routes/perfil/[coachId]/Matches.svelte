@@ -1,5 +1,5 @@
 <script>
-    let tableHeaders = [
+  let tableHeaders = [
     "Data",
     "Local",
     "Competição",
@@ -8,24 +8,7 @@
     "Visitante",
   ];
 
-  let matchData = [
-    [
-      "06/04/2023",
-      "Maracanã",
-      "Brasileiro Série A",
-      "Internacional",
-      "2x3",
-      "Palmeiras",
-    ],
-    [
-      "06/04/2023",
-      "Maracanã",
-      "Brasileiro Série A",
-      "Internacional",
-      "2x3",
-      "Palmeiras",
-    ],
-  ];
+  export let matches;
 
   let teams = ["Palmeiras", "Internacional"];
   let seasons = [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
@@ -59,21 +42,81 @@
       <option value={competition}>{competition}</option>
     {/each}
   </select>
-  <table>
-    <tbody>
-      <tr>
-        {#each tableHeaders as header}
-          <th>{header}</th>
-        {/each}
-      </tr>
-      {#each matchData as matches}
+  <div id="table">
+    <table id="matches-table">
+      <thead>
         <tr>
-          {#each matches as match}
-            <td>{match}</td>
+          {#each tableHeaders as header}
+            <th class="headers">{header}</th>
           {/each}
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each matches as { date_time, stadium, competition, home_team, home_team_state, home_score, away_score, away_team, away_team_state, coach }, i}
+          <tr>
+            <td class="date"
+              >{date_time.getDate()}/{date_time.getMonth() +
+                1}/{date_time.getFullYear()}</td
+            >
+            <td>{stadium}</td>
+            <td>{competition}</td>
+            {#if coach === "Mandante"}
+              <td class="coach-team home-team">{home_team}/{home_team_state}</td
+              >
+            {:else}
+              <td class="home-team">{home_team}/{home_team_state}</td>
+            {/if}
+            <td class="score">{home_score}x{away_score}</td>
+            {#if coach === "Visitante"}
+              <td class="coach-team away-team">{away_team}/{away_team_state}</td
+              >
+            {:else}
+              <td class="away-team">{away_team}/{away_team_state}</td>
+            {/if}
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
   <p>*Equipe comandada pelo treinador em negrito</p>
 </section>
+
+<style>
+  #matches {
+    display: block;
+  }
+
+  #table {
+    overflow-x: auto;
+  }
+
+  #matches-table {
+    background-color: var(--table-background);
+    font-family: var(--main-font);
+    font-size: clamp(0.75rem, 2vw, 1.25rem);
+    color: var(--main-color);
+    border-radius: 5px;
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  .headers {
+    text-transform: uppercase;
+  }
+
+  .date {
+    text-align: right;
+  }
+
+  .coach-team {
+    font-weight: var(--bold);
+  }
+
+  .home-team {
+    text-align: right;
+  }
+
+  .score {
+    text-align: center;
+  }
+</style>
