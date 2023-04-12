@@ -6,14 +6,12 @@
   import Matches from "./Matches.svelte";
   import Footer from "./Footer.svelte";
 
-  /** @type {import('./$types').PageData} */
-  export let data;
 </script>
 
 <Navbar />
-<p>{data.name}</p>
 <Hero />
 <About />
 <Numbers />
 <Matches />
+
 <!-- <Footer {menu_items} /> -->

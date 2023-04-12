@@ -26,9 +26,9 @@
 <section id="matches">
   <h2 id="matches-title">Atualizado diariamente.</h2>
   <img src="/src/static/images/calendar.png" alt="calendário" id="calendar-icon" />
-  <h3 class="last-added roboto-condensed">Últimos jogos adicionados</h3>
+  <h3 class="last-added">Últimos jogos adicionados</h3>
   {#each matches as { date, competition, home_team, away_team, home_score, away_score, home_coach, away_coach }, i}
-    <div class="game-card roboto-condensed">
+    <div class="game-card">
       <p class="date">{date}</p>
       <p class="competition">{competition}</p>
       <p class="home-coach coach">{home_coach}</p>
@@ -55,15 +55,11 @@
     padding: 10vw;
     text-align: center;
     background-color: #ffffff;
-    padding: max(15px, 5vw);
+    padding: var(--section-margin);
   }
 
   #matches-title {
     color: var(--background-color);
-  }
-
-  .roboto-condensed {
-    font-family: "Roboto Condensed";
   }
 
   #calendar-icon {
@@ -72,8 +68,9 @@
 
   .last-added {
     font-style: normal;
-    font-weight: 700;
+    font-weight: var(--bold);
     font-size: clamp(0.75rem, 2vw, 3rem);
+    font-family: var(--main-font);
     text-transform: uppercase;
     text-align: center;
     margin-top: auto;
@@ -115,41 +112,41 @@
     margin: auto;
     font-size: clamp(0.75rem, 2vw, 1.5rem);
   }
-
+  
   .home-coach {
     grid-area: home-coach;
   }
-
+  
   .away-coach {
     grid-area: away-coach;
   }
-
+  
   .team {
     height: 4vw;
     margin: auto;
   }
-
+  
   .home-team {
     grid-area: home-team;
   }
-
+  
   .away-team {
     grid-area: away-team;
   }
-
+  
   .score {
     margin: auto;
     font-size: clamp(1.5rem, 5vw, 10rem);
   }
-
+  
   .home-score {
     grid-area: home-score;
   }
-
+  
   .away-score {
     grid-area: away-score;
   }
-
+  
   .x {
     grid-area: x;
     margin: auto;

@@ -44,7 +44,7 @@
   }
 
   #description {
-    font-family: 'Roboto Condensed';
+    font-family: var(--main-font);
     grid-column: 2 / 3;
     grid-row: 3 / 4;
     z-index: 1000;

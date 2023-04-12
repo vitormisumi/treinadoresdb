@@ -48,7 +48,7 @@
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: auto max(40px, 10vh) auto;
     gap: 2.5vw;
-    margin: max(15px, 5vw);
+    margin: var(--section-margin);
     min-width: 200px;
   }
 

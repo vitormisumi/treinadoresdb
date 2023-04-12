@@ -41,13 +41,12 @@
 
   .over {
     font-size: clamp(2rem, 5vw, 4rem);
-    font-weight: 700;
+    font-weight: var(--bold);
     color: var(--accent-color);
   }
 
   #asterisk {
     color: var(--background-color);
-    font-family: var(--main-font);
     font-size: clamp(1rem, 2vw, 1.5rem);
     text-align: center;
   }

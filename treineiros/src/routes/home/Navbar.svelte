@@ -6,6 +6,8 @@
   }
 
   let menu_items = ["home", "sobre", "h2h", "rankings"];
+
+  export let search = '';
 </script>
 
 <header>
@@ -21,7 +23,7 @@
       {/each}
     </ul>
     <form id="search-bar">
-      <input type="search" placeholder="Busque um treinador" id="search-text" />
+      <input bind:value={search} type="search" placeholder="Busque um treinador" id="search-text" />
       <button type="submit" id="search-button"
         ><i class="fa fa-search" /></button
       >

@@ -20,12 +20,12 @@
 
 <section id="comparison">
   <table class="table" id="generalData">
+    <thead>
+      <th />
+      <th class="col2">Dados Gerais</th>
+      <th />
+    </thead>
     <tbody>
-      <tr>
-        <th />
-        <th class="col2">Dados Gerais</th>
-        <th />
-      </tr>
       {#each Object.entries(generalData) as [key, value]}
         <tr>
           <td class="col1">{value[0]}</td>
@@ -36,12 +36,12 @@
     </tbody>
   </table>
   <table class="table" id="h2h">
+    <thead>
+      <th />
+      <th class="col2">Confrontos</th>
+      <th />
+    </thead>
     <tbody>
-      <tr>
-        <th />
-        <th class="col2">Confrontos</th>
-        <th />
-      </tr>
       {#each Object.entries(h2h) as [key, value]}
         <tr>
           <td class="col1">{value[0]}</td>
