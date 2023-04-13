@@ -1,7 +1,15 @@
 <script>
-    import Navbar from "../../home/Navbar.svelte";
-    import Matches from "./Matches.svelte";
+  import Navbar from "../../home/Navbar.svelte";
+  import Match from "./Match.svelte";
+
+  /** @type {import('./$types').PageData} */
+  export let data;
 </script>
 
 <Navbar />
-<Matches />
+<Match
+  matchData={data.matchData}
+  competition={data.competition}
+  teams={data.teams}
+  coaches={data.coaches}
+/>

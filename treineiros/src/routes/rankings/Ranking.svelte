@@ -81,7 +81,6 @@
 
 <style>
   #ranking {
-    margin: max(15px, 5vw);
     display: grid;
     grid-template-columns: 7fr 3fr;
     grid-template-rows: auto;

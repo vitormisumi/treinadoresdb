@@ -55,8 +55,8 @@
         {#each matches as { date_time, stadium, competition, home_team, home_team_state, home_score, away_score, away_team, away_team_state, coach }, i}
           <tr>
             <td class="date"
-              >{date_time.getDate()}/{date_time.getMonth() +
-                1}/{date_time.getFullYear()}</td
+              >{('0' + date_time.getDate()).slice(-2)}/{('0' + (date_time.getMonth() +
+                1)).slice(-2)}/{date_time.getFullYear()}</td
             >
             <td>{stadium}</td>
             <td>{competition}</td>
@@ -88,6 +88,7 @@
 
   #table {
     overflow-x: auto;
+    text-align: center;
   }
 
   #matches-table {
@@ -104,19 +105,7 @@
     text-transform: uppercase;
   }
 
-  .date {
-    text-align: right;
-  }
-
   .coach-team {
     font-weight: var(--bold);
-  }
-
-  .home-team {
-    text-align: right;
-  }
-
-  .score {
-    text-align: center;
   }
 </style>

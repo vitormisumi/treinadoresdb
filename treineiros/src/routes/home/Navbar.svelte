@@ -139,7 +139,7 @@
     padding: 0 2vw 0 0;
     background-color: transparent;
     color: var(--background-color);
-    font-size: clamp(1rem, 2vw, 1.5rem);
+    font-size: clamp(1rem, 2vw, 1.25rem);
   }
 
   ::placeholder {

@@ -75,14 +75,14 @@
 
 <style>
   #profile {
-    margin: var(--section-margin);
     display: grid;
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: 1fr 4fr 1fr;
+    grid-template-rows: auto;
     grid-template-areas:
       "title title"
       "image table"
       "name asterisk";
+    column-gap: 5%;
   }
 
   #title {
@@ -97,11 +97,15 @@
   #name {
     grid-area: name;
     color: var(--main-color);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    text-align: center;
+    margin: 0;
   }
 
   #coach-table {
     grid-area: table;
     font-family: var(--main-font);
+    font-size: clamp(1.5rem, 4vw, 2rem);
     color: var(--main-color);
     border-collapse: collapse;
   }
@@ -114,6 +118,7 @@
   .col2 {
     text-align: right;
     width: 50%;
+    font-weight: var(--bold);
   }
 
   td {
@@ -122,11 +127,11 @@
   }
 
   #coach-table tr:first-child td {
-    border-radius: 1vw 0 0 0;
+    border-radius: 1vw 1vw 0 0;
   }
 
   #coach-table tr:last-child td {
-    border-radius: 0 0 0 1vw;
+    border-radius: 0 0 1vw 1vw;
     border: 0;
   }
 

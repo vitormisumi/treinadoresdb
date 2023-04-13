@@ -39,7 +39,6 @@
 
 <style>
     #about {
-        margin: max(15px, 5vw);
         max-width: 800px;
     }
     h3 {

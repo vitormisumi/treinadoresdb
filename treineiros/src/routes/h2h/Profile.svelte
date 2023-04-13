@@ -36,7 +36,6 @@
       "coach-team-name1 none none none coach-team-name2";
     align-items: center;
     justify-items: center;
-    margin: max(15px, 5vw);
   }
 
   .title {

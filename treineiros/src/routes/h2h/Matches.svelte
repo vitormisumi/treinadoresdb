@@ -71,10 +71,6 @@
 </section>
 
 <style>
-  #matches {
-    margin: max(15px, 5vw);
-  }
-
   #table {
     overflow-x: auto;
   }

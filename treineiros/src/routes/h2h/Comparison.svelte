@@ -58,10 +58,6 @@
 </section>
 
 <style>
-  #comparison {
-    margin: max(15px, 5vw);
-  }
-
   .table {
     width: 100%;
     border-collapse: collapse;
