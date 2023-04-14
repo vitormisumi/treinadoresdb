@@ -161,9 +161,4 @@
   .competition-checkbox {
     background-color: var(--main-color);
   }
-
-  #asterisk {
-    color: var(--main-color);
-    grid-area: asterisk;
-  }
 </style>
