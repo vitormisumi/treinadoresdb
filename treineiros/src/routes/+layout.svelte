@@ -1,13 +1,22 @@
 <script>
-  let menu = true;
+  import { createSearchStore, searchHandler } from "$lib/stores/search";
+  import { onDestroy } from "svelte";
 
+  let menu = true;
   function toggle() {
     menu = !menu;
   }
 
-  let menu_items = ["home", "sobre", "h2h", "rankings"];
-
-  export let search = '';
+  export let data;
+  const searchCoaches = data.coach.map((field) => ({
+    ...field,
+    searchFields: `${field.name} ${field.nickname}`,
+  }));
+  const searchStore = createSearchStore(searchCoaches);
+  const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
+  onDestroy(() => {
+    unsubscribe();
+  });
 </script>
 
 <header>
@@ -18,18 +27,39 @@
   </button>
   <nav class:menu id="menu">
     <ul>
-      {#each menu_items as item}
-          <li class="menu-item"><a href="/{item}">{item}</a></li>
-      {/each}
+          <li class="menu-item"><a href="/">Home</a></li>
+          <li class="menu-item"><a href="/sobre">Sobre</a></li>
+          <li class="menu-item"><a href="/h2h">H2H</a></li>
+          <li class="menu-item"><a href="/rankings">Rankings</a></li>
     </ul>
     <form id="search-bar">
-      <input bind:value={search} type="search" placeholder="Busque um treinador" id="search-text" />
+      <input
+        bind:value={$searchStore.search}
+        type="search"
+        placeholder="Busque um treinador"
+        id="search-text"
+      />
       <button type="submit" id="search-button"
         ><i class="fa fa-search" /></button
       >
     </form>
   </nav>
+  <table>
+    <tbody>
+      {#each $searchStore.filtered as coach}
+        <tr>
+          {#if coach.nickname === null}
+            <td><a href="/perfil/{coach.coach_id}">{coach.name}</a></td>
+          {:else}
+            <td><a href="/perfil/{coach.coach_id}">{coach.nickname}</a></td>
+          {/if}
+        </tr>
+      {/each}
+    </tbody>
+  </table>
 </header>
+
+<slot />
 
 <style>
   .visually-hidden {

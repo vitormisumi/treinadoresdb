@@ -1,12 +1,12 @@
 import { createPool } from 'mysql2';
-// import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DATABASE } from '$env/static/private';
+import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DATABASE } from '$env/static/private';
 
 const pool = createPool({
-    host: "containers-us-west-35.railway.app",
-    port: "6058",
-    user: "root",
-    password: "wx8vG4YqewXLCoxFTLZ5",
-    database: "railway",
+    host: DB_HOST,
+    port: DB_PORT,
+    user: DB_USER,
+    password: DB_PASSWORD,
+    database: DATABASE,
     waitForConnections: true,
     connectionLimit: 100,
     maxIdle: 100, 
@@ -34,7 +34,7 @@ async function lastClub(coach_id) {
     if (rows[0].date_time > rows2[0].date_time) {
         return rows[0].name + '/' + rows[0].state;
     } 
-    return rows2[0].name + '/' + rows[0].state;
+    return rows2[0].name + '/' + rows2[0].state;
 }
 
 async function numberOfClubs(coach_id) {
@@ -99,7 +99,6 @@ async function matches(coach_id) {
         JOIN teams AS at ON m.away_team_id = at.team_id
         WHERE home_coach_id = ? OR away_coach_id = ? ORDER BY date_time DESC LIMIT 10;`,
         [coach_id, coach_id, coach_id]);
-    console.log(rows);
     return rows;
 }
 

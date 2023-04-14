@@ -1,5 +1,4 @@
 <script>
-  export let menu_items;
 </script>
 
 <section id="footer">
@@ -26,8 +25,9 @@
     </form>
   </div>
   <div id="menu">
-    {#each menu_items as item}
-      <a href="http://">{item}</a>
-    {/each}
+      <a href="/">Home</a>
+      <a href="/sobre">Sobre</a>
+      <a href="/h2h">H2H</a>
+      <a href="/rankings">Rankings</a>
   </div>
 </section>

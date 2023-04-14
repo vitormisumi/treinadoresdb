@@ -1,8 +1,5 @@
 <script>
-  import Navbar from "../home/Navbar.svelte";
 </script>
-
-<Navbar />
 
 <section id="about">
     <h3>O que é o Treineiros?</h3>

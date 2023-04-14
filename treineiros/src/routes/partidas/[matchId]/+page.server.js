@@ -1,12 +1,12 @@
 import { createPool } from 'mysql2';
-// import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DATABASE } from '$env/static/private';
+import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DATABASE } from '$env/static/private';
 
 const pool = createPool({
-    host: "containers-us-west-35.railway.app",
-    port: "6058",
-    user: "root",
-    password: "wx8vG4YqewXLCoxFTLZ5",
-    database: "railway",
+    host: DB_HOST,
+    port: DB_PORT,
+    user: DB_USER,
+    password: DB_PASSWORD,
+    database: DATABASE,
     waitForConnections: true,
     connectionLimit: 100,
     maxIdle: 100, 

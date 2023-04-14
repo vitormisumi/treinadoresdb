@@ -1,5 +1,4 @@
 <script>
-  import Navbar from "../../home/Navbar.svelte";
   import Profile from "./Profile.svelte";
   import History from "./History.svelte";
   import Matches from "./Matches.svelte";
@@ -10,7 +9,6 @@
   export let data;
 </script>
 
-<Navbar />
 <Profile
   coach={data.coach}
   lastClub={data.lastClub}

@@ -50,11 +50,6 @@
       {/each}
     </tbody>
   </table>
-  <p id="asterisk">
-    *Considerando apenas jogos de Copa do Brasil e séries A, B, C e D desde
-    2014.
-    <a href="/sobre">Clique aqui</a> para mais informações.
-  </p>
   <select bind:value={selectedIndicator} id="indicator">
     <option selected disabled>Indicador</option>
     {#each indicators as indicator}
