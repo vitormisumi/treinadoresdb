@@ -8,11 +8,19 @@
 <section id="match">
   <h2 id="title">Partida</h2>
   <a href="/perfil/{coaches.home_coach_id}" id="home-coach-img-link"
-    ><img src="/src/static/images/mano.png" alt="" id="home-coach-img" /></a
+    ><img
+      src="/src/static/images/coaches/{coaches.home_coach_id}.png"
+      alt=""
+      id="home-coach-img"
+    /></a
   >
   <img id="home-team-logo" src="/src/static/images/Internacional.png" alt="" />
   <a href="/perfil/{coaches.away_coach_id}" id="away-coach-img-link"
-    ><img src="/src/static/images/abel.png" alt="" id="away-coach-img" /></a
+    ><img
+      src="/src/static/images/coaches/{coaches.away_coach_id}.png"
+      alt=""
+      id="away-coach-img"
+    /></a
   >
   <img id="away-team-logo" src="/src/static/images/Palmeiras.png" alt="" />
   <div id="match-data">
@@ -163,28 +171,28 @@
     grid-area: home-coach-name;
     text-align: left;
   }
-  
+
   #away-team {
     grid-area: away-team;
     text-align: right;
   }
-  
+
   .away-coach-name {
     grid-area: away-coach-name;
     text-align: right;
   }
-  
+
   #away-team-logo {
     grid-area: away-coach-img;
     width: 25%;
     align-self: end;
   }
-  
+
   .team {
     margin: 0;
     font-size: clamp(1rem, 2vw, 1.25rem);
   }
-  
+
   .coach {
     font-family: var(--main-font);
     color: var(--main-color);

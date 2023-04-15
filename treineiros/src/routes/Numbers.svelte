@@ -58,9 +58,9 @@
       grid-template-columns: repeat(3, 1fr);
       margin: 0;
     }
-    
+
     .number-item {
-        margin: 0;
+      margin: 0;
     }
   }
 </style>

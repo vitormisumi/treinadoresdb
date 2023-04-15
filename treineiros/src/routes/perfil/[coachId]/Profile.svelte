@@ -21,7 +21,12 @@
 
 <section id="profile">
   <h2 id="title">Perfil</h2>
-  <img id="image" src="/src/static/images/mano.png" alt="" />
+  <img
+    id="image"
+    src="/src/static/images/coaches/{coach.coach_id}.png"
+    onerror="this.onerror=null; this.src='/src/static/images/coaches/default.png'"
+    alt="{coach.name}"
+  />
   {#if coach.nickname === null}
     <p id="name">{coach.name}</p>
   {:else}
@@ -51,8 +56,12 @@
       </tr>
       <tr>
         <td class="col1">Última Partida</td>
-        <td class="col2">{('0' + lastMatch.getDate()).slice(-2)}/{('0' + (lastMatch.getMonth() +
-                1)).slice(-2)}/{lastMatch.getFullYear()}</td>
+        <td class="col2"
+          >{("0" + lastMatch.getDate()).slice(-2)}/{(
+            "0" +
+            (lastMatch.getMonth() + 1)
+          ).slice(-2)}/{lastMatch.getFullYear()}</td
+        >
       </tr>
       <tr>
         <td class="col1">Clubes</td>
@@ -64,7 +73,9 @@
       </tr>
       <tr>
         <td class="col1">Mais Partidas</td>
-        <td class="col2">{mostMatches.name}/{mostMatches.state} ({mostMatches.count})</td>
+        <td class="col2"
+          >{mostMatches.name}/{mostMatches.state} ({mostMatches.count})</td
+        >
       </tr>
       <tr>
         <td class="col1">Aproveitamento</td>

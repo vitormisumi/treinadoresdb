@@ -90,7 +90,7 @@ async function percentage(coach_id) {
 
 async function matches(coach_id) {
     const [rows, fields] = await accessPool().query(`
-        SELECT date_time, stadium, c.name AS competition, ht.name AS home_team, ht.state AS home_team_state, home_score, away_score, at.name AS away_team, at.state AS away_team_state,
+        SELECT m.match_id, m.date_time, m.stadium, c.name AS competition, ht.name AS home_team, ht.state AS home_team_state, home_score, away_score, at.name AS away_team, at.state AS away_team_state,
         CASE WHEN home_coach_id = ? THEN 'Mandante'
         ELSE 'Visitante'
         END AS coach

@@ -52,11 +52,13 @@
         </tr>
       </thead>
       <tbody>
-        {#each matches as { date_time, stadium, competition, home_team, home_team_state, home_score, away_score, away_team, away_team_state, coach }, i}
+        {#each matches as { match_id, date_time, stadium, competition, home_team, home_team_state, home_score, away_score, away_team, away_team_state, coach }, i}
           <tr>
             <td class="date"
-              >{('0' + date_time.getDate()).slice(-2)}/{('0' + (date_time.getMonth() +
-                1)).slice(-2)}/{date_time.getFullYear()}</td
+              >{("0" + date_time.getDate()).slice(-2)}/{(
+                "0" +
+                (date_time.getMonth() + 1)
+              ).slice(-2)}/{date_time.getFullYear()}</td
             >
             <td>{stadium}</td>
             <td>{competition}</td>
@@ -66,7 +68,9 @@
             {:else}
               <td class="home-team">{home_team}/{home_team_state}</td>
             {/if}
-            <td class="score">{home_score}x{away_score}</td>
+            <td class="score"
+              ><a href="/partidas/{match_id}">{home_score}x{away_score}</a></td
+            >
             {#if coach === "Visitante"}
               <td class="coach-team away-team">{away_team}/{away_team_state}</td
               >
