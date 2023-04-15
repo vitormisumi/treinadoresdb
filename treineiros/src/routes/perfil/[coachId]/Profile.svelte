@@ -1,6 +1,7 @@
 <script>
   export let coach;
   export let lastClub;
+  export let lastMatch;
   export let numberOfClubs;
   export let numberOfMatches;
   export let mostMatches;
@@ -47,6 +48,11 @@
       <tr>
         <td class="col1">Clube Atual/Mais Recente</td>
         <td class="col2">{lastClub}</td>
+      </tr>
+      <tr>
+        <td class="col1">Última Partida</td>
+        <td class="col2">{('0' + lastMatch.getDate()).slice(-2)}/{('0' + (lastMatch.getMonth() +
+                1)).slice(-2)}/{lastMatch.getFullYear()}</td>
       </tr>
       <tr>
         <td class="col1">Clubes</td>
@@ -123,7 +129,7 @@
 
   td {
     border: 1px solid;
-    border-color: var(--background-color) var(--background-color) #e5e5e525;
+    border-color: transparent transparent #e5e5e525;
   }
 
   #coach-table tr:first-child td {

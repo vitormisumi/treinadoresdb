@@ -20,6 +20,7 @@
       rgba(255, 255, 255, 1) 100%
     );
     padding: max(15px, 5vw);
+    margin: 0;
   }
 
   #numbers-title {

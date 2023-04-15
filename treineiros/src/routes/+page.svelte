@@ -5,11 +5,13 @@
   import Matches from "./Matches.svelte";
   import Footer from "./Footer.svelte";
 
+  export let data;
+
 </script>
 
 <Hero />
 <About />
 <Numbers />
-<Matches />
+<Matches matches={data.matches}/>
 
 <!-- <Footer {menu_items} /> -->

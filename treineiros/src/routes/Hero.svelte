@@ -13,6 +13,7 @@
     position: relative;
     grid-template-columns: max(15px, 5vw) 8fr max(15px, 5vw);
     grid-template-rows: min(5vh, 20px) auto;
+    margin: 0;
   }
 
   #field-fade {

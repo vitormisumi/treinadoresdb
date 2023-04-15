@@ -1,44 +1,45 @@
-import { createPool } from 'mysql2';
-import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DATABASE } from '$env/static/private';
-
-const pool = createPool({
-    host: DB_HOST,
-    port: DB_PORT,
-    user: DB_USER,
-    password: DB_PASSWORD,
-    database: DATABASE,
-    waitForConnections: true,
-    connectionLimit: 100,
-    maxIdle: 100, 
-    idleTimeout: 60000,
-    queueLimit: 0
-});
-const promisePool = pool.promise();
+import { accessPool } from '$db/db'
 
 async function getCoach(coach_id) {
-    const [rows, fields] = await promisePool.query("SELECT * FROM coaches WHERE coach_id = ?", [coach_id]);
+    const [rows, fields] = await accessPool().query(`
+        SELECT * FROM coaches WHERE coach_id = ?`,
+        [coach_id]);
     return rows[0];
 }
 
 async function lastClub(coach_id) {
-    const [rows, fields] = await promisePool.query(`
+    const [rows, fields] = await accessPool().query(`
         SELECT date_time, name, state FROM matches
         JOIN teams ON matches.home_team_id = teams.team_id
         WHERE home_coach_id = ? ORDER BY date_time DESC LIMIT 1;`,
         [coach_id]);
-    const [rows2, fields2] = await promisePool.query(`
+    const [rows2, fields2] = await accessPool().query(`
         SELECT date_time, name, state FROM matches
         JOIN teams ON matches.away_team_id = teams.team_id
         WHERE away_coach_id = ? ORDER BY date_time DESC LIMIT 1;`,
         [coach_id]);
-    if (rows[0].date_time > rows2[0].date_time) {
-        return rows[0].name + '/' + rows[0].state;
-    } 
-    return rows2[0].name + '/' + rows2[0].state;
+        if (rows.length === 0) {
+            return rows2[0].name + '/' + rows2[0].state;
+        } else if (rows2.length === 0) {
+            return rows[0].name + '/' + rows[0].state;
+        } else if (rows2[0].date_time > rows[0].date_time) {
+            return rows2[0].name + '/' + rows2[0].state;
+        } else {
+            return rows[0].name + '/' + rows[0].state;
+        }
+    }
+    
+async function lastMatch(coach_id) {
+    const [rows, fields] = await accessPool().query(`
+        SELECT date_time FROM matches
+        WHERE home_coach_id = ? OR away_coach_id = ?
+        ORDER BY date_time DESC LIMIT 1;`,
+        [coach_id, coach_id]);
+    return rows[0].date_time;
 }
 
 async function numberOfClubs(coach_id) {
-    const [rows, fields] = await promisePool.query(`SELECT DISTINCT(name), state FROM matches 
+    const [rows, fields] = await accessPool().query(`SELECT DISTINCT(name), state FROM matches 
         JOIN teams ON matches.home_team_id = teams.team_id
         WHERE home_coach_id = ?
         UNION
@@ -50,14 +51,14 @@ async function numberOfClubs(coach_id) {
 }
 
 async function numberOfMatches(coach_id) {
-    const [rows, fields] = await promisePool.query(`
+    const [rows, fields] = await accessPool().query(`
         SELECT COUNT(*) FROM matches 
         WHERE home_coach_id = ? OR away_coach_id = ?;`, [coach_id, coach_id]);
     return Object.values(rows[0]);
 }
 
 async function mostMatches(coach_id) {
-    const [rows, fields] = await promisePool.query(`
+    const [rows, fields] = await accessPool().query(`
         SELECT a.team_id, COUNT(a.team_id) AS count, name, state
         FROM (SELECT match_id, team_id FROM matches 
         JOIN teams ON matches.home_team_id = teams.team_id 
@@ -72,7 +73,7 @@ async function mostMatches(coach_id) {
 }
 
 async function percentage(coach_id) {
-    const [rows, fields] = await promisePool.query(`
+    const [rows, fields] = await accessPool().query(`
         SELECT t.points / max.maxpoints FROM (
         SELECT SUM(points) AS points FROM (
         SELECT COUNT(*) * 3 AS points FROM matches WHERE home_coach_id = ? AND home_score > away_score
@@ -88,7 +89,7 @@ async function percentage(coach_id) {
 }
 
 async function matches(coach_id) {
-    const [rows, fields] = await promisePool.query(`
+    const [rows, fields] = await accessPool().query(`
         SELECT date_time, stadium, c.name AS competition, ht.name AS home_team, ht.state AS home_team_state, home_score, away_score, at.name AS away_team, at.state AS away_team_state,
         CASE WHEN home_coach_id = ? THEN 'Mandante'
         ELSE 'Visitante'
@@ -107,6 +108,7 @@ export async function load({ params }) {
     return {
         coach: getCoach(params.coachId),
         lastClub: lastClub(params.coachId),
+        lastMatch: lastMatch(params.coachId),
         numberOfClubs: numberOfClubs(params.coachId),
         numberOfMatches: numberOfMatches(params.coachId),
         mostMatches: mostMatches(params.coachId),

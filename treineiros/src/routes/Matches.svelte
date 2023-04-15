@@ -1,49 +1,45 @@
 <script>
-  let matches = [
-    {
-      date: "30/03/2023",
-      competition: "Brasileiro Série A",
-      home_team: "Palmeiras",
-      away_team: "Internacional",
-      home_score: 2,
-      away_score: 1,
-      home_coach: "Abel Ferreira",
-      away_coach: "Mano Menezes",
-    },
-    {
-      date: "31/03/2023",
-      competition: "Brasileiro Série B",
-      home_team: "Palmeiras",
-      away_team: "Internacional",
-      home_score: 4,
-      away_score: 5,
-      home_coach: "Abel Ferreira",
-      away_coach: "Mano Menezes",
-    },
-  ];
+  export let matches;
 </script>
 
 <section id="matches">
   <h2 id="matches-title">Atualizado diariamente.</h2>
-  <img src="/src/static/images/calendar.png" alt="calendário" id="calendar-icon" />
+  <img
+    src="/src/static/images/calendar.png"
+    alt="calendário"
+    id="calendar-icon"
+  />
   <h3 class="last-added">Últimos jogos adicionados</h3>
-  {#each matches as { date, competition, home_team, away_team, home_score, away_score, home_coach, away_coach }, i}
+  {#each matches as { match_id, date_time, competition, home_team_id, home_team_name, away_team_id, away_team_name, home_score, away_score, home_coach, home_coach_nickname, away_coach, away_coach_nickname }, i}
     <div class="game-card">
-      <p class="date">{date}</p>
+      <p class="date">
+        {("0" + date_time.getDate()).slice(-2)}/{(
+          "0" +
+          (date_time.getMonth() + 1)
+        ).slice(-2)}/{date_time.getFullYear()}
+      </p>
       <p class="competition">{competition}</p>
-      <p class="home-coach coach">{home_coach}</p>
-      <p class="away-coach coach">{away_coach}</p>
+      {#if home_coach_nickname === null}
+        <p class="home-coach coach">{home_coach}</p>
+      {:else}
+        <p class="home-coach coach">{home_coach_nickname}</p>
+      {/if}
+      {#if away_coach_nickname === null}
+        <p class="away-coach coach">{away_coach}</p>
+      {:else}
+        <p class="away-coach coach">{away_coach_nickname}</p>
+      {/if}
       <p class="home-score score">{home_score}</p>
       <p class="away-score score">{away_score}</p>
-      <p class="x">X</p>
+      <a href="/partidas/{match_id}" class="x">X<span class="match-link" /></a>
       <img
-        src="/src/static/images/{home_team}.png"
-        alt="{home_team}"
+        src="/src/static/images/{home_team_id}.png"
+        alt={home_team_name}
         class="home-team team"
       />
       <img
-        src="/src/static/images/{away_team}.png"
-        alt="{away_team}"
+        src="/src/static/images/{away_team_id}.png"
+        alt={away_team_name}
         class="away-team team"
       />
     </div>
@@ -56,6 +52,7 @@
     text-align: center;
     background-color: #ffffff;
     padding: var(--section-margin);
+    margin: 0;
   }
 
   #matches-title {
@@ -79,12 +76,14 @@
 
   .game-card {
     display: grid;
+    position: relative;
     text-align: center;
     align-items: middle;
     margin: 1vw 2vw;
     padding: 2vw;
     background-color: var(--main-color);
     border-radius: 5vw;
+    grid-template-columns: 5fr 1fr 1fr 1fr 5fr;
     grid-template-areas:
       "date date date date date"
       "competition competition competition competition competition"
@@ -112,45 +111,56 @@
     margin: auto;
     font-size: clamp(0.75rem, 2vw, 1.5rem);
   }
-  
+
   .home-coach {
     grid-area: home-coach;
   }
-  
+
   .away-coach {
     grid-area: away-coach;
   }
-  
+
   .team {
     height: 4vw;
     margin: auto;
   }
-  
+
   .home-team {
     grid-area: home-team;
   }
-  
+
   .away-team {
     grid-area: away-team;
   }
-  
+
   .score {
     margin: auto;
     font-size: clamp(1.5rem, 5vw, 10rem);
   }
-  
+
   .home-score {
     grid-area: home-score;
   }
-  
+
   .away-score {
     grid-area: away-score;
   }
-  
+
   .x {
     grid-area: x;
     margin: auto;
     font-size: clamp(1rem, 2vw, 1.5rem);
+    font-family: var(--main-font);
+    color: var(--background-color);
+  }
+
+  .match-link {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
   }
 
   @media (min-width: 768px) {

@@ -27,36 +27,52 @@
   </button>
   <nav class:menu id="menu">
     <ul>
-          <li class="menu-item"><a href="/">Home</a></li>
-          <li class="menu-item"><a href="/sobre">Sobre</a></li>
-          <li class="menu-item"><a href="/h2h">H2H</a></li>
-          <li class="menu-item"><a href="/rankings">Rankings</a></li>
+      <li class="menu-item"><a href="/" class="menu-link">Home</a></li>
+      <li class="menu-item"><a href="/sobre" class="menu-link">Sobre</a></li>
+      <li class="menu-item"><a href="/h2h" class="menu-link">H2H</a></li>
+      <li class="menu-item">
+        <a href="/rankings" class="menu-link">Rankings</a>
+      </li>
     </ul>
-    <form id="search-bar">
-      <input
-        bind:value={$searchStore.search}
-        type="search"
-        placeholder="Busque um treinador"
-        id="search-text"
-      />
-      <button type="submit" id="search-button"
-        ><i class="fa fa-search" /></button
-      >
-    </form>
-  </nav>
-  <table>
-    <tbody>
-      {#each $searchStore.filtered as coach}
-        <tr>
-          {#if coach.nickname === null}
-            <td><a href="/perfil/{coach.coach_id}">{coach.name}</a></td>
-          {:else}
-            <td><a href="/perfil/{coach.coach_id}">{coach.nickname}</a></td>
+    <div id="search">
+      <form id="search-bar">
+        <input
+          bind:value={$searchStore.search}
+          type="search"
+          placeholder="Busque um treinador"
+          id="search-text"
+        />
+        <button type="submit" id="search-button"
+          ><i class="fa fa-search" /></button
+        >
+      </form>
+      <table id="search-results">
+        <tbody>
+          {#if $searchStore.search !== ""}
+            {#each $searchStore.filtered as coach, i}
+              {#if i < 10}
+                <tr>
+                  {#if coach.nickname === null}
+                    <td
+                      ><a href="/perfil/{coach.coach_id}" class="coach-result"
+                        >{coach.name}</a
+                      ></td
+                    >
+                  {:else}
+                    <td
+                      ><a href="/perfil/{coach.coach_id}" class="coach-result"
+                        >{coach.nickname}</a
+                      ></td
+                    >
+                  {/if}
+                </tr>
+              {/if}
+            {/each}
           {/if}
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+        </tbody>
+      </table>
+    </div>
+  </nav>
 </header>
 
 <slot />
@@ -128,18 +144,16 @@
     padding: 0;
   }
 
-  .menu-item {
+  .menu-link:link,
+  .menu-link:visited {
     padding: clamp(10px, 2vw, 20px);
     font-family: "Roboto Condensed";
-    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    font-size: clamp(1.5rem, 5vw, 2rem);
     text-transform: uppercase;
-  }
-
-  a {
     color: var(--background-color);
   }
 
-  a:hover {
+  .menu-link:hover {
     color: var(--accent-color);
   }
 
@@ -183,6 +197,35 @@
     z-index: 2;
   }
 
+  #search-results {
+    position: absolute;
+    width: 100%;
+    margin: 3vw;
+    border-collapse: collapse;
+    white-space: nowrap;
+    font-family: var(--main-font);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    background-color: var(--table-background);
+    border-radius: 1vw;
+  }
+
+  td {
+    border: 1px solid;
+    border-color: transparent transparent #e5e5e525;
+  }
+
+  #search-results tr:last-child td {
+    border: 0;
+  }
+
+  .coach-result {
+    color: var(--main-color);
+  }
+
+  .coach-result:hover {
+    color: var(--accent-color);
+  }
+
   @media (min-width: 768px) {
     header {
       align-items: center;
@@ -220,6 +263,11 @@
     #search-bar {
       margin: 0;
       width: clamp(200px, 4vw, 300px);
+    }
+
+    #search-results {
+      width: clamp(200px, 4vw, 300px);
+      margin: 0;
     }
   }
 

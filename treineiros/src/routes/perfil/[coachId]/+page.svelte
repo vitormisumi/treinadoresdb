@@ -12,6 +12,7 @@
 <Profile
   coach={data.coach}
   lastClub={data.lastClub}
+  lastMatch={data.lastMatch}
   numberOfClubs={data.numberOfClubs}
   numberOfMatches={data.numberOfMatches}
   mostMatches={data.mostMatches}
