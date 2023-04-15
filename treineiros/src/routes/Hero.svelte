@@ -1,10 +1,10 @@
 <section id="hero">
   <div id="field-fade" />
-  <img src="/src/static/images/field.png" alt="campo de futebol" id="field-img" />
+  <img src="/images/field.png" alt="campo de futebol" id="field-img" />
   <h2 id="main-title">O portal da análise de treinadores do Brasil</h2>
   <h2 id="description">Dados únicos para conhecer mais a fundo os comandantes das equipes brasileiras</h2>
   <div id="coaches-fade" />
-  <img src="/src/static/images/coaches.png" alt="treinadores" id="coaches-img" />
+  <img src="/images/coaches.png" alt="treinadores" id="coaches-img" />
 </section>
 
 <style>
