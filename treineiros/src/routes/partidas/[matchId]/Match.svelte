@@ -7,14 +7,20 @@
 
 <section id="match">
   <h2 id="title">Partida</h2>
-  <img id="home-coach-img" src="/src/static/images/mano.png" alt="" />
+  <a href="/perfil/{coaches.home_coach_id}" id="home-coach-img-link"
+    ><img src="/src/static/images/mano.png" alt="" id="home-coach-img" /></a
+  >
   <img id="home-team-logo" src="/src/static/images/Internacional.png" alt="" />
-  <img id="away-coach-img" src="/src/static/images/abel.png" alt="" />
+  <a href="/perfil/{coaches.away_coach_id}" id="away-coach-img-link"
+    ><img src="/src/static/images/abel.png" alt="" id="away-coach-img" /></a
+  >
   <img id="away-team-logo" src="/src/static/images/Palmeiras.png" alt="" />
   <div id="match-data">
     <p id="date">
-      {('0' + matchData.date_time.getDate()).slice(-2)}/{('0' + (matchData.date_time.getMonth() +
-        1)).slice(-2)}/{matchData.date_time.getFullYear()}
+      {("0" + matchData.date_time.getDate()).slice(-2)}/{(
+        "0" +
+        (matchData.date_time.getMonth() + 1)
+      ).slice(-2)}/{matchData.date_time.getFullYear()}
     </p>
     <p id="competition">{competition.name}</p>
     <p id="stadium">{matchData.stadium}</p>
@@ -24,17 +30,25 @@
     {teams.home_team_name}/{teams.home_team_state}
   </p>
   {#if coaches.home_coach_nickname === null}
-    <p class="home-coach-name coach">{coaches.home_coach}</p>
+    <a href="/perfil/{coaches.home_coach_id}" class="home-coach-name coach"
+      >{coaches.home_coach}</a
+    >
   {:else}
-    <p class="home-coach-name coach">{coaches.home_coach_nickname}</p>
+    <a href="/perfil/{coaches.home_coach_id}" class="home-coach-name coach"
+      >{coaches.home_coach_nickname}</a
+    >
   {/if}
   <p id="away-team" class="team">
     {teams.away_team_name}/{teams.away_team_state}
   </p>
   {#if coaches.away_coach_nickname === null}
-    <p class="away-coach-name coach">{coaches.away_coach}</p>
+    <a href="/perfil/{coaches.away_coach_id}" class="away-coach-name coach"
+      >{coaches.away_coach}</a
+    >
   {:else}
-    <p class="away-coach-name coach">{coaches.away_coach_nickname}</p>
+    <a href="/perfil/{coaches.away_coach_id}" class="away-coach-name coach"
+      >{coaches.away_coach_nickname}</a
+    >
   {/if}
   <table id="match-table">
     <thead>
@@ -111,8 +125,11 @@
     grid-area: title;
   }
 
-  #home-coach-img {
+  #home-coach-img-link {
     grid-area: home-coach-img;
+  }
+
+  #home-coach-img {
     width: 100%;
   }
 
@@ -122,8 +139,11 @@
     font-size: clamp(1rem, 2vw, 1.25rem);
   }
 
-  #away-coach-img {
+  #away-coach-img-link {
     grid-area: away-coach-img;
+  }
+
+  #away-coach-img {
     width: 100%;
   }
 
@@ -143,29 +163,31 @@
     grid-area: home-coach-name;
     text-align: left;
   }
-
+  
   #away-team {
     grid-area: away-team;
     text-align: right;
   }
-
+  
   .away-coach-name {
     grid-area: away-coach-name;
     text-align: right;
   }
-
+  
   #away-team-logo {
     grid-area: away-coach-img;
     width: 25%;
     align-self: end;
   }
-
+  
   .team {
     margin: 0;
     font-size: clamp(1rem, 2vw, 1.25rem);
   }
   
   .coach {
+    font-family: var(--main-font);
+    color: var(--main-color);
     font-size: clamp(1rem, 2vw, 1.25rem);
     font-weight: var(--bold);
     margin: 0;
@@ -182,7 +204,7 @@
 
   .col1 {
     text-align: left;
-    width: 30%
+    width: 30%;
   }
 
   .col2 {

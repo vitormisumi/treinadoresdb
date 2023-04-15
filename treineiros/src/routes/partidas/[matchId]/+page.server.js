@@ -29,7 +29,7 @@ async function teams(match_id) {
 
 async function coaches(match_id) {
     const [rows, fields] = await accessPool().query(`
-        SELECT m.match_id, hc.name AS home_coach, hc.nickname AS home_coach_nickname, ac.name AS away_coach, ac.nickname AS away_coach_nickname
+        SELECT m.match_id, hc.coach_id AS home_coach_id, hc.name AS home_coach, hc.nickname AS home_coach_nickname, ac.coach_id AS away_coach_id, ac.name AS away_coach, ac.nickname AS away_coach_nickname
         FROM matches AS m
         JOIN coaches AS hc ON m.home_coach_id = hc.coach_id
         JOIN coaches AS ac ON m.away_coach_id = ac.coach_id
