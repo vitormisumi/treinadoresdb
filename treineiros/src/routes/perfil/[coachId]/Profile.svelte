@@ -17,16 +17,14 @@
           today.getDate() < birthdate.getDate()));
     return age;
   }
+
+  let fallback = "/src/lib/assets/images/coaches/default.png";
+  const handleError = (ev) => (ev.target.src = fallback);
 </script>
 
 <section id="profile">
   <h2 id="title">Perfil</h2>
-  <img
-    id="image"
-    src="/src/static/images/coaches/{coach.coach_id}.png"
-    onerror="this.onerror=null; this.src='/src/static/images/coaches/default.png'"
-    alt="{coach.name}"
-  />
+  <img id="image" src="/src/lib/assets/images/coaches/{coach.coach_id}.png" on:error={handleError} alt={coach.name} />
   {#if coach.nickname === null}
     <p id="name">{coach.name}</p>
   {:else}

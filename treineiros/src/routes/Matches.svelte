@@ -1,11 +1,13 @@
 <script>
   export let matches;
+
+  import calendar from '$lib/assets/images/calendar.png';
 </script>
 
 <section id="matches">
   <h2 id="matches-title">Atualizado diariamente.</h2>
   <img
-    src="/src/static/images/calendar.png"
+    src={calendar}
     alt="calendário"
     id="calendar-icon"
   />
@@ -33,12 +35,12 @@
       <p class="away-score score">{away_score}</p>
       <a href="/partidas/{match_id}" class="x">X<span class="match-link" /></a>
       <img
-        src="/src/static/images/teams/{home_team_id}.png"
+        src="/src/lib/assets/images/teams/{home_team_id}.png"
         alt={home_team_name}
         class="home-team team"
       />
       <img
-        src="/src/static/images/teams/{away_team_id}.png"
+        src="/src/lib/assets/images/teams/{away_team_id}.png"
         alt={away_team_name}
         class="away-team team"
       />

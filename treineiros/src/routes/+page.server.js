@@ -11,7 +11,6 @@ async function lastMatches() {
         JOIN coaches AS ac ON m.away_coach_id = ac.coach_id
         ORDER BY date_time DESC
         LIMIT 5;`);
-    console.log(rows);
     return rows;
 }
 

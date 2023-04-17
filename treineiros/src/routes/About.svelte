@@ -1,24 +1,31 @@
 <script>
   let current = "h2h";
 
+  import h2h from "$lib/assets/images/h2h-icon.png";
+  import ranking from "$lib/assets/images/ranking-icon.png";
+  import history from "$lib/assets/images/history-icon.png";
+
   let buttons = [
     {
       name: "h2h",
       alt: "confronto",
       span: "Compare os",
       b: "Confrontos",
+      src: h2h,
     },
     {
       name: "ranking",
       alt: "ranking",
       span: "Veja os",
       b: "Rankings",
+      src: ranking,
     },
     {
       name: "history",
       alt: "histórico",
       span: "Analise o",
       b: "Histórico",
+      src: history,
     },
   ];
 </script>
@@ -31,15 +38,11 @@
       class:selected={current === button.name}
       on:click={() => (current = button.name)}
     >
-      <img
-        src="/src/static/images/{button.name}-icon.png"
-        alt={button.alt}
-        class="button-icon"
-      />
+      <img src={button.src} alt={button.alt} class="button-icon" />
       <span class="button-text">{button.span}</span><b>{button.b}</b>
     </button>
   {/each}
-  <img src="/src/static/images/{current}-img.png" alt={current} id="img" />
+  <img src="/src/lib/assets/images/{current}-img.png" alt={current} id="img" />
 </section>
 
 <style>
