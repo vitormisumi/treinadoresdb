@@ -74,7 +74,7 @@ async function mostMatches(coach_id) {
 
 async function percentage(coach_id) {
     const [rows, fields] = await accessPool().query(`
-        SELECT t.points / max.maxpoints FROM (
+        SELECT t.points / max.maxpoints AS percentage FROM (
         SELECT SUM(points) AS points FROM (
         SELECT COUNT(*) * 3 AS points FROM matches WHERE home_coach_id = ? AND home_score > away_score
         UNION
@@ -85,7 +85,27 @@ async function percentage(coach_id) {
         SELECT COUNT(*) AS points FROM matches WHERE away_coach_id = ? AND home_score = away_score) AS total) AS t JOIN (
         SELECT COUNT(*) * 3 AS maxpoints FROM matches WHERE home_coach_id = ? OR away_coach_id = ?) AS max;`,
         [coach_id, coach_id, coach_id, coach_id, coach_id, coach_id]);
-    return Math.round(Number(Object.values(rows[0]) * 100));
+    return rows[0].percentage * 100;
+}
+
+async function goalsScoredAvg(coach_id) {
+    const [rows, fields] = await accessPool().query(`
+        SELECT SUM(goals) / SUM(matches) AS goal_average FROM (
+        SELECT SUM(home_score) AS goals, COUNT(*) AS matches FROM matches WHERE home_coach_id = ?
+        UNION
+        SELECT SUM(away_score) AS goals, COUNT(*) AS matches FROM matches WHERE away_coach_id = ?) AS m;`,
+        [coach_id, coach_id]);
+    return rows[0].goal_average;
+}
+
+async function goalsConcededAvg(coach_id) {
+    const [rows, fields] = await accessPool().query(`
+        SELECT SUM(goals) / SUM(matches) AS goal_average FROM (
+        SELECT SUM(away_score) AS goals, COUNT(*) AS matches FROM matches WHERE home_coach_id = ?
+        UNION
+        SELECT SUM(home_score) AS goals, COUNT(*) AS matches FROM matches WHERE away_coach_id = ?) AS m;`,
+        [coach_id, coach_id]);
+    return rows[0].goal_average;
 }
 
 async function matches(coach_id) {
@@ -113,6 +133,8 @@ export async function load({ params }) {
         numberOfMatches: numberOfMatches(params.coachId),
         mostMatches: mostMatches(params.coachId),
         percentage: percentage(params.coachId),
+        goalsScoredAvg: goalsScoredAvg(params.coachId),
+        goalsConcededAvg: goalsConcededAvg(params.coachId),
         matches: matches(params.coachId)
     };
 };

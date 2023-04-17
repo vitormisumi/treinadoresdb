@@ -17,6 +17,8 @@
   numberOfMatches={data.numberOfMatches}
   mostMatches={data.mostMatches}
   percentage={data.percentage}
+  goalsScoredAvg={data.goalsScoredAvg}
+  goalsConcededAvg={data.goalsConcededAvg}
 />
 <History />
 <Matches matches={data.matches} />

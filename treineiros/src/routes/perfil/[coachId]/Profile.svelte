@@ -6,6 +6,8 @@
   export let numberOfMatches;
   export let mostMatches;
   export let percentage;
+  export let goalsScoredAvg;
+  export let goalsConcededAvg;
 
   function age(birthdate) {
     const today = new Date();
@@ -77,7 +79,15 @@
       </tr>
       <tr>
         <td class="col1">Aproveitamento</td>
-        <td class="col2">{percentage}%</td>
+        <td class="col2">{percentage.toFixed(1)}%</td>
+      </tr>
+      <tr>
+        <td class="col1">Média Gols Marcados</td>
+        <td class="col2">{Number(goalsScoredAvg).toFixed(2)}</td>
+      </tr>
+      <tr>
+        <td class="col1">Média Gols Sofridos</td>
+        <td class="col2">{Number(goalsConcededAvg).toFixed(2)}</td>
       </tr>
     </tbody>
   </table>
