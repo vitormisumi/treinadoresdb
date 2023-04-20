@@ -26,7 +26,12 @@
 
 <section id="profile">
   <h2 id="title">Perfil</h2>
-  <img id="image" src="/src/lib/assets/images/coaches/{coach.coach_id}.png" on:error={handleError} alt={coach.name} />
+  <img
+    id="image"
+    src="/src/lib/assets/images/coaches/{coach.coach_id}.png"
+    on:error={handleError}
+    alt={coach.name}
+  />
   {#if coach.nickname === null}
     <p id="name">{coach.name}</p>
   {:else}
@@ -101,13 +106,14 @@
 <style>
   #profile {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr;
     grid-template-rows: auto;
     grid-template-areas:
-      "title title"
-      "image table"
-      "name asterisk";
-    column-gap: 5%;
+      "title"
+      "image"
+      "name"
+      "table" 
+      "asterisk";
   }
 
   #title {
@@ -122,7 +128,7 @@
   #name {
     grid-area: name;
     color: var(--main-color);
-    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-size: clamp(1.25rem, 4vw, 2.5rem);
     text-align: center;
     margin: 0;
   }
@@ -130,7 +136,7 @@
   #coach-table {
     grid-area: table;
     font-family: var(--main-font);
-    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-size: clamp(0.75rem, 2.5vw, 2rem);
     color: var(--main-color);
     border-collapse: collapse;
   }
@@ -163,5 +169,18 @@
   #asterisk {
     grid-area: asterisk;
     color: var(--main-color);
+    font-size: clamp(0.75rem, 2vw, 1rem);
+  }
+
+  @media (min-width: 768px) {
+    #profile {
+      grid-template-columns: 1fr 2fr;
+      grid-template-rows: auto;
+      grid-template-areas:
+        "title title"
+        "image table"
+        "name asterisk";
+      column-gap: 5%;
+    }
   }
 </style>

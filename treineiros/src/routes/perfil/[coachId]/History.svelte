@@ -1,26 +1,44 @@
 <script>
-    let tableHeaders = ['', 'J', 'V', 'E', 'D', 'GF', 'GS', 'CA', 'CV', '%']
+  export let history;
+
+  let filters = [];
+  const filtersMenu = ["year", "team", "competition"];
+
+  const groupBy = (arr, keys) => {
+    return arr.reduce((storage, item) => {
+      const objKey = keys.map((key) => `${item[key]}`).join(":");
+      if (storage[objKey]) {
+        storage[objKey].push(item);
+      } else {
+        storage[objKey] = [item];
+      }
+      console.log(storage);
+      return storage;
+    }, {});
+  }
 </script>
 
 <section id="history">
-    <h2>Histórico</h2>
-    <p>Agrupar por:</p>
-    <input type="checkbox" name="team" id="team">
-    <label for="team">Equipe</label>
-    <input type="checkbox" name="season" id="season">
-    <label for="season">Temporada</label>
-    <input type="checkbox" name="competition" id="competition">
-    <label for="competition">Competição</label>
-    <table>
-        <tbody>
-            <tr>
-            {#each tableHeaders as header}
-                <th>{header}</th>
-            {/each}
-            </tr>
-            <tr>
-                <td>Total</td>
-            </tr>
-        </tbody>
-    </table>
+  <h2>Histórico</h2>
+  <p>Agrupar por:</p>
+  {#each filtersMenu as filter}
+    <label>
+      <input
+        type="checkbox"
+        bind:group={filters}
+        name="filters"
+        value={filter}
+      />
+      {filter}
+    </label>
+  {/each}
+  <p>{filters}</p>
 </section>
+
+<style>
+  table,
+  label,
+  p {
+    color: var(--main-color);
+  }
+</style>
