@@ -18,7 +18,7 @@ async function competition(match_id) {
 
 async function teams(match_id) {
     const [rows, fields] = await accessPool().query(`
-        SELECT m.match_id, ht.name AS home_team_name, ht.state AS home_team_state, at.name AS away_team_name, at.state AS away_team_state
+        SELECT m.match_id, ht.team_id AS home_team_id, ht.name AS home_team_name, ht.state AS home_team_state, at.team_id AS away_team_id, at.name AS away_team_name, at.state AS away_team_state
         FROM matches AS m
         JOIN teams AS ht ON m.home_team_id = ht.team_id
         JOIN teams AS at ON m.away_team_id = at.team_id
