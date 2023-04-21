@@ -17,25 +17,67 @@
     }
   });
   let teams = [...new Set(allTeams)];
+
+  $: filteredMatches = matches.filter((m) => {
+    if (
+      ($filter.team === "default" ||
+        (m.coach === "Mandante" &&
+          $filter.team === m.home_team + "/" + m.home_team_state) ||
+        (m.coach === "Visitante" &&
+          $filter.team === m.away_team + "/" + m.away_team_state)) &&
+      ($filter.season === "default" ||
+        $filter.season === m.date_time.getFullYear()) &&
+      ($filter.competition === "default" ||
+        $filter.competition === m.competition)
+    ) {
+      return m;
+    }
+  });
+
+  let page = 0;
+  $: pages = Math.ceil(filteredMatches.length / 10);
+
+  function updatePage(newPage) {
+    page = newPage;
+  }
+
+  function resetPage() {
+    page = 0;
+  }
 </script>
 
 <section id="matches">
   <h2>Partidas</h2>
   <div id="filters">
     <label for="team">Filtrar por:</label>
-    <select name="team" id="team" bind:value={$filter.team}>
+    <select
+      name="team"
+      id="team"
+      bind:value={$filter.team}
+      on:change={resetPage}
+    >
       <option value="default" selected>Equipe (todas)</option>
       {#each teams as team}
         <option value={team}>{team}</option>
       {/each}
     </select>
-    <select name="team" id="team" bind:value={$filter.season}>
+    <select
+      name="team"
+      id="team"
+      bind:value={$filter.season}
+      on:change={resetPage}
+    >
       <option value="default" selected>Temporada (todas)</option>
       {#each seasons as season}
         <option value={season}>{season}</option>
       {/each}
     </select>
-    <select name="team" id="team" bind:value={$filter.competition}>
+    <select
+      name="team"
+      id="team"
+      bind:value={$filter.competition}
+      on:change={resetPage}
+    >
       <option value="default" selected>Competição (todas)</option>
       {#each competitions as competition}
         <option value={competition}>{competition}</option>
@@ -55,8 +97,8 @@
         </tr>
       </thead>
       <tbody>
-        {#each matches as { match_id, date_time, stadium, competition, home_team, home_team_state, home_score, away_score, away_team, away_team_state, coach }, i}
-          {#if ($filter.team === "default" || ($filter.team === home_team + "/" + home_team_state && coach === "Mandante") || ($filter.team === away_team + "/" + away_team_state && coach === "Visitante")) && ($filter.season === "default" || $filter.season === date_time.getFullYear()) && ($filter.competition === "default" || $filter.competition === competition)}
+        {#each filteredMatches as { match_id, date_time, stadium, competition, home_team, home_team_state, home_score, away_score, away_team, away_team_state, coach }, i}
+          {#if i >= page * 10 && i <= page * 10 + 9}
             <tr>
               <td class="date"
                 >{("0" + date_time.getDate()).slice(-2)}/{(
@@ -89,6 +131,11 @@
         {/each}
       </tbody>
     </table>
+    <div id="pagination">
+      {#each { length: pages } as _, i}
+        <button on:click={() => updatePage(i)}>{i + 1}</button>
+      {/each}
+    </div>
   </div>
   <p>*Equipe comandada pelo treinador em negrito</p>
 </section>
@@ -150,5 +197,11 @@
 
   a {
     color: var(--main-color);
+  }
+
+  #pagination {
+    padding: 2vw;
+    display: flex;
+    justify-content: center;
   }
 </style>
