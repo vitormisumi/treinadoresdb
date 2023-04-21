@@ -118,7 +118,7 @@ async function matches(coach_id) {
         JOIN competitions AS c ON m.competition_id = c.competition_id
         JOIN teams AS ht ON m.home_team_id = ht.team_id
         JOIN teams AS at ON m.away_team_id = at.team_id
-        WHERE home_coach_id = ? OR away_coach_id = ? ORDER BY date_time DESC LIMIT 10;`,
+        WHERE home_coach_id = ? OR away_coach_id = ? ORDER BY date_time DESC;`,
         [coach_id, coach_id, coach_id]);
     return rows;
 }

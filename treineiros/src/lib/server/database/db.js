@@ -9,7 +9,7 @@ const pool = createPool({
     database: DATABASE,
     waitForConnections: true,
     connectionLimit: 100,
-    maxIdle: 100, 
+    maxIdle: 10, 
     idleTimeout: 600000,
     queueLimit: 0
 });

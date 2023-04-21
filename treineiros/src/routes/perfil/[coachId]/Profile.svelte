@@ -121,8 +121,8 @@
   }
 
   #image {
-    width: 100%;
-    height: 100%;
+    justify-self: center;
+    width: 50%;
   }
 
   #name {
@@ -181,6 +181,11 @@
         "image table"
         "name asterisk";
       column-gap: 5%;
+    }
+
+    #image {
+      width: auto;
+      height: 100%;
     }
   }
 </style>
