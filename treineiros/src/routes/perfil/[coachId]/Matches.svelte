@@ -41,8 +41,24 @@
     page = newPage;
   }
 
-  function resetPage() {
+  function firstPage() {
     page = 0;
+  }
+
+  function backPage() {
+    if (page > 0) {
+      page -= 1;
+    }
+  }
+
+  function nextPage() {
+    if (page < pages - 1) {
+      page += 1;
+    }
+  }
+
+  function lastPage() {
+    page = pages - 1;
   }
 </script>
 
@@ -54,7 +70,7 @@
       name="team"
       id="team"
       bind:value={$filter.team}
-      on:change={resetPage}
+      on:change={firstPage}
     >
       <option value="default" selected>Equipe (todas)</option>
       {#each teams as team}
@@ -65,7 +81,7 @@
       name="team"
       id="team"
       bind:value={$filter.season}
-      on:change={resetPage}
+      on:change={firstPage}
     >
       <option value="default" selected>Temporada (todas)</option>
       {#each seasons as season}
@@ -76,7 +92,7 @@
       name="team"
       id="team"
       bind:value={$filter.competition}
-      on:change={resetPage}
+      on:change={firstPage}
     >
       <option value="default" selected>Competição (todas)</option>
       {#each competitions as competition}
@@ -115,10 +131,25 @@
               {:else}
                 <td class="home-team">{home_team}/{home_team_state}</td>
               {/if}
-              <td class="score"
-                ><a href="/partidas/{match_id}">{home_score}x{away_score}</a
-                ></td
-              >
+              {#if (coach === "Mandante" && home_score > away_score) || (coach === "Visitante" && away_score > home_score)}
+                <td class="score"
+                  ><a href="/partidas/{match_id}" class="win"
+                    >{home_score}x{away_score}</a
+                  ></td
+                >
+              {:else if home_score === away_score}
+                <td class="score"
+                  ><a href="/partidas/{match_id}" class="draw"
+                    >{home_score}x{away_score}</a
+                  ></td
+                >
+              {:else}
+                <td class="score"
+                  ><a href="/partidas/{match_id}" class="loss"
+                    >{home_score}x{away_score}</a
+                  ></td
+                >
+              {/if}
               {#if coach === "Visitante"}
                 <td class="coach-team away-team"
                   >{away_team}/{away_team_state}</td
@@ -131,13 +162,51 @@
         {/each}
       </tbody>
     </table>
-    <div id="pagination">
-      {#each { length: pages } as _, i}
-        <button on:click={() => updatePage(i)}>{i + 1}</button>
-      {/each}
-    </div>
   </div>
   <p>*Equipe comandada pelo treinador em negrito</p>
+  {#if pages > 1}
+    <div id="pagination">
+      <button id="first-page" on:click={firstPage}>&lt;&lt;&lt;</button>
+      <button id="back-page" on:click={backPage}>&lt;</button>
+      {#if page > 2}
+        <p class="ellipsis">...</p>
+      {/if}
+      {#if page === 0}
+        <p class="empty" />
+        <p class="empty" />
+        <p class="empty" />
+      {:else if page === 1}
+        <p class="empty" />
+        <p class="empty" />
+      {:else if page === 2}
+        <p class="empty" />
+      {/if}
+      {#each { length: pages } as _, i}
+        {#if i === page}
+          <button class="page current" on:click={() => updatePage(i)}
+            >{i + 1}</button
+          >
+        {:else if i < page + 3 && i > page - 3}
+          <button class="page" on:click={() => updatePage(i)}>{i + 1}</button>
+        {/if}
+      {/each}
+      {#if pages > page + 3}
+        <p class="ellipsis">...</p>
+      {/if}
+      {#if pages - page === 1}
+        <p class="empty" />
+        <p class="empty" />
+        <p class="empty" />
+      {:else if pages - page === 2}
+        <p class="empty" />
+        <p class="empty" />
+      {:else if pages - page === 3}
+        <p class="empty" />
+      {/if}
+      <button id="next-page" on:click={nextPage}>&gt;</button>
+      <button id="last-page" on:click={lastPage}>&gt;&gt;&gt;</button>
+    </div>
+  {/if}
 </section>
 
 <style>
@@ -188,6 +257,18 @@
     font-weight: var(--bold);
   }
 
+  .win {
+    color: #1ade1a;
+  }
+
+  .draw {
+    color: grey;
+  }
+
+  .loss {
+    color: var(--accent-color);
+  }
+
   label,
   p {
     font-family: var(--main-font);
@@ -200,8 +281,32 @@
   }
 
   #pagination {
-    padding: 2vw;
+    padding: 0;
     display: flex;
-    justify-content: center;
+    gap: 5px;
+    justify-content: right;
+  }
+
+  button {
+    cursor: pointer;
+    background-color: var(--table-background);
+    color: var(--main-color);
+    font-family: var(--main-font);
+    width: clamp(25px, 3vw, 40px);
+    height: clamp(25px, 3vw, 40px);
+    border: none;
+    font-size: clamp(0.75rem, 1.5vw, 1rem);
+  }
+
+  .current {
+    font-weight: var(--bold);
+    color: var(--accent-color);
+  }
+
+  .ellipsis,
+  .empty {
+    width: clamp(25px, 3vw, 40px);
+    height: clamp(25px, 3vw, 40px);
+    text-align: center;
   }
 </style>
