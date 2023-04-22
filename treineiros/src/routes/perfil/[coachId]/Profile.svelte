@@ -1,4 +1,6 @@
 <script>
+  import fallback from '$lib/assets/images/coaches/default.png';
+
   export let coach;
   export let lastClub;
   export let lastMatch;
@@ -20,7 +22,6 @@
     return age;
   }
 
-  let fallback = "/src/lib/assets/images/coaches/default.png";
   const handleError = (ev) => (ev.target.src = fallback);
 </script>
 
