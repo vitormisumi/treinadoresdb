@@ -15,7 +15,7 @@ async function lastMatches() {
 }
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
+export async function load() {
     return {
         matches: lastMatches(),
     };

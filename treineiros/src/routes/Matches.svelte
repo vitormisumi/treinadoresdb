@@ -112,6 +112,7 @@
   .coach {
     margin: auto;
     font-size: clamp(0.75rem, 2vw, 1.5rem);
+    font-weight: var(--bold);
   }
 
   .home-coach {
