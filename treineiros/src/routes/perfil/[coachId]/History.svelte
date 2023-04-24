@@ -1,47 +1,59 @@
 <script>
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+
   export let history;
 
-  let filters = [];
-  const filtersMenu = ["year", "team", "competition"];
+  const groupMenu = [
+    {
+      slug: "team",
+      name: "Clube",
+    },
+    {
+      slug: "competition",
+      name: "Competição",
+    },
+  ];
 
-  const groupBy = (arr, keys) => {
-    return arr.reduce((storage, item) => {
-      const objKey = keys.map((key) => `${item[key]}`).join(":");
-      if (storage[objKey]) {
-        storage[objKey].push(item);
-      } else {
-        storage[objKey] = [item];
-      }
-      console.log(storage);
-      return storage;
-    }, {});
+  let groups = $page.url.searchParams.get("groups");
+
+  const handleGroupChange = () => {
+    goto(`?groups=${groups}`, {
+      noScroll: true,
+    });
   };
 </script>
 
 <section id="history">
   <h2>Histórico</h2>
-  <div id="filters">
-    <p>Agrupar por:</p>
-    {#each filtersMenu as filter}
-      <label>
-        <input
-          type="checkbox"
-          bind:group={filters}
-          name="filters"
-          value={filter}
-        />
-        {filter}
-      </label>
-    {/each}
-    <p>{filters}</p>
-  </div>
+  <form>
+    <div id="groups">
+      <h3 id="group-heading">Agrupar por:</h3>
+      {#each groupMenu as group}
+        <label>
+          <input
+            type="checkbox"
+            bind:group={groups}
+            name="groups"
+            value={group.slug}
+            on:change={handleGroupChange}
+          />
+          {group.name}
+        </label>
+      {/each}
+    </div>
+  </form>
   <div id="table">
     <table>
       <thead>
         <tr>
           <th>Ano</th>
-          <th>Campeonato</th>
-          <th>Clube</th>
+          {#if history[0].team !== undefined}
+            <th>Clube</th>
+          {/if}
+          {#if history[0].competition !== undefined}
+            <th>Campeonato</th>
+          {/if}
           <th>P</th>
           <th>V</th>
           <th>E</th>
@@ -55,21 +67,25 @@
         </tr>
       </thead>
       <tbody>
-        {#each history as data}
+        {#each history as column}
           <tr>
-            <td>{data.year}</td>
-            <td>{data.competition}</td>
-            <td>{data.team}</td>
-            <td>{data.matches}</td>
-            <td>{data.wins}</td>
-            <td>{data.draws}</td>
-            <td>{data.losses}</td>
-            <td>{data.goals_scored}</td>
-            <td>{data.goals_conceded}</td>
-            <td>{data.goals_scored - data.goals_conceded}</td>
-            <td>{data.yellow_cards}</td>
-            <td>{data.red_cards}</td>
-            <td>{Number(data.average).toFixed(1)}</td>
+            <td>{column.year}</td>
+            {#if column.team !== undefined}
+              <td>{column.team}</td>
+            {/if}
+            {#if column.competition !== undefined}
+              <td>{column.competition}</td>
+            {/if}
+            <td>{column.matches}</td>
+            <td>{column.wins}</td>
+            <td>{column.draws}</td>
+            <td>{column.losses}</td>
+            <td>{column.goals_scored}</td>
+            <td>{column.goals_conceded}</td>
+            <td>{column.goals_scored - column.goals_conceded}</td>
+            <td>{column.yellow_cards}</td>
+            <td>{column.red_cards}</td>
+            <td>{Number(column.average).toFixed(1)}</td>
           </tr>
         {/each}
       </tbody>
@@ -78,7 +94,7 @@
 </section>
 
 <style>
-  #filters {
+  #groups {
     justify-content: flex-end;
     align-items: center;
     display: flex;
@@ -88,7 +104,7 @@
 
   table,
   label,
-  p {
+  #group-heading {
     color: var(--main-color);
     font-family: var(--main-font);
     font-size: clamp(0.75rem, 2vw, 1.25rem);

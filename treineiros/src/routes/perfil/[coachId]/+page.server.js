@@ -123,11 +123,9 @@ async function matches(coach_id) {
     return rows;
 }
 
-async function history(coach_id) {
+async function history(coach_id, groups) {
     const [rows, fields] = await accessPool().query(`
-        SELECT coach.competition,
-            coach.year,
-            coach.team,
+        SELECT ??,
             COUNT(*) AS matches, 
             SUM(wins) AS wins,
             SUM(draws) AS draws,
@@ -158,14 +156,23 @@ async function history(coach_id) {
             JOIN teams AS at ON m.away_team_id = at.team_id
             JOIN competitions AS c ON m.competition_id = c.competition_id
             WHERE home_coach_id = ? OR away_coach_id = ?) AS coach
-        GROUP BY coach.competition, coach.year, coach.team
+        GROUP BY ??
         ORDER BY coach.year DESC;`,
-        [coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id]);
+        [groups, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, groups]);
     return rows;
 }
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
+export async function load({ params, url }) {
+    let groupsParams = url.searchParams.get('groups');
+    let groups;
+    if (groupsParams === null || groupsParams === '') {
+        groups = ['coach.year']
+    } else {
+        groups = groupsParams.split(',');
+        groups.splice(0, 0, 'coach.year');
+    }
+    console.log(groupsParams, groups);
     return {
         coach: getCoach(params.coachId),
         lastClub: lastClub(params.coachId),
@@ -177,6 +184,7 @@ export async function load({ params }) {
         goalsScoredAvg: goalsScoredAvg(params.coachId),
         goalsConcededAvg: goalsConcededAvg(params.coachId),
         matches: matches(params.coachId),
-        history: history(params.coachId)
+        history: history(params.coachId, groups)
     };
 };
+

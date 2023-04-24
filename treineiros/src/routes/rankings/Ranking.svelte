@@ -1,7 +1,5 @@
 <script>
   import MostMatches from "./MostMatches.svelte";
-  import MostGoalsScored from "./MostGoalsScored.svelte";
-  import MostGoalsConceded from "./MostGoalsConceded.svelte";
 
   const indicators = [
     "Mais partidas",
@@ -13,31 +11,21 @@
 
   let selectedIndicator;
 
-  const competitions = [
-    "Brasileiro Série A",
-    "Brasileiro Série B",
-    "Brasileiro Série C",
-    "Brasileiro Série D",
-    "Copa do Brasil",
+  let competitions = [
+    "Campeonato Brasileiro - Serie A",
+    "Campeonato Brasileiro - Serie B",
+    "Campeonato Brasileiro - Serie C",
+    "Campeonato Brasileiro - Serie D",
+    "Copa do Brasil - Profissional",
   ];
 
-  let selectedCompetitions = [
-    "Brasileiro Série A",
-    "Brasileiro Série B",
-    "Brasileiro Série C",
-    "Brasileiro Série D",
-    "Copa do Brasil",
-  ];
+  let form;
 </script>
 
 <section id="ranking">
   <h2>Rankings</h2>
   {#if selectedIndicator === "Mais partidas"}
     <MostMatches />
-  {:else if selectedIndicator === "Mais gols feitos"}
-    <MostGoalsScored />
-  {:else if selectedIndicator === "Mais gols sofridos"}
-    <MostGoalsConceded />
   {/if}
   <select bind:value={selectedIndicator} id="indicator">
     <option selected disabled>Indicador</option>
@@ -46,20 +34,23 @@
     {/each}
   </select>
   <br />
-  <div id="competition-filter">
-    <h3 id="competition-heading">Competição</h3>
-    {#each competitions as competition}
-      <label for={competition} class="competitions">
-        <input
-          type="checkbox"
-          bind:group={selectedCompetitions}
-          value={competition}
-          class="competition-checkbox"
-        />
-        {competition}
-      </label>
-    {/each}
-  </div>
+  <form method="POST" bind:this={form}>
+    <div id="competition-filter">
+      <h3 id="competition-heading">Competição</h3>
+      {#each competitions as competition}
+        <label for={competition} class="competitions">
+          <input
+            type="checkbox"
+            name="competition"
+            value={competition}
+            class="competition-checkbox"
+          />
+          {competition}
+        </label>
+      {/each}
+      <button id="update-competition" on:click={() => form.requestSubmit()}>Atualizar</button>
+    </div>
+  </form>
   <br />
 </section>
 
@@ -99,6 +90,8 @@
 
   #competition-filter {
     grid-area: competition;
+    background-color: var(--table-background);
+    border-radius: 1vw;
   }
 
   #competition-heading {

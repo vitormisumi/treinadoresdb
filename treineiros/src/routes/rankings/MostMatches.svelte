@@ -1,7 +1,7 @@
 <script>
-    import { getContext } from "svelte";
+  import { getContext } from "svelte";
 
-    const mostMatches = getContext('mostMatches');
+  const mostMatches = getContext("mostMatches");
 </script>
 
 <table id="ranking-table">
@@ -12,16 +12,20 @@
         <td
           ><img
             src="/src/lib/assets/images/coaches/{coach.coach_id}.png"
-            alt={coach.name}
+            alt={coach.coach_name}
             class="coach-img"
           /></td
         >
-        {#if coach.nickname === null}
-          <td class="coach-column"><a href="/perfil/{coach.coach_id}">{coach.name}</a></td>
+        {#if coach.coach_nickname === null}
+          <td class="coach-column"
+            ><a href="/perfil/{coach.coach_id}">{coach.coach_name}</a></td
+          >
         {:else}
-          <td class="coach-column"><a href="/perfil/{coach.coach_id}">{coach.nickname}</a></td>
+          <td class="coach-column"
+            ><a href="/perfil/{coach.coach_id}">{coach.coach_nickname}</a></td
+          >
         {/if}
-        <td class="value-column">{coach.number_of_matches}</td>
+        <td class="value-column">{coach.matches}</td>
       </tr>
     {/each}
   </tbody>

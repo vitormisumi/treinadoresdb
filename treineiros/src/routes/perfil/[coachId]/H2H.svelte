@@ -4,7 +4,7 @@
     <form id="search-bar1" class="search-bar">
     <input
       type="search"
-      placeholder="Busque um treinador ou equipe"
+      placeholder="Busque um treinador"
       class="search-text"
     />
     <button type="submit" class="search-button"><i class="fa fa-search" /></button>

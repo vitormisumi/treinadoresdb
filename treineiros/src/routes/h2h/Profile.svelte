@@ -1,21 +1,5 @@
 <section id="profile">
-  <h2 class="title">H2H</h2>
-  <form id="search-bar1" class="search-bar">
-    <input
-      type="search"
-      placeholder="Busque um treinador ou equipe"
-      class="search-text"
-    />
-    <button type="submit" class="search-button"><i class="fa fa-search" /></button>
-  </form>
-  <form id="search-bar2" class="search-bar">
-    <input
-      type="search"
-      placeholder="Busque um treinador ou equipe"
-      class="search-text"
-    />
-    <button type="submit" class="search-button"><i class="fa fa-search" /></button>
-  </form>
+  
   <img src="src/static/images/mano.png" alt="" id="coach-team1" />
   <p id="coach-team-name1" class="coach-team">Mano Menezes</p>
   <p id="wins1" class="wins">2</p>
@@ -38,50 +22,9 @@
     justify-items: center;
   }
 
-  .title {
-    grid-area: title;
-  }
-
-  #search-bar1 {
-    grid-area: search1;
-  }
-
-  #search-bar2 {
-    grid-area: search2;
-  }
-
-  .search-bar {
-    display: grid;
-    align-self: center;
-    grid-template-columns: 85% 15%;
-    margin: 3vw;
-    background-color: var(--accent-color);
-    border-radius: 2rem;
-    z-index: 100;
-    width: max(100%, 100px);
-    height: clamp(30px, 7vh, 40px);
-  }
-
-  .search-text {
-    font-family: var(--main-font);
-    padding-left: clamp(10px, 2vw, 20px);
-    font-size: clamp(1rem, 1vw, 1.5rem);
-    background-color: transparent;
-    border: none;
-  }
-
   ::placeholder {
     color: var(--main-color);
     opacity: 0.7;
-  }
-
-  .search-button {
-    cursor: pointer;
-    border: none;
-    padding: 0 2vw 0 0;
-    background-color: transparent;
-    color: var(--background-color);
-    font-size: clamp(1rem, 2vw, 1.5rem);
   }
 
   #coach-team1 {
