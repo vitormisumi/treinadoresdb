@@ -65,36 +65,38 @@
 <section id="matches">
   <h2>Partidas</h2>
   <div id="filters">
-    <label for="team">Filtrar por:</label>
+    <h4>Equipe:</h4>
     <select
       name="team"
       id="team"
       bind:value={$filter.team}
       on:change={firstPage}
     >
-      <option value="default" selected>Equipe (todas)</option>
+      <option value="default" selected>Todas</option>
       {#each teams as team}
         <option value={team}>{team}</option>
       {/each}
     </select>
+    <h4>Temporada:</h4>
     <select
       name="team"
       id="team"
       bind:value={$filter.season}
       on:change={firstPage}
     >
-      <option value="default" selected>Temporada (todas)</option>
+      <option value="default" selected>Todas</option>
       {#each seasons as season}
         <option value={season}>{season}</option>
       {/each}
     </select>
+    <h4>Competição:</h4>
     <select
       name="team"
       id="team"
       bind:value={$filter.competition}
       on:change={firstPage}
     >
-      <option value="default" selected>Competição (todas)</option>
+      <option value="default" selected>Todas</option>
       {#each competitions as competition}
         <option value={competition}>{competition}</option>
       {/each}
@@ -213,13 +215,14 @@
   #filters {
     display: flex;
     justify-content: flex-end;
+    flex-wrap: wrap;
     align-items: center;
     gap: 2%;
-    padding: 0 0 2rem 0;
+    padding: 0 0 1rem 0;
   }
 
-  #matches {
-    display: block;
+  select {
+    width: 200px;
   }
 
   #table {
@@ -269,11 +272,15 @@
     color: var(--accent-color);
   }
 
-  label,
+  h4,
   p {
     font-family: var(--main-font);
     color: var(--main-color);
     font-size: clamp(0.75rem, 1.5vw, 1rem);
+  }
+
+  h4 {
+    margin: 0;
   }
 
   a {

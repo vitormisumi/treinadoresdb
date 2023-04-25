@@ -162,6 +162,44 @@ async function history(coach_id, groups) {
     return rows;
 }
 
+async function totalHistory(coach_id) {
+    const [rows, fields] = await accessPool().query(
+        `SELECT 
+            COUNT(*) AS matches, 
+            SUM(wins) AS wins,
+            SUM(draws) AS draws,
+            SUM(losses) AS losses,
+            SUM(goals_scored) AS goals_scored,
+            SUM(goals_conceded) AS goals_conceded,
+            SUM(yellow_cards) AS yellow_cards,
+            SUM(red_cards) AS red_cards,
+            (SUM(points) / (COUNT(*) * 3)) * 100 AS average
+        FROM
+            (SELECT c.name AS competition, 
+                c.year AS year,
+                IF(home_coach_id = ?, CONCAT(ht.name, '/', ht.state), CONCAT(at.name, '/', at.state)) AS team,
+                IF(home_coach_id = ? AND m.home_score > m.away_score OR away_coach_id = ? AND m.home_score < m.away_score, 1, 0) AS wins,
+                IF(m.home_score = m.away_score, 1, 0) AS draws,
+                IF(home_coach_id = ? AND m.home_score < m.away_score OR away_coach_id = ? AND m.home_score > m.away_score, 1, 0) AS losses,
+                IF(home_coach_id = ?, m.home_score, m.away_score) AS goals_scored,
+                IF(home_coach_id = ?, m.away_score, m.home_score) AS goals_conceded,
+                IF(home_coach_id = ?, m.home_yellow_cards, m.away_yellow_cards) AS yellow_cards,
+                IF(home_coach_id = ?, m.home_red_cards, m.away_red_cards) AS red_cards,
+                (CASE 
+                    WHEN home_coach_id = ? AND m.home_score > m.away_score OR away_coach_id = ? AND m.home_score < m.away_score THEN 3
+                    WHEN m.home_score = m.away_score THEN 1
+                    ELSE 0
+                    END) AS points
+            FROM matches AS m
+            JOIN teams AS ht ON m.home_team_id = ht.team_id
+            JOIN teams AS at ON m.away_team_id = at.team_id
+            JOIN competitions AS c ON m.competition_id = c.competition_id
+            WHERE home_coach_id = ? OR away_coach_id = ?) AS coach;`,
+        [coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id]);
+    console.log(rows[0]);
+    return rows[0];
+}
+
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params, url }) {
     let groupsParams = url.searchParams.get('groups');
@@ -172,7 +210,7 @@ export async function load({ params, url }) {
         groups = groupsParams.split(',');
         groups.splice(0, 0, 'coach.year');
     }
-    console.log(groupsParams, groups);
+
     return {
         coach: getCoach(params.coachId),
         lastClub: lastClub(params.coachId),
@@ -184,7 +222,8 @@ export async function load({ params, url }) {
         goalsScoredAvg: goalsScoredAvg(params.coachId),
         goalsConcededAvg: goalsConcededAvg(params.coachId),
         matches: matches(params.coachId),
-        history: history(params.coachId, groups)
+        history: history(params.coachId, groups),
+        totalHistory: totalHistory(params.coachId)
     };
 };
 

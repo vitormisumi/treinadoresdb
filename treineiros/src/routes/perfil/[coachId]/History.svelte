@@ -3,6 +3,7 @@
   import { page } from "$app/stores";
 
   export let history;
+  export let totalHistory;
 
   const groupMenu = [
     {
@@ -88,6 +89,27 @@
             <td>{Number(column.average).toFixed(1)}</td>
           </tr>
         {/each}
+        <tr id="total-row">
+          <td class="total">TOTAL</td>
+          {#if history[0].team !== undefined}
+            <td />
+          {/if}
+          {#if history[0].competition !== undefined}
+            <td />
+          {/if}
+          <td class="total">{totalHistory.matches}</td>
+          <td class="total">{totalHistory.wins}</td>
+          <td class="total">{totalHistory.draws}</td>
+          <td class="total">{totalHistory.losses}</td>
+          <td class="total">{totalHistory.goals_scored}</td>
+          <td class="total">{totalHistory.goals_conceded}</td>
+          <td class="total"
+            >{totalHistory.goals_scored - totalHistory.goals_conceded}</td
+          >
+          <td class="total">{totalHistory.yellow_cards}</td>
+          <td class="total">{totalHistory.red_cards}</td>
+          <td class="total">{Number(totalHistory.average).toFixed(1)}</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -98,18 +120,24 @@
     justify-content: flex-end;
     align-items: center;
     display: flex;
-    padding: 0 0 2rem 0;
+    padding: 0 0 1rem 0;
     gap: 2%;
   }
 
-  table,
-  label,
-  #group-heading {
+  table {
     color: var(--main-color);
     font-family: var(--main-font);
     font-size: clamp(0.75rem, 2vw, 1.25rem);
     border-collapse: collapse;
     white-space: nowrap;
+  }
+  
+  #group-heading,
+  label {
+    color: var(--main-color);
+    font-family: var(--main-font);
+    font-size: clamp(0.75rem, 1.5vw, 1rem);
+    margin: 0;
   }
 
   table {
@@ -135,5 +163,13 @@
 
   tr:nth-last-of-type(2n) {
     background-color: var(--table-background);
+  }
+
+  #total-row {
+    background-color: black;
+  }
+
+  .total {
+    font-weight: var(--bold);
   }
 </style>

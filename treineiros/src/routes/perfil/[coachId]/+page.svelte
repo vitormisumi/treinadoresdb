@@ -20,7 +20,7 @@
   goalsScoredAvg={data.goalsScoredAvg}
   goalsConcededAvg={data.goalsConcededAvg}
 />
-<History history={data.history}/>
+<History history={data.history} totalHistory={data.totalHistory}/>
 <Matches matches={data.matches} />
 <Performance />
 <H2H />
