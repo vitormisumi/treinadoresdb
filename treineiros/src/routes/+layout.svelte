@@ -29,7 +29,7 @@
       <li class="menu-item"><a href="/sobre" class="menu-link">Sobre</a></li>
       <li class="menu-item"><a href="/h2h" class="menu-link">H2H</a></li>
       <li class="menu-item">
-        <a href="/rankings" class="menu-link">Rankings</a>
+        <a href="/rankings?competitions=a,b,c,d,cb&period=2014,2023" class="menu-link">Rankings</a>
       </li>
     </ul>
     <div id="search">

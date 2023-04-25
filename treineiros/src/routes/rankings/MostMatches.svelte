@@ -53,6 +53,10 @@
     border-color: var(--background-color) var(--background-color) #e5e5e525;
   }
 
+  a {
+    color: var(--main-color);
+  }
+
   .position-column {
     color: var(--main-color);
   }
@@ -68,7 +72,7 @@
 
   .coach-img {
     width: auto;
-    height: 50px;
+    max-height: 50px;
     padding: 0;
     margin: 0;
   }

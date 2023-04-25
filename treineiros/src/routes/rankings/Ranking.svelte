@@ -1,5 +1,9 @@
 <script>
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
   import MostMatches from "./MostMatches.svelte";
+  import RangeSlider from "svelte-range-slider-pips";
+  export let mostRecentYear;
 
   const indicators = [
     "Mais partidas",
@@ -11,15 +15,38 @@
 
   let selectedIndicator;
 
-  let competitions = [
-    "Campeonato Brasileiro - Serie A",
-    "Campeonato Brasileiro - Serie B",
-    "Campeonato Brasileiro - Serie C",
-    "Campeonato Brasileiro - Serie D",
-    "Copa do Brasil - Profissional",
+  const competitions = [
+    {
+      slug: "a",
+      name: "Brasileiro Série A",
+    },
+    {
+      slug: "b",
+      name: "Brasileiro Série B",
+    },
+    {
+      slug: "c",
+      name: "Brasileiro Série C",
+    },
+    {
+      slug: "d",
+      name: "Brasileiro Série D",
+    },
+    {
+      slug: "cb",
+      name: "Copa do Brasil",
+    },
   ];
 
-  let form;
+  let selectedCompetitions = $page.url.searchParams.get("competitions");
+
+  let period = [2014, mostRecentYear];
+
+  const handleChange = () => {
+    goto(`?competitions=${selectedCompetitions}&period=${period}`, {
+      noScroll: true,
+    });
+  };
 </script>
 
 <section id="ranking">
@@ -27,45 +54,64 @@
   {#if selectedIndicator === "Mais partidas"}
     <MostMatches />
   {/if}
-  <select bind:value={selectedIndicator} id="indicator">
+  <select
+    bind:value={selectedIndicator}
+    id="indicator"
+    on:change={handleChange}
+  >
     <option selected disabled>Indicador</option>
     {#each indicators as indicator}
       <option value={indicator}>{indicator}</option>
     {/each}
   </select>
   <br />
-  <form method="POST" bind:this={form}>
-    <div id="competition-filter">
-      <h3 id="competition-heading">Competição</h3>
+  <div class="filter-div" id="competition-filter">
+    <h3 id="competition-heading">Competição</h3>
+    <form>
       {#each competitions as competition}
-        <label for={competition} class="competitions">
+        <label>
           <input
             type="checkbox"
             name="competition"
-            value={competition}
+            value={competition.slug}
+            bind:group={selectedCompetitions}
             class="competition-checkbox"
+            on:change={handleChange}
           />
-          {competition}
+          {competition.name}
         </label>
       {/each}
-      <button id="update-competition" on:click={() => form.requestSubmit()}>Atualizar</button>
-    </div>
-  </form>
+    </form>
+  </div>
   <br />
+  <div class="filter-div" id="year-filter">
+    <h3 id="year-heading">Ano</h3>
+    <RangeSlider
+      float
+      range="min/max"
+      min={2014}
+      max={mostRecentYear}
+      pips
+      first="label"
+      last="label"
+      id="slider"
+      bind:values={period}
+      on:change={handleChange}
+    />
+  </div>
 </section>
 
 <style>
   #ranking {
     display: grid;
-    grid-template-columns: 7fr 3fr;
+    grid-template-columns: 8fr 2fr;
     grid-template-rows: auto;
     grid-template-areas:
       "title title"
       "table indicator"
       "table competition"
-      "table period"
-      "asterisk asterisk";
-    column-gap: 5vw;
+      "table period";
+    gap: 3vw;
   }
 
   h2 {
@@ -77,36 +123,33 @@
     height: 50px;
   }
 
-  #indicator:after {
-    position: absolute;
-    content: "";
-    top: 14px;
-    right: 10px;
-    width: 0;
-    height: 0;
-    border: 6px solid transparent;
-    border-color: #fff transparent transparent transparent;
+  form {
+    margin: 1vw;
   }
 
-  #competition-filter {
-    grid-area: competition;
+  .filter-div {
     background-color: var(--table-background);
     border-radius: 1vw;
   }
 
-  #competition-heading {
+  #competition-filter {
+    grid-area: competition;
+  }
+
+  #competition-heading,
+  #year-heading {
     font-family: var(--main-font);
     color: var(--main-color);
     text-align: center;
   }
 
-  .competitions {
+  label {
     color: var(--main-color);
     font-family: var(--main-font);
     display: block;
   }
 
-  .competition-checkbox {
-    background-color: var(--main-color);
+  #year-filter {
+    grid-area: period;
   }
 </style>

@@ -8,7 +8,6 @@
   const mostMatches = writable();
   $: mostMatches.set(data.mostMatches);
   setContext("mostMatches", mostMatches);
-
 </script>
 
-<Ranking />
+<Ranking mostRecentYear={data.mostRecentYear}/>

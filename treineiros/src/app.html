@@ -29,6 +29,17 @@
 		--title-font: "Inter";
 		--table-background: #ffffff15;
 		--section-margin: max(15px, 5vw);
+
+		--range-slider:          black; /* slider main background color */
+		--range-handle-inactive: var(--main-color); /* inactive handle color */
+		--range-handle:          var(--accent-color); /* non-focussed handle color */
+		--range-handle-focus:    var(--accent-color); /* focussed handle color */
+		--range-handle-border:   var(--range-handle);
+		--range-range-inactive:  var(--range-handle-inactive); /* inactive range bar background color */
+		--range-range:           var(--range-handle-focus); /* active range bar background color */
+		--range-float-inactive:  var(--range-handle-inactive); /* inactive floating label background color */
+		--range-float:           var(--range-handle-focus); /* floating label background color */
+		--range-float-text:      var(--main-color); /* text color on floating label */
 	}
 
 	section {
@@ -63,4 +74,18 @@
 		color: var(--accent-color);
 		text-decoration: none;
 	}
+
+	input {
+    	accent-color: var(--accent-color);
+  	}
+
+	#slider > .rangePips > .pip > .pipVal {
+		color: var(--main-color);
+		font-family: var(--main-font);
+	}
+
+	#slider > .rangePips > .pipSelected {
+		color: var(--accent-color);
+	}
+
 </style>
