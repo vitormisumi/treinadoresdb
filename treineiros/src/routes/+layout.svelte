@@ -7,6 +7,10 @@
     menu = !menu;
   }
 
+  function closeMenu() {
+    menu = true;
+  }
+
   export let data;
   const searchCoaches = data.coach.map((field) => ({
     ...field,
@@ -25,11 +29,21 @@
   </button>
   <nav class:menu id="menu">
     <ul>
-      <li class="menu-item"><a href="/" class="menu-link">Home</a></li>
-      <li class="menu-item"><a href="/sobre" class="menu-link">Sobre</a></li>
-      <li class="menu-item"><a href="/h2h" class="menu-link">H2H</a></li>
       <li class="menu-item">
-        <a href="/rankings?competitions=a,b,c,d,cb&period=2014,2023" class="menu-link">Rankings</a>
+        <a href="/" class="menu-link" on:click={closeMenu}>Home</a>
+      </li>
+      <li class="menu-item">
+        <a href="/sobre" class="menu-link" on:click={closeMenu}>Sobre</a>
+      </li>
+      <li class="menu-item">
+        <a href="/h2h" class="menu-link" on:click={closeMenu}>H2H</a>
+      </li>
+      <li class="menu-item">
+        <a
+          href="/rankings?competitions=a,b,c,d,cb&period=2014,2023"
+          class="menu-link"
+          on:click={closeMenu}>Rankings</a
+        >
       </li>
     </ul>
     <div id="search">
