@@ -85,15 +85,15 @@
       </tr>
       <tr>
         <td class="col1">Aproveitamento</td>
-        <td class="col2">{Number(pointPercentage).toFixed(1)}%</td>
+        <td class="col2">{pointPercentage}%</td>
       </tr>
       <tr>
         <td class="col1">Média Gols Marcados</td>
-        <td class="col2">{Number(goalsScoredAvg).toFixed(2)}</td>
+        <td class="col2">{goalsScoredAvg}</td>
       </tr>
       <tr>
         <td class="col1">Média Gols Sofridos</td>
-        <td class="col2">{Number(goalsConcededAvg).toFixed(2)}</td>
+        <td class="col2">{goalsConcededAvg}</td>
       </tr>
     </tbody>
   </table>

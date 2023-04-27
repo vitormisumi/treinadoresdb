@@ -1,5 +1,5 @@
 <script>
-  import { filter } from "/src/lib/stores/matchfilter";
+  import { filter } from "/src/lib/stores/matchFilter";
 
   export let matches;
 

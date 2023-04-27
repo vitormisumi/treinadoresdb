@@ -74,12 +74,12 @@ async function mostMatches(coach_id) {
 
 async function pointPercentage(coach_id) {
     const [rows, fields] = await accessPool().query(`
-        SELECT (SUM(CASE WHEN home_coach_id = ? AND home_score > away_score THEN 3
+        SELECT ROUND((SUM(CASE WHEN home_coach_id = ? AND home_score > away_score THEN 3
                         WHEN away_coach_id = ? AND home_score < away_score THEN 3
                         WHEN home_score = away_score AND (home_coach_id = ? OR away_coach_id = ?) THEN 1
                         ELSE 0 END)) /
                (SUM(CASE WHEN home_coach_id = ? OR away_coach_id = ? THEN 1
-                        ELSE 0 END) * 3) * 100 AS point_percentage 
+                        ELSE 0 END) * 3) * 100, 1) AS point_percentage 
         FROM matches;`,
         [coach_id, coach_id, coach_id, coach_id, coach_id, coach_id]);
     console.log(rows[0].point_percentage);
@@ -88,7 +88,7 @@ async function pointPercentage(coach_id) {
 
 async function goalsScoredAvg(coach_id) {
     const [rows, fields] = await accessPool().query(`
-        SELECT SUM(goals) / SUM(matches) AS goal_average FROM (
+        SELECT ROUND(SUM(goals) / SUM(matches), 2) AS goal_average FROM (
         SELECT SUM(home_score) AS goals, COUNT(*) AS matches FROM matches WHERE home_coach_id = ?
         UNION
         SELECT SUM(away_score) AS goals, COUNT(*) AS matches FROM matches WHERE away_coach_id = ?) AS m;`,
@@ -98,7 +98,7 @@ async function goalsScoredAvg(coach_id) {
 
 async function goalsConcededAvg(coach_id) {
     const [rows, fields] = await accessPool().query(`
-        SELECT SUM(goals) / SUM(matches) AS goal_average FROM (
+        SELECT ROUND(SUM(goals) / SUM(matches), 2) AS goal_average FROM (
         SELECT SUM(away_score) AS goals, COUNT(*) AS matches FROM matches WHERE home_coach_id = ?
         UNION
         SELECT SUM(home_score) AS goals, COUNT(*) AS matches FROM matches WHERE away_coach_id = ?) AS m;`,
