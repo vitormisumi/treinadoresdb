@@ -40,7 +40,7 @@
       </li>
       <li class="menu-item">
         <a
-          href="/rankings?competitions=a,b,c,d,cb&period=2014,2023"
+          href="/rankings?competitions=a,b,c,d,cb&period=2014,2023&minmatches=50&value=total"
           class="menu-link"
           on:click={closeMenu}>Rankings</a
         >

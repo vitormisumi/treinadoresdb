@@ -8,10 +8,10 @@ async function mostRecentYear() {
 
 async function mostMatches(competitions, periodStart, periodEnd) {
     const [rows, fields] = await accessPool().query(`
-        SELECT home.home_coach_id AS coach_id, 
-            home.name AS coach_name, 
-            home.nickname AS coach_nickname, 
-            (home.home_matches + away.away_matches) AS matches 
+        SELECT home.home_coach_id AS id, 
+            home.name, 
+            home.nickname, 
+            (home.home_matches + away.away_matches) AS value 
             FROM (SELECT m.home_coach_id, 
                     hc.name,
                     hc.nickname,
@@ -34,86 +34,167 @@ async function mostMatches(competitions, periodStart, periodEnd) {
                 WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
                 GROUP BY away_coach_id) AS away
             ON home.home_coach_id = away.away_coach_id
-            ORDER BY matches DESC
+            ORDER BY value DESC
             LIMIT 10;`,
     [competitions, periodStart, periodEnd, competitions, periodStart, periodEnd]);
     return rows;
 }
 
-async function mostGoalsScored(competitions, periodStart, periodEnd) {
+async function mostGoalsScored(value, competitions, periodStart, periodEnd, minMatches) {
+    if (value === 'total') {
+        const [rows, fields] = await accessPool().query(`
+            SELECT home.home_coach_id AS id, 
+                home.name, 
+                home.nickname, 
+                (home.home_goals + away.away_goals) AS value
+                FROM (SELECT COUNT(m.match_id) AS matches, 
+                        m.home_coach_id, 
+                        hc.name,
+                        hc.nickname,
+                        SUM(m.home_score) AS home_goals 
+                    FROM matches AS m
+                    JOIN coaches AS hc
+                    ON m.home_coach_id = hc.coach_id
+                    JOIN competitions AS c
+                    ON m.competition_id = c.competition_id
+                    WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
+                    GROUP BY home_coach_id) AS home
+                JOIN
+                    (SELECT COUNT(m.match_id) AS matches, 
+                        m.away_coach_id,
+                        SUM(m.away_score) AS away_goals 
+                    FROM matches AS m
+                    JOIN coaches AS ac
+                    ON m.away_coach_id = ac.coach_id
+                    JOIN competitions AS c
+                    ON m.competition_id = c.competition_id
+                    WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
+                    GROUP BY away_coach_id) AS away
+                ON home.home_coach_id = away.away_coach_id
+                WHERE home.matches + away.matches >= ?
+                ORDER BY value DESC
+                LIMIT 10;`,
+        [competitions, periodStart, periodEnd, competitions, periodStart, periodEnd, minMatches]);
+        return rows;
+    }
     const [rows, fields] = await accessPool().query(`
-        SELECT home.home_coach_id AS coach_id, 
-            home.name AS coach_name, 
-            home.nickname AS coach_nickname, 
-            (home.home_goals + away.away_goals) AS goals_scored
-            FROM (SELECT m.home_coach_id, 
-                    hc.name,
-                    hc.nickname,
-                    SUM(m.home_score) AS home_goals 
-                FROM matches AS m
-                JOIN coaches AS hc
-                ON m.home_coach_id = hc.coach_id
-                JOIN competitions AS c
-                ON m.competition_id = c.competition_id
-                WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
-                GROUP BY home_coach_id) AS home
-            JOIN
-                (SELECT m.away_coach_id,
-                    SUM(m.away_score) AS away_goals 
-                FROM matches AS m
-                JOIN coaches AS ac
-                ON m.away_coach_id = ac.coach_id
-                JOIN competitions AS c
-                ON m.competition_id = c.competition_id
-                WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
-                GROUP BY away_coach_id) AS away
-            ON home.home_coach_id = away.away_coach_id
-            ORDER BY goals_scored DESC
-            LIMIT 10;`,
-    [competitions, periodStart, periodEnd, competitions, periodStart, periodEnd]);
+        SELECT home.home_coach_id AS id, 
+            home.name, 
+            home.nickname, 
+            ROUND((home.home_goals + away.away_goals) / (home.matches + away.matches), 2) AS value
+        FROM 
+            (SELECT COUNT(m.match_id) AS matches, 
+                m.home_coach_id, 
+                hc.name,
+                hc.nickname,
+                SUM(m.home_score) AS home_goals 
+            FROM matches AS m
+            JOIN coaches AS hc
+            ON m.home_coach_id = hc.coach_id
+            JOIN competitions AS c
+            ON m.competition_id = c.competition_id
+            WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
+            GROUP BY home_coach_id) AS home
+        JOIN
+            (SELECT COUNT(m.match_id) AS matches, 
+                m.away_coach_id,
+                SUM(m.away_score) AS away_goals 
+            FROM matches AS m
+            JOIN coaches AS ac
+            ON m.away_coach_id = ac.coach_id
+            JOIN competitions AS c
+            ON m.competition_id = c.competition_id
+            WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
+            GROUP BY away_coach_id) AS away
+        ON home.home_coach_id = away.away_coach_id
+        WHERE home.matches + away.matches >= ?
+        ORDER BY value DESC
+        LIMIT 10;`,
+    [competitions, periodStart, periodEnd, competitions, periodStart, periodEnd, minMatches]);
     return rows;
+
 }
 
-async function mostGoalsConceded(competitions, periodStart, periodEnd) {
+async function mostGoalsConceded(value, competitions, periodStart, periodEnd, minMatches) {
+    if (value === 'total') {
+        const [rows, fields] = await accessPool().query(`
+            SELECT home.home_coach_id AS id, 
+                home.name, 
+                home.nickname, 
+                (home.away_goals + away.home_goals) AS value
+                FROM (SELECT COUNT(m.match_id) AS matches, 
+                        m.home_coach_id, 
+                        hc.name,
+                        hc.nickname,
+                        SUM(m.away_score) AS away_goals 
+                    FROM matches AS m
+                    JOIN coaches AS hc
+                    ON m.home_coach_id = hc.coach_id
+                    JOIN competitions AS c
+                    ON m.competition_id = c.competition_id
+                    WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
+                    GROUP BY home_coach_id) AS home
+                JOIN
+                    (SELECT COUNT(m.match_id) AS matches, 
+                        m.away_coach_id,
+                        SUM(m.home_score) AS home_goals 
+                    FROM matches AS m
+                    JOIN coaches AS ac
+                    ON m.away_coach_id = ac.coach_id
+                    JOIN competitions AS c
+                    ON m.competition_id = c.competition_id
+                    WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
+                    GROUP BY away_coach_id) AS away
+                ON home.home_coach_id = away.away_coach_id
+                WHERE home.matches + away.matches >= ?
+                ORDER BY value
+                LIMIT 10;`,
+        [competitions, periodStart, periodEnd, competitions, periodStart, periodEnd, minMatches]);
+        return rows;
+    }
     const [rows, fields] = await accessPool().query(`
-        SELECT home.home_coach_id AS coach_id, 
-            home.name AS coach_name, 
-            home.nickname AS coach_nickname, 
-            (home.away_goals + away.home_goals) AS goals_conceded
-            FROM (SELECT m.home_coach_id, 
-                    hc.name,
-                    hc.nickname,
-                    SUM(m.away_score) AS away_goals 
-                FROM matches AS m
-                JOIN coaches AS hc
-                ON m.home_coach_id = hc.coach_id
-                JOIN competitions AS c
-                ON m.competition_id = c.competition_id
-                WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
-                GROUP BY home_coach_id) AS home
-            JOIN
-                (SELECT m.away_coach_id,
-                    SUM(m.home_score) AS home_goals 
-                FROM matches AS m
-                JOIN coaches AS ac
-                ON m.away_coach_id = ac.coach_id
-                JOIN competitions AS c
-                ON m.competition_id = c.competition_id
-                WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
-                GROUP BY away_coach_id) AS away
-            ON home.home_coach_id = away.away_coach_id
-            ORDER BY goals_conceded DESC
-            LIMIT 10;`,
-    [competitions, periodStart, periodEnd, competitions, periodStart, periodEnd]);
+        SELECT home.home_coach_id AS id, 
+            home.name, 
+            home.nickname, 
+            ROUND((home.away_goals + away.home_goals) / (home.matches + away.matches), 2) AS value
+        FROM 
+            (SELECT COUNT(m.match_id) AS matches, 
+                m.home_coach_id, 
+                hc.name,
+                hc.nickname,
+                SUM(m.away_score) AS away_goals 
+            FROM matches AS m
+            JOIN coaches AS hc
+            ON m.home_coach_id = hc.coach_id
+            JOIN competitions AS c
+            ON m.competition_id = c.competition_id
+            WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
+            GROUP BY home_coach_id) AS home
+        JOIN
+            (SELECT COUNT(m.match_id) AS matches, 
+                m.away_coach_id,
+                SUM(m.home_score) AS home_goals 
+            FROM matches AS m
+            JOIN coaches AS ac
+            ON m.away_coach_id = ac.coach_id
+            JOIN competitions AS c
+            ON m.competition_id = c.competition_id
+            WHERE c.name IN (?) AND c.year BETWEEN ? AND ?
+            GROUP BY away_coach_id) AS away
+        ON home.home_coach_id = away.away_coach_id
+        WHERE home.matches + away.matches >= ?
+        ORDER BY value
+        LIMIT 10;`,
+    [competitions, periodStart, periodEnd, competitions, periodStart, periodEnd, minMatches]);
     return rows;
 }
 
 async function bestPointPercentage(competitions, periodStart, periodEnd, minMatches) {
     const [rows, fields] = await accessPool().query(`
-        SELECT home.coach_id, 
+        SELECT home.coach_id AS id, 
             home.name, 
             home.nickname, 
-            (home.points + away.points) / ((home.matches + away.matches) * 3) * 100 AS point_percentage
+            ROUND((home.points + away.points) / ((home.matches + away.matches) * 3) * 100, 1) AS value
         FROM
             (SELECT hc.coach_id, 
                     hc.name, 
@@ -146,7 +227,7 @@ async function bestPointPercentage(competitions, periodStart, periodEnd, minMatc
             GROUP BY coach_id) AS away
         ON home.coach_id = away.coach_id
         WHERE home.matches + away.matches >= ?
-        ORDER BY point_percentage DESC
+        ORDER BY value DESC
         LIMIT 10;`,
     [competitions, periodStart, periodEnd, competitions, periodStart, periodEnd, minMatches]);
     return rows;
@@ -166,11 +247,15 @@ export async function load({ url }) {
 
     let period = url.searchParams.get('period').split(',');
 
+    let minMatches = url.searchParams.get('minmatches').split(',');
+
+    let value = url.searchParams.get('value');
+
     return {
         mostRecentYear: mostRecentYear(),
         mostMatches: mostMatches(competitionQuery, period[0], period[1]),
-        mostGoalsScored: mostGoalsScored(competitionQuery, period[0], period[1]),
-        mostGoalsConceded: mostGoalsConceded(competitionQuery, period[0], period[1]),
-        bestPointPercentage: bestPointPercentage(competitionQuery, period[0], period[1], 50),
+        mostGoalsScored: mostGoalsScored(value, competitionQuery, period[0], period[1], minMatches),
+        mostGoalsConceded: mostGoalsConceded(value, competitionQuery, period[0], period[1], minMatches),
+        bestPointPercentage: bestPointPercentage(competitionQuery, period[0], period[1], minMatches),
     };
 };

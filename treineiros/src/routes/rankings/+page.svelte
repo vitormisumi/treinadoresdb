@@ -1,25 +1,45 @@
 <script>
-  import { setContext } from "svelte";
-  import { writable } from "svelte/store";
-  import Ranking from "./Ranking.svelte";
+  import Table from "./Table.svelte";
+  import Filters from "./Filters.svelte";
 
   export let data;
-
-  const mostMatches = writable();
-  $: mostMatches.set(data.mostMatches);
-  setContext("mostMatches", mostMatches);
-
-  const mostGoalsScored = writable();
-  $: mostGoalsScored.set(data.mostGoalsScored);
-  setContext("mostGoalsScored", mostGoalsScored);
-
-  const mostGoalsConceded = writable();
-  $: mostGoalsConceded.set(data.mostGoalsConceded);
-  setContext("mostGoalsConceded", mostGoalsConceded);
-
-  const bestPointPercentage = writable();
-  $: bestPointPercentage.set(data.bestPointPercentage);
-  setContext("bestPointPercentage", bestPointPercentage);
 </script>
 
-<Ranking mostRecentYear={data.mostRecentYear}/>
+<section id="ranking">
+  <h2>Rankings</h2>
+  <div id="table">
+    <Table
+      mostMatches={data.mostMatches}
+      mostGoalsScored={data.mostGoalsScored}
+      mostGoalsConceded={data.mostGoalsConceded}
+      bestPointPercentage={data.bestPointPercentage}
+    />
+  </div>
+  <div id="filters">
+    <Filters mostRecentYear={data.mostRecentYear} />
+  </div>
+</section>
+
+<style>
+  #ranking {
+    display: grid;
+    grid-template-columns: 8fr 2fr;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "title title"
+      "table filters";
+    gap: 1.5vw;
+  }
+
+  h2 {
+    grid-area: title;
+  }
+
+  #table {
+    grid-area: table;
+  }
+
+  #filters {
+    grid-area: filters;
+  }
+</style>
