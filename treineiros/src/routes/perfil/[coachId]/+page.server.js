@@ -72,20 +72,18 @@ async function mostMatches(coach_id) {
     return rows[0];
 }
 
-async function percentage(coach_id) {
+async function pointPercentage(coach_id) {
     const [rows, fields] = await accessPool().query(`
-        SELECT t.points / max.maxpoints AS percentage FROM (
-        SELECT SUM(points) AS points FROM (
-        SELECT COUNT(*) * 3 AS points FROM matches WHERE home_coach_id = ? AND home_score > away_score
-        UNION
-        SELECT COUNT(*) * 3 AS points FROM matches WHERE away_coach_id = ? AND away_score > home_score
-        UNION
-        SELECT COUNT(*) AS points FROM matches WHERE home_coach_id = ? AND home_score = away_score
-        UNION
-        SELECT COUNT(*) AS points FROM matches WHERE away_coach_id = ? AND home_score = away_score) AS total) AS t JOIN (
-        SELECT COUNT(*) * 3 AS maxpoints FROM matches WHERE home_coach_id = ? OR away_coach_id = ?) AS max;`,
+        SELECT (SUM(CASE WHEN home_coach_id = ? AND home_score > away_score THEN 3
+                        WHEN away_coach_id = ? AND home_score < away_score THEN 3
+                        WHEN home_score = away_score AND (home_coach_id = ? OR away_coach_id = ?) THEN 1
+                        ELSE 0 END)) /
+               (SUM(CASE WHEN home_coach_id = ? OR away_coach_id = ? THEN 1
+                        ELSE 0 END) * 3) * 100 AS point_percentage 
+        FROM matches;`,
         [coach_id, coach_id, coach_id, coach_id, coach_id, coach_id]);
-    return rows[0].percentage * 100;
+    console.log(rows[0].point_percentage);
+    return rows[0].point_percentage;
 }
 
 async function goalsScoredAvg(coach_id) {
@@ -196,7 +194,6 @@ async function totalHistory(coach_id) {
             JOIN competitions AS c ON m.competition_id = c.competition_id
             WHERE home_coach_id = ? OR away_coach_id = ?) AS coach;`,
         [coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id, coach_id]);
-    console.log(rows[0]);
     return rows[0];
 }
 
@@ -218,7 +215,7 @@ export async function load({ params, url }) {
         numberOfClubs: numberOfClubs(params.coachId),
         numberOfMatches: numberOfMatches(params.coachId),
         mostMatches: mostMatches(params.coachId),
-        percentage: percentage(params.coachId),
+        pointPercentage: pointPercentage(params.coachId),
         goalsScoredAvg: goalsScoredAvg(params.coachId),
         goalsConcededAvg: goalsConcededAvg(params.coachId),
         matches: matches(params.coachId),

@@ -7,7 +7,7 @@
   export let numberOfClubs;
   export let numberOfMatches;
   export let mostMatches;
-  export let percentage;
+  export let pointPercentage;
   export let goalsScoredAvg;
   export let goalsConcededAvg;
 
@@ -85,7 +85,7 @@
       </tr>
       <tr>
         <td class="col1">Aproveitamento</td>
-        <td class="col2">{percentage.toFixed(1)}%</td>
+        <td class="col2">{Number(pointPercentage).toFixed(1)}%</td>
       </tr>
       <tr>
         <td class="col1">Média Gols Marcados</td>

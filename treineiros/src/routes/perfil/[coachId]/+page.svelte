@@ -16,7 +16,7 @@
   numberOfClubs={data.numberOfClubs}
   numberOfMatches={data.numberOfMatches}
   mostMatches={data.mostMatches}
-  percentage={data.percentage}
+  pointPercentage={data.pointPercentage}
   goalsScoredAvg={data.goalsScoredAvg}
   goalsConcededAvg={data.goalsConcededAvg}
 />
