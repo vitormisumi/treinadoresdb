@@ -2,15 +2,19 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import MostMatches from "./MostMatches.svelte";
+  import MostGoalsScored from "./MostGoalsScored.svelte";
+  import MostGoalsConceded from "./MostGoalsConceded.svelte";
+  import BestPointPercentage from "./BestPointPercentage.svelte";
   import RangeSlider from "svelte-range-slider-pips";
   export let mostRecentYear;
 
   const indicators = [
-    "Mais partidas",
-    "Mais gols feitos",
-    "Mais gols sofridos",
-    "Melhor aproveitamento",
-    "Melhor média de gols",
+    "Partidas",
+    "Gols Feitos",
+    "Gols Sofridos",
+    "Cartões Amarelos",
+    "Cartões Vermelhos",
+    "Aproveitamento",
   ];
 
   let selectedIndicator;
@@ -51,14 +55,19 @@
 
 <section id="ranking">
   <h2>Rankings</h2>
-  {#if selectedIndicator === "Mais partidas"}
+  {#if selectedIndicator === "Partidas"}
     <MostMatches />
   {/if}
-  <select
-    bind:value={selectedIndicator}
-    id="indicator"
-    on:change={handleChange}
-  >
+  {#if selectedIndicator === "Gols Feitos"}
+    <MostGoalsScored />
+  {/if}
+  {#if selectedIndicator === "Gols Sofridos"}
+    <MostGoalsConceded />
+  {/if}
+  {#if selectedIndicator === "Aproveitamento"}
+    <BestPointPercentage />
+  {/if}
+  <select bind:value={selectedIndicator} id="indicator">
     <option selected disabled>Indicador</option>
     {#each indicators as indicator}
       <option value={indicator}>{indicator}</option>

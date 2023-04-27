@@ -8,6 +8,18 @@
   const mostMatches = writable();
   $: mostMatches.set(data.mostMatches);
   setContext("mostMatches", mostMatches);
+
+  const mostGoalsScored = writable();
+  $: mostGoalsScored.set(data.mostGoalsScored);
+  setContext("mostGoalsScored", mostGoalsScored);
+
+  const mostGoalsConceded = writable();
+  $: mostGoalsConceded.set(data.mostGoalsConceded);
+  setContext("mostGoalsConceded", mostGoalsConceded);
+
+  const bestPointPercentage = writable();
+  $: bestPointPercentage.set(data.bestPointPercentage);
+  setContext("bestPointPercentage", bestPointPercentage);
 </script>
 
 <Ranking mostRecentYear={data.mostRecentYear}/>
