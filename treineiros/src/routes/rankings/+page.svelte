@@ -12,6 +12,8 @@
       mostMatches={data.mostMatches}
       mostGoalsScored={data.mostGoalsScored}
       mostGoalsConceded={data.mostGoalsConceded}
+      mostYellowCards={data.mostYellowCards}
+      mostRedCards={data.mostRedCards}
       bestPointPercentage={data.bestPointPercentage}
     />
   </div>

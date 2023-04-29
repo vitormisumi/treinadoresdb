@@ -72,29 +72,31 @@
     {/each}
   </select>
   <!-- VALUE FILTER -->
-  <div class="filter-div" id="value-filter">
-    <h3 class="filter-heading">Valor</h3>
-    <div class="filter-values" id="value-options">
-      <label>
-        <input
-          type="radio"
-          bind:group={totalOrPerMatch}
-          value="total"
-          on:change={handleChange}
-        />
-        Total
-      </label>
-      <label>
-        <input
-          type="radio"
-          bind:group={totalOrPerMatch}
-          value="permatch"
-          on:change={handleChange}
-        />
-        Por Partida
-      </label>
+  {#if !["Partidas", "Aproveitamento (%)"].includes(selectedIndicator)}
+    <div class="filter-div" id="value-filter">
+      <h3 class="filter-heading">Valor</h3>
+      <div class="filter-values" id="value-options">
+        <label>
+          <input
+            type="radio"
+            bind:group={totalOrPerMatch}
+            value="total"
+            on:change={handleChange}
+          />
+          Total
+        </label>
+        <label>
+          <input
+            type="radio"
+            bind:group={totalOrPerMatch}
+            value="permatch"
+            on:change={handleChange}
+          />
+          Por Partida
+        </label>
+      </div>
     </div>
-  </div>
+  {/if}
   <!-- COMPETITION FILTER -->
   <div class="filter-div" id="competition-filter">
     <h3 class="filter-heading">Competição</h3>

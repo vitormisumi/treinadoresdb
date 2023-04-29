@@ -7,6 +7,8 @@
   export let mostMatches;
   export let mostGoalsScored;
   export let mostGoalsConceded;
+  export let mostYellowCards;
+  export let mostRedCards;
   export let bestPointPercentage;
 
   let tableData;
@@ -16,6 +18,10 @@
     tableData = mostGoalsScored
   } else if ($indicator === "Gols Sofridos") {
     tableData = mostGoalsConceded
+  } else if ($indicator === "Cartões Amarelos") {
+    tableData = mostYellowCards
+  } else if ($indicator === "Cartões Vermelhos") {
+    tableData = mostRedCards
   } else if ($indicator === "Aproveitamento (%)") {
     tableData = bestPointPercentage
   }
