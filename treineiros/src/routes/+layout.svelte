@@ -12,7 +12,7 @@
   }
 
   export let data;
-  const searchCoaches = data.coach.map((field) => ({
+  const searchCoaches = data.coaches.map((field) => ({
     ...field,
     searchFields: `${field.name} ${field.nickname}`,
   }));

@@ -1,7 +1,7 @@
 <script>
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
-  import { indicator } from "../../lib/stores/selectedIndicator";
+  import { indicator } from "$lib/stores/selectedIndicator";
   import RangeSlider from "svelte-range-slider-pips";
 
   export let mostRecentYear;

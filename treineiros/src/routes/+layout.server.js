@@ -7,8 +7,8 @@ async function getCoaches() {
 }
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
+export async function load() {
     return {
-        coach: getCoaches()
+        coaches: getCoaches()
     };
 };
