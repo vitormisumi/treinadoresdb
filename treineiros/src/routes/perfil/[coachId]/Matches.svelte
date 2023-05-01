@@ -34,6 +34,16 @@
     }
   });
 
+  function shortDate(date) {
+    return (
+      ("0" + date.getDate()).slice(-2) +
+      "/" +
+      ("0" + (date.getMonth() + 1)).slice(-2) +
+      "/" +
+      date.getFullYear()
+    );
+  }
+
   let page = 0;
   $: pages = Math.ceil(filteredMatches.length / 10);
 
@@ -118,12 +128,7 @@
         {#each filteredMatches as { match_id, date_time, stadium, competition, home_team, home_team_state, home_score, away_score, away_team, away_team_state, coach }, i}
           {#if i >= page * 10 && i <= page * 10 + 9}
             <tr>
-              <td class="date"
-                >{("0" + date_time.getDate()).slice(-2)}/{(
-                  "0" +
-                  (date_time.getMonth() + 1)
-                ).slice(-2)}/{date_time.getFullYear()}</td
-              >
+              <td class="date">{shortDate(date_time)}</td>
               <td>{stadium}</td>
               <td>{competition}</td>
               {#if coach === "Mandante"}
