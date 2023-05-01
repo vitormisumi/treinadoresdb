@@ -5,15 +5,25 @@
 </script>
 
 <section id="profile">
-  <img
-    src="/src/lib/assets/images/coaches/{coachInfo1.coach_id}.png"
-    alt=""
-    id="coach-img1"
-  />
+  <a href="/perfil/{coachInfo1.coach_id}">
+    <img
+      src="/src/lib/assets/images/coaches/{coachInfo1.coach_id}.png"
+      alt=""
+      id="coach-img1"
+    />
+  </a>
   {#if coachInfo1.nickname === null}
-    <p id="coach-team-name1" class="coach-team">{coachInfo1.name}</p>
+    <a
+      href="/perfil/{coachInfo1.coach_id}"
+      id="coach-team-name1"
+      class="coach-team">{coachInfo1.name}</a
+    >
   {:else}
-    <p id="coach-team-name1" class="coach-team">{coachInfo1.nickname}</p>
+    <a
+      href="/perfil/{coachInfo1.coach_id}"
+      id="coach-team-name1"
+      class="coach-team">{coachInfo1.nickname}</a
+    >
   {/if}
   {#if h2h.coach1_wins === null}
     <p id="wins1" class="wins">0</p>
@@ -23,15 +33,25 @@
     <p>Graph goes here!</p>
     <p id="wins2" class="wins">{h2h.coach2_wins}</p>
   {/if}
-  <img
-    src="/src/lib/assets/images/coaches/{coachInfo2.coach_id}.png"
-    alt=""
-    id="coach-img2"
-  />
+  <a href="/perfil/{coachInfo2.coach_id}">
+    <img
+      src="/src/lib/assets/images/coaches/{coachInfo2.coach_id}.png"
+      alt=""
+      id="coach-img2"
+    />
+  </a>
   {#if coachInfo2.nickname === null}
-    <p id="coach-team-name2" class="coach-team">{coachInfo2.name}</p>
+    <a
+      href="/perfil/{coachInfo2.coach_id}"
+      id="coach-team-name2"
+      class="coach-team">{coachInfo2.name}</a
+    >
   {:else}
-    <p id="coach-team-name2" class="coach-team">{coachInfo2.nickname}</p>
+    <a
+      href="/perfil/{coachInfo2.coach_id}"
+      id="coach-team-name2"
+      class="coach-team">{coachInfo2.nickname}</a
+    >
   {/if}
 </section>
 
@@ -71,9 +91,9 @@
   }
 
   .wins {
-    font-size: clamp(2rem, 5vw, 5rem);
+    font-size: clamp(3rem, 7vw, 5rem);
     font-family: var(--main-font);
-    color: var(--main-color);
+    color: var(--accent-color);
   }
 
   #coach-team-name1 {

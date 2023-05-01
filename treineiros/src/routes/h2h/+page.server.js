@@ -123,7 +123,7 @@ async function coachInfo(coach_id) {
         [coach_id, coach_id]);
     const finalRows = Object.assign(rows[0], rows1[0], rows2[0], rows3[0], rows[4], rows5[0], rows6[0], rows7[0], rows8[0]);
     return finalRows;
-}
+};
 
 async function h2h(coach_id1, coach_id2) {
     if (coach_id1 === null || coach_id2 === null) {
@@ -184,6 +184,40 @@ async function h2h(coach_id1, coach_id2) {
     return finalRows;
 };
 
+async function matches(coach_id1, coach_id2) {
+    const [rows, fields] = await accessPool().query(`
+    SELECT m.match_id,
+        m.date_time,
+        m.stadium,
+        c.name AS competition,
+        ht.name AS home_team,
+        ht.state AS home_team_state,
+        hc.name AS home_coach_name,
+        hc.nickname AS home_coach_nickname,
+        m.home_score,
+        m.away_score,
+        ac.name AS away_coach_name,
+        ac.nickname AS away_coach_nickname,
+        at.name AS away_team,
+        at.state AS away_team_state
+    FROM matches AS m
+    JOIN competitions AS c
+    ON m.competition_id = c.competition_id
+    JOIN teams AS ht
+    ON m.home_team_id = ht.team_id
+    JOIN teams AS at
+    ON m.away_team_id = at.team_id
+    JOIN coaches AS hc
+    ON m.home_coach_id = hc.coach_id
+    JOIN coaches AS ac
+    ON m.away_coach_id = ac.coach_id
+    WHERE m.home_coach_id = ? AND m.away_coach_id = ?
+        OR m.away_coach_id = ? AND m.home_coach_id = ?
+    ORDER BY date_time DESC;`,
+        [coach_id1, coach_id2, coach_id1, coach_id2]);
+    return rows;
+}
+
 export async function load({ url }) {
     let coach_id1 = url.searchParams.get('coach1');
     let coach_id2 = url.searchParams.get('coach2');
@@ -192,5 +226,6 @@ export async function load({ url }) {
         coachInfo1: coachInfo(coach_id1),
         coachInfo2: coachInfo(coach_id2),
         h2h: h2h(coach_id1, coach_id2),
+        matches: matches(coach_id1, coach_id2),
     };
 };

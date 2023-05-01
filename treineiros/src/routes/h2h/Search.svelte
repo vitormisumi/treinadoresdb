@@ -146,7 +146,8 @@
     display: grid;
     align-self: center;
     grid-template-columns: 85% 15%;
-    background-color: var(--accent-color);
+    background-color: var(--background-color);
+    border: 2px solid var(--main-color);
     border-radius: 2rem;
     z-index: 100;
     width: max(100%, 100px);
@@ -156,7 +157,7 @@
   .search-text {
     font-family: var(--main-font);
     padding-left: clamp(10px, 2vw, 20px);
-    font-size: clamp(1rem, 1vw, 1.5rem);
+    font-size: clamp(0.75rem, 1vw, 1.5rem);
     background-color: transparent;
     border: none;
   }
@@ -173,7 +174,7 @@
     border: none;
     padding: 0 2vw 0 0;
     background-color: transparent;
-    color: var(--background-color);
+    color: var(--main-color);
     font-size: clamp(1rem, 2vw, 1.5rem);
   }
 
@@ -181,7 +182,7 @@
     position: absolute;
     table-layout: fixed;
     width: clamp(100px, 20vw, 400px);
-    background-color: var(--table-background);
+    background-color: #393B43;
     border-collapse: collapse;
     font-family: var(--main-font);
     font-size: clamp(1rem, 2vw, 1.25rem);
@@ -215,5 +216,9 @@
     border-color: transparent;
     color: var(--main-color);
     font-family: var(--main-font);
+  }
+
+  .coach-result:hover {
+    color: var(--accent-color);
   }
 </style>

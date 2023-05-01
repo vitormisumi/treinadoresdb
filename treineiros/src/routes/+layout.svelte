@@ -64,13 +64,13 @@
                 <tr>
                   {#if coach.nickname === null}
                     <td
-                      ><a href="/perfil/{coach.coach_id}" class="coach-result"
+                      ><a href="/perfil/{coach.coach_id}" class="coach-result" on:click={closeMenu}
                         >{coach.name}</a
                       ></td
                     >
                   {:else}
                     <td
-                      ><a href="/perfil/{coach.coach_id}" class="coach-result"
+                      ><a href="/perfil/{coach.coach_id}" class="coach-result" on:click={closeMenu}
                         >{coach.nickname}</a
                       ></td
                     >
@@ -174,7 +174,7 @@
     justify-items: center;
     align-items: center;
     grid-template-columns: 80% 20%;
-    margin: 3vw;
+    margin: 2vw;
     background-color: var(--accent-color);
     border-radius: 2rem;
     z-index: 100;
@@ -184,7 +184,6 @@
 
   #search-text {
     font-family: "Roboto Condensed";
-    width: auto;
     font-size: clamp(1rem, 2vw, 1.25rem);
     background-color: transparent;
     border: none;
@@ -210,7 +209,7 @@
     text-align: left;
     font-family: var(--main-font);
     font-size: clamp(1rem, 2vw, 1.25rem);
-    background-color: var(--main-color);
+    background-color: var(--table-background);
     border-radius: 1vw;
   }
 
@@ -227,7 +226,7 @@
   }
 
   .coach-result {
-    color: var(--background-color);
+    color: var(--main-color);
   }
 
   .coach-result:hover {

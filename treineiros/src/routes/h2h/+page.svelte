@@ -18,4 +18,4 @@
   coachInfo2={data.coachInfo2}
   h2h={data.h2h}
 />
-<Matches />
+<Matches matches={data.matches}/>
