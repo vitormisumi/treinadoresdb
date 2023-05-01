@@ -37,8 +37,8 @@
 </script>
 
 <section id="search">
-  <h2 class="title">H2H</h2>
-  <div id="search">
+  <h2 id="title">H2H</h2>
+  <div id="search1" class="search">
     <form id="search-bar1" class="search-bar">
       <input
         bind:value={$searchStore1.search}
@@ -48,7 +48,7 @@
       />
       <i class="fa fa-search search-button" />
     </form>
-    <table id="search-results">
+    <table id="search-results1" class="search-results">
       <tbody>
         {#if $searchStore1.search !== ""}
           {#each $searchStore1.filtered as coach, i}
@@ -78,7 +78,7 @@
       </tbody>
     </table>
   </div>
-  <div id="search">
+  <div id="search2" class="search">
     <form id="search-bar2" class="search-bar">
       <input
         bind:value={$searchStore2.search}
@@ -88,7 +88,7 @@
       />
       <i class="fa fa-search search-button" />
     </form>
-    <table id="search-results">
+    <table id="search-results2" class="search-results">
       <tbody>
         {#if $searchStore2.search !== ""}
           {#each $searchStore2.filtered as coach, i}
@@ -123,28 +123,29 @@
 <style>
   #search {
     display: grid;
-    grid-template-areas:
-      "title title title"
-      "search1 none search1";
+    grid-template-columns: 2fr 1fr 2fr;
+    grid-template-rows: auto;
   }
 
-  .title {
-    grid-area: title;
+  #title {
+    grid-column: 1 / 4;
+    grid-row: 1 / 2;
   }
 
-  #search-bar1 {
-    grid-area: search1;
+  #search1 {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
   }
 
-  #search-bar2 {
-    grid-area: search2;
+  #search2 {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
   }
 
   .search-bar {
     display: grid;
     align-self: center;
     grid-template-columns: 85% 15%;
-    margin: 3vw;
     background-color: var(--accent-color);
     border-radius: 2rem;
     z-index: 100;
@@ -160,12 +161,59 @@
     border: none;
   }
 
+  ::placeholder {
+    color: var(--main-color);
+    opacity: 0.7;
+  }
+
   .search-button {
+    align-self: center;
+    justify-self: center;
     cursor: pointer;
     border: none;
     padding: 0 2vw 0 0;
     background-color: transparent;
     color: var(--background-color);
     font-size: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .search-results {
+    position: absolute;
+    table-layout: fixed;
+    width: clamp(100px, 20vw, 400px);
+    background-color: var(--table-background);
+    border-collapse: collapse;
+    font-family: var(--main-font);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    border-radius: 1vw;
+    z-index: 1000;
+  }
+
+  .search-results tr:last-child td {
+    border: 0;
+  }
+
+  #search-results1 {
+    grid-area: results1;
+  }
+
+  #search-results2 {
+    grid-area: results2;
+  }
+
+  td {
+    border: 1px solid;
+    border-color: transparent transparent var(--background-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .coach-result {
+    cursor: pointer;
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--main-color);
+    font-family: var(--main-font);
   }
 </style>

@@ -6,7 +6,7 @@
 
 <section id="profile">
   <img
-    src="$lib/assets/images/coaches/{coachInfo1.coach_id}.png"
+    src="/src/lib/assets/images/coaches/{coachInfo1.coach_id}.png"
     alt=""
     id="coach-img1"
   />
@@ -24,7 +24,7 @@
     <p id="wins2" class="wins">{h2h.coach2_wins}</p>
   {/if}
   <img
-    src="$lib/assets/images/coaches/{coachInfo2.coach_id}.png"
+    src="/src/lib/assets/images/coaches/{coachInfo2.coach_id}.png"
     alt=""
     id="coach-img2"
   />

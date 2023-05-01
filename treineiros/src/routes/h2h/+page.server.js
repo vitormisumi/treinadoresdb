@@ -150,9 +150,7 @@ async function h2h(coach_id1, coach_id2) {
                     ELSE 0 END) AS coach2_wins
     FROM matches;`,
         [coach_id1, coach_id2, coach_id1, coach_id2, coach_id1, coach_id2, coach_id1, coach_id2, coach_id2, coach_id1, coach_id2, coach_id1]);
-    console.log(rows2);
     if (rows2.length === 0) {
-        console.log(rows2);
         return emptyH2hInfo;
     }
     const [rows3, fields3] = await accessPool().query(`
@@ -183,11 +181,9 @@ async function h2h(coach_id1, coach_id2) {
     FROM matches;`,
         [coach_id1, coach_id2, coach_id1, coach_id2, coach_id2, coach_id1, coach_id2, coach_id1]);
     const finalRows = Object.assign(rows2[0], rows3[0], rows4[0], rows5[0]);
-    console.log(finalRows);
     return finalRows;
 };
 
-/** @type {import('./$types').PageServerLoad} */
 export async function load({ url }) {
     let coach_id1 = url.searchParams.get('coach1');
     let coach_id2 = url.searchParams.get('coach2');
