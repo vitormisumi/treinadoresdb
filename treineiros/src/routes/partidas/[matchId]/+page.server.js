@@ -38,7 +38,6 @@ async function coaches(match_id) {
     return rows[0];
 }
 
-/** @type {import('./$types').PageServerLoad} */
 export async function load({ params }) {
     return {
         matchData: matchData(params.matchId),

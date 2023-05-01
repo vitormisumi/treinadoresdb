@@ -381,7 +381,6 @@ async function mostRedCards(value, competitions, periodStart, periodEnd, minMatc
     return rows;
 }
 
-/** @type {import('./$types').PageServerLoad} */
 export async function load({ url }) {
     const competitionDict = {
         a: 'Campeonato Brasileiro - Serie A',

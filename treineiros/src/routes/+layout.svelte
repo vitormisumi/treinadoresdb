@@ -204,8 +204,10 @@
 
   #search-results {
     position: absolute;
-    margin: 0;
+    table-layout: fixed;
+    width: clamp(200px, 5vw, 300px);
     border-collapse: collapse;
+    text-align: left;
     font-family: var(--main-font);
     font-size: clamp(1rem, 2vw, 1.25rem);
     background-color: var(--main-color);
@@ -215,8 +217,6 @@
   td {
     border: 1px solid;
     border-color: transparent transparent var(--background-color);
-    max-width: 200px;
-    width: clamp(150px, 3vw, 200px);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -232,6 +232,10 @@
 
   .coach-result:hover {
     color: var(--accent-color);
+  }
+
+  .fa-search {
+    color: var(--background-color);
   }
 
   @media (min-width: 768px) {

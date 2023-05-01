@@ -197,7 +197,6 @@ async function totalHistory(coach_id) {
     return rows[0];
 }
 
-/** @type {import('./$types').PageServerLoad} */
 export async function load({ params, url }) {
     let groupsParams = url.searchParams.get('groups');
     let groups;
