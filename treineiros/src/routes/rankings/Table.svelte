@@ -1,5 +1,5 @@
 <script>
-  import { indicator } from "../../lib/stores/selectedIndicator";
+  import { indicator } from "$lib/stores/indicator";
   import fallback from "$lib/assets/images/coaches/default.png";
 
   const handleError = (ev) => (ev.target.src = fallback);
@@ -13,33 +13,32 @@
 
   let tableData;
   $: if ($indicator === "Partidas") {
-		tableData = mostMatches;
-	} else if ($indicator === "Gols Feitos") {
-    tableData = mostGoalsScored
+    tableData = mostMatches;
+  } else if ($indicator === "Gols Feitos") {
+    tableData = mostGoalsScored;
   } else if ($indicator === "Gols Sofridos") {
-    tableData = mostGoalsConceded
+    tableData = mostGoalsConceded;
   } else if ($indicator === "Cartões Amarelos") {
-    tableData = mostYellowCards
+    tableData = mostYellowCards;
   } else if ($indicator === "Cartões Vermelhos") {
-    tableData = mostRedCards
+    tableData = mostRedCards;
   } else if ($indicator === "Aproveitamento (%)") {
-    tableData = bestPointPercentage
+    tableData = bestPointPercentage;
   }
-
 </script>
 
 <table id="ranking-table">
   <colgroup>
-    <col id="col1">
-    <col id="col2">
-    <col id="col3">
-    <col id="col4">
+    <col id="col1" />
+    <col id="col2" />
+    <col id="col3" />
+    <col id="col4" />
   </colgroup>
   <tbody>
     {#each tableData as coach, i}
       <tr>
         <td class="position-column">{i + 1}º</td>
-        <td
+        <td class="img-column"
           ><img
             src="/src/lib/assets/images/coaches/{coach.id}.png"
             alt={coach.name}
@@ -81,8 +80,17 @@
   }
 
   td {
+    height: clamp(30px, 6vh, 60px);
     border: 1px solid;
     border-color: transparent transparent #e5e5e525;
+    text-align: center;
+    padding: 0;
+    height: clamp(40px, 8vw, 70px);
+  }
+  
+  .coach-column {
+    padding-left: 1vw;
+    text-align: left;
   }
 
   a {
@@ -92,29 +100,30 @@
   #col1,
   #col2,
   #col4 {
-    width: 10%;
+    width: clamp(35px, 8vw, 80px);
   }
 
   #col3 {
-    width: 70%;
+    width: auto;
   }
 
   .position-column {
     color: var(--main-color);
   }
-  
+
   .coach-column {
     color: var(--main-color);
     background-color: var(--table-background);
   }
-  
+
   .value-column {
     text-align: right;
     color: var(--accent-color);
   }
 
   .coach-img {
-    width: auto;
-    max-height: 50px;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
   }
 </style>

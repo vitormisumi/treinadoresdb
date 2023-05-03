@@ -1,5 +1,5 @@
 <script>
-  import { createSearchStoreH2h, searchHandler } from "$lib/stores/h2hCoaches";
+  import { createSearchStoreH2h, searchHandler, coach1, coach2 } from "$lib/stores/h2hCoaches";
   import { onDestroy } from "svelte";
 
   export let coach;
@@ -12,6 +12,11 @@
   const searchStore = createSearchStoreH2h(searchCoaches);
   const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
   onDestroy(unsubscribe);
+
+  function updateCoaches(coach_id1, coach_id2) {
+    coach1.set(coach_id1);
+    coach2.set(coach_id2);
+  }
 </script>
 
 <section id="h2h">
@@ -42,14 +47,16 @@
                     <td
                       ><a
                         href="/h2h?coach1={coach.coach_id}&coach2={h2hcoach.coach_id}"
-                        class="coach-result">{h2hcoach.nickname}</a
+                        class="coach-result" 
+                        on:click={updateCoaches(coach.coach_id, h2hcoach.coach_id)}>{h2hcoach.nickname}</a
                       ></td
                     >
                   {:else}
                     <td
                       ><a
                         href="/h2h?coach1={coach.coach_id}&coach2={h2hcoach.coach_id}"
-                        class="coach-result">{h2hcoach.name}</a
+                        class="coach-result"
+                        on:click={updateCoaches(coach.coach_id, h2hcoach.coach_id)}>{h2hcoach.name}</a
                       ></td
                     >
                   {/if}
