@@ -1,5 +1,11 @@
 import { accessPool } from '$db/db'
 
+async function getCoaches() {
+    const [rows, fields] = await accessPool().query(`
+        SELECT * FROM coaches ORDER BY nickname, name;`);
+    return rows;
+};
+
 async function getCoach(coach_id) {
     const [rows, fields] = await accessPool().query(`
         SELECT * FROM coaches WHERE coach_id = ?`,
@@ -208,6 +214,7 @@ export async function load({ params, url }) {
 
     return {
         coach: getCoach(params.coachId),
+        coaches: getCoaches(),
         lastClub: lastClub(params.coachId),
         lastMatch: lastMatch(params.coachId),
         numberOfClubs: numberOfClubs(params.coachId),

@@ -22,4 +22,4 @@
 <History history={data.history} totalHistory={data.totalHistory}/>
 <Matches matches={data.matches} />
 <Performance />
-<H2H />
+<H2H coach={data.coach} coaches={data.coaches}/>

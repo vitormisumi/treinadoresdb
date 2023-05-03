@@ -16,7 +16,7 @@
     },
   ];
 
-  let groups = $page.url.searchParams.get("groups");
+  let groups;
 
   const handleGroupChange = () => {
     goto(`?groups=${groups}`, {
