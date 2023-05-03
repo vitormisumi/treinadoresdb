@@ -1,7 +1,10 @@
 <script>
+  import fallback from "$lib/assets/images/coaches/default.png";
   export let coachInfo1;
   export let coachInfo2;
   export let h2h;
+
+  const handleError = (ev) => (ev.target.src = fallback);
 </script>
 
 <section id="profile">
@@ -10,34 +13,36 @@
       src="/src/lib/assets/images/coaches/{coachInfo1.coach_id}.png"
       alt=""
       id="coach-img1"
-    />
-  </a>
-  {#if coachInfo1.nickname === null}
+      on:error={handleError}
+      />
+    </a>
+    {#if coachInfo1.nickname === null}
     <a
-      href="/perfil/{coachInfo1.coach_id}"
-      id="coach-team-name1"
-      class="coach-team">{coachInfo1.name}</a
+    href="/perfil/{coachInfo1.coach_id}"
+    id="coach-team-name1"
+    class="coach-team">{coachInfo1.name}</a
     >
-  {:else}
+    {:else}
     <a
-      href="/perfil/{coachInfo1.coach_id}"
-      id="coach-team-name1"
-      class="coach-team">{coachInfo1.nickname}</a
+    href="/perfil/{coachInfo1.coach_id}"
+    id="coach-team-name1"
+    class="coach-team">{coachInfo1.nickname}</a
     >
-  {/if}
-  {#if h2h.coach1_wins === null}
+    {/if}
+    {#if h2h.coach1_wins === null}
     <p id="wins1" class="wins">0</p>
     <p id="wins2" class="wins">0</p>
-  {:else}
+    {:else}
     <p id="wins1" class="wins">{h2h.coach1_wins}</p>
     <p>Graph goes here!</p>
     <p id="wins2" class="wins">{h2h.coach2_wins}</p>
-  {/if}
-  <a href="/perfil/{coachInfo2.coach_id}">
-    <img
+    {/if}
+    <a href="/perfil/{coachInfo2.coach_id}">
+      <img
       src="/src/lib/assets/images/coaches/{coachInfo2.coach_id}.png"
       alt=""
       id="coach-img2"
+      on:error={handleError}
     />
   </a>
   {#if coachInfo2.nickname === null}

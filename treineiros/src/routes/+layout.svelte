@@ -2,15 +2,6 @@
   import { createSearchStore, searchHandler } from "$lib/stores/search";
   import { onDestroy } from "svelte";
 
-  let menu = true;
-  function toggle() {
-    menu = !menu;
-  }
-
-  function closeMenu() {
-    menu = true;
-  }
-
   export let data;
   const searchCoaches = data.coaches.map((field) => ({
     ...field,
@@ -19,6 +10,16 @@
   const searchStore = createSearchStore(searchCoaches);
   const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
   onDestroy(unsubscribe);
+
+  let menu = true;
+  function toggle() {
+    menu = !menu;
+  }
+
+  function closeMenu() {
+    menu = true;
+    $searchStore.search = "";
+  }
 </script>
 
 <header>
@@ -64,14 +65,18 @@
                 <tr>
                   {#if coach.nickname === null}
                     <td
-                      ><a href="/perfil/{coach.coach_id}" class="coach-result" on:click={closeMenu}
-                        >{coach.name}</a
+                      ><a
+                        href="/perfil/{coach.coach_id}"
+                        class="coach-result"
+                        on:click={closeMenu}>{coach.name}</a
                       ></td
                     >
                   {:else}
                     <td
-                      ><a href="/perfil/{coach.coach_id}" class="coach-result" on:click={closeMenu}
-                        >{coach.nickname}</a
+                      ><a
+                        href="/perfil/{coach.coach_id}"
+                        class="coach-result"
+                        on:click={closeMenu}>{coach.nickname}</a
                       ></td
                     >
                   {/if}
@@ -192,6 +197,10 @@
   ::placeholder {
     color: var(--main-color);
     opacity: 0.7;
+  }
+
+  input:focus {
+    outline: none;
   }
 
   .fa-solid {

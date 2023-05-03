@@ -82,7 +82,6 @@ async function pointPercentage(coach_id) {
                         ELSE 0 END) * 3) * 100, 1) AS point_percentage 
         FROM matches;`,
         [coach_id, coach_id, coach_id, coach_id, coach_id, coach_id]);
-    console.log(rows[0].point_percentage);
     return rows[0].point_percentage;
 }
 

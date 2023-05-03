@@ -26,13 +26,15 @@
     goto(`?coach1=${id}&coach2=${$coach2}`, {
       noScroll: true,
     });
+    $searchStore1.search = "";
   }
-
+  
   function updateCoach2(id) {
     coach2.set(id);
     goto(`?coach1=${$coach1}&coach2=${id}`, {
       noScroll: true,
     });
+    $searchStore2.search = "";
   }
 </script>
 
@@ -41,10 +43,10 @@
   <div id="search1" class="search">
     <form id="search-bar1" class="search-bar">
       <input
-        bind:value={$searchStore1.search}
         type="search"
         placeholder="Busque um treinador"
         class="search-text"
+        bind:value={$searchStore1.search}
       />
       <i class="fa fa-search search-button" />
     </form>
@@ -160,11 +162,16 @@
     font-size: clamp(0.75rem, 1vw, 1.5rem);
     background-color: transparent;
     border: none;
+    color: var(--main-color);
   }
 
   ::placeholder {
     color: var(--main-color);
     opacity: 0.7;
+  }
+
+  input:focus {
+    outline: none;
   }
 
   .search-button {
@@ -182,7 +189,7 @@
     position: absolute;
     table-layout: fixed;
     width: clamp(100px, 20vw, 400px);
-    background-color: #393B43;
+    background-color: #393b43;
     border-collapse: collapse;
     font-family: var(--main-font);
     font-size: clamp(1rem, 2vw, 1.25rem);
