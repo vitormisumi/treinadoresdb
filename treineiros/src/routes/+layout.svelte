@@ -163,7 +163,7 @@
   .menu-link:visited {
     padding: clamp(5px, 2vw, 10px);
     font-family: "Roboto Condensed";
-    font-size: clamp(1.25rem, 3vw, 2rem);
+    font-size: clamp(1.25rem, 2.5vw, 2rem);
     text-transform: uppercase;
     color: var(--background-color);
   }
@@ -183,7 +183,7 @@
     background-color: var(--accent-color);
     border-radius: 2rem;
     z-index: 100;
-    width: clamp(200px, 5vw, 300px);
+    width: clamp(175px, 15vw, 300px);
     height: clamp(30px, 7vh, 40px);
   }
 
@@ -213,7 +213,7 @@
   #search-results {
     position: absolute;
     table-layout: fixed;
-    width: clamp(200px, 5vw, 300px);
+    width: clamp(175px, 15vw, 300px);
     border-collapse: collapse;
     text-align: left;
     font-family: var(--main-font);
@@ -275,9 +275,8 @@
 
     .menu-item {
       display: inline;
-      padding: auto;
+      padding: 0.65vw;
       margin: auto;
-      font-size: clamp(1rem, 2vw, 2rem);
     }
 
     #search-bar {

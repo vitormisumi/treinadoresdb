@@ -144,7 +144,7 @@ async function h2h(coach_id1, coach_id2) {
                     ELSE 0 END) AS coach1_wins,
            SUM(CASE WHEN home_coach_id = ? AND away_coach_id = ? AND home_score = away_score THEN 1 
                     WHEN away_coach_id = ? AND home_coach_id = ? AND home_score = away_score THEN 1
-                    ELSE 0 END) AS ties,
+                    ELSE 0 END) AS draws,
 	       SUM(CASE WHEN home_coach_id = ? AND away_coach_id = ? AND home_score > away_score THEN 1
 			        WHEN away_coach_id = ? AND home_coach_id = ? AND away_score > home_score THEN 1 
                     ELSE 0 END) AS coach2_wins

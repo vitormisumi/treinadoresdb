@@ -1,5 +1,7 @@
 <script>
   import fallback from "$lib/assets/images/coaches/default.png";
+  import Graph from "./Graph.svelte";
+
   export let coachInfo1;
   export let coachInfo2;
   export let h2h;
@@ -14,31 +16,31 @@
       alt=""
       id="coach-img1"
       on:error={handleError}
-      />
-    </a>
-    {#if coachInfo1.nickname === null}
+    />
+  </a>
+  {#if coachInfo1.nickname === null}
     <a
-    href="/perfil/{coachInfo1.coach_id}"
-    id="coach-team-name1"
-    class="coach-team">{coachInfo1.name}</a
+      href="/perfil/{coachInfo1.coach_id}"
+      id="coach-name1"
+      class="coach-name">{coachInfo1.name}</a
     >
-    {:else}
+  {:else}
     <a
-    href="/perfil/{coachInfo1.coach_id}"
-    id="coach-team-name1"
-    class="coach-team">{coachInfo1.nickname}</a
+      href="/perfil/{coachInfo1.coach_id}"
+      id="coach-name1"
+      class="coach-name">{coachInfo1.nickname}</a
     >
-    {/if}
-    {#if h2h.coach1_wins === null}
+  {/if}
+  {#if h2h.coach1_wins === null}
     <p id="wins1" class="wins">0</p>
     <p id="wins2" class="wins">0</p>
-    {:else}
+  {:else}
     <p id="wins1" class="wins">{h2h.coach1_wins}</p>
-    <p>Graph goes here!</p>
+      <Graph {h2h} {coachInfo1} {coachInfo2} />
     <p id="wins2" class="wins">{h2h.coach2_wins}</p>
-    {/if}
-    <a href="/perfil/{coachInfo2.coach_id}">
-      <img
+  {/if}
+  <a href="/perfil/{coachInfo2.coach_id}">
+    <img
       src="/src/lib/assets/images/coaches/{coachInfo2.coach_id}.png"
       alt=""
       id="coach-img2"
@@ -48,14 +50,14 @@
   {#if coachInfo2.nickname === null}
     <a
       href="/perfil/{coachInfo2.coach_id}"
-      id="coach-team-name2"
-      class="coach-team">{coachInfo2.name}</a
+      id="coach-name2"
+      class="coach-name">{coachInfo2.name}</a
     >
   {:else}
     <a
       href="/perfil/{coachInfo2.coach_id}"
-      id="coach-team-name2"
-      class="coach-team">{coachInfo2.nickname}</a
+      id="coach-name2"
+      class="coach-name">{coachInfo2.nickname}</a
     >
   {/if}
 </section>
@@ -67,7 +69,7 @@
     grid-template-rows: auto;
     grid-template-areas:
       "coach-img1 wins1 graph wins2 coach-img2"
-      "coach-team-name1 none none none coach-team-name2";
+      "coach-name1 none none none coach-name2";
     align-items: center;
     justify-items: center;
   }
@@ -99,20 +101,21 @@
     font-size: clamp(3rem, 7vw, 5rem);
     font-family: var(--main-font);
     color: var(--accent-color);
+    margin: auto;
   }
 
-  #coach-team-name1 {
-    grid-area: coach-team-name1;
+  #coach-name1 {
+    grid-area: coach-name1;
     margin: 0;
   }
 
-  #coach-team-name2 {
-    grid-area: coach-team-name2;
+  #coach-name2 {
+    grid-area: coach-name2;
     text-align: right;
     margin: 0;
   }
 
-  .coach-team {
+  .coach-name {
     font-size: clamp(1rem, 4vw, 2rem);
     font-family: var(--main-font);
     color: var(--main-color);

@@ -28,7 +28,7 @@
     });
     $searchStore1.search = "";
   }
-  
+
   function updateCoach2(id) {
     coach2.set(id);
     goto(`?coach1=${$coach1}&coach2=${id}`, {
@@ -152,14 +152,18 @@
     border: 2px solid var(--main-color);
     border-radius: 2rem;
     z-index: 100;
-    width: max(100%, 100px);
+    width: clamp(120px, 42.5vw, 400px);
     height: clamp(30px, 7vh, 40px);
+  }
+
+  #search2 {
+    justify-self: end;
   }
 
   .search-text {
     font-family: var(--main-font);
     padding-left: clamp(10px, 2vw, 20px);
-    font-size: clamp(0.75rem, 1vw, 1.5rem);
+    font-size: clamp(0.75rem, 2vw, 1.5rem);
     background-color: transparent;
     border: none;
     color: var(--main-color);
@@ -188,27 +192,26 @@
   .search-results {
     position: absolute;
     table-layout: fixed;
-    width: clamp(100px, 20vw, 400px);
+    width: clamp(120px, 42.5vw, 400px);
     background-color: #393b43;
     border-collapse: collapse;
     font-family: var(--main-font);
-    font-size: clamp(1rem, 2vw, 1.25rem);
     border-radius: 1vw;
     z-index: 1000;
   }
-
+  
   .search-results tr:last-child td {
     border: 0;
   }
-
+  
   #search-results1 {
     grid-area: results1;
   }
-
+  
   #search-results2 {
     grid-area: results2;
   }
-
+  
   td {
     border: 1px solid;
     border-color: transparent transparent var(--background-color);
@@ -216,8 +219,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-
+  
   .coach-result {
+    font-size: clamp(1rem, 1.25vw, 1.5rem);
     cursor: pointer;
     background-color: transparent;
     border-color: transparent;
