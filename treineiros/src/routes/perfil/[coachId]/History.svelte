@@ -29,7 +29,7 @@
   <h2>Histórico</h2>
   <form>
     <div id="groups">
-      <h3 id="group-heading">Agrupar por:</h3>
+      <p id="group">Agrupar por:</p>
       {#each groupMenu as group}
         <label>
           <input
@@ -132,11 +132,11 @@
     white-space: nowrap;
   }
   
-  #group-heading,
-  label {
+  #group {
     color: var(--main-color);
     font-family: var(--main-font);
     font-size: clamp(0.75rem, 1.5vw, 1rem);
+    font-weight: var(--bold);
     margin: 0;
   }
 

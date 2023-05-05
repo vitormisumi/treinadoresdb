@@ -1,4 +1,6 @@
 <script>
+  import { shortDate } from "$lib/assets/functions"
+
   export let matchData;
   export let competition;
   export let teams;
@@ -25,10 +27,7 @@
   <img id="away-team-logo" src="/src/lib/assets/images/teams/{teams.away_team_id}.png" alt="" />
   <div id="match-data">
     <p id="date">
-      {("0" + matchData.date_time.getDate()).slice(-2)}/{(
-        "0" +
-        (matchData.date_time.getMonth() + 1)
-      ).slice(-2)}/{matchData.date_time.getFullYear()}
+      {shortDate(matchData.date_time)}
     </p>
     <p id="competition">{competition.name}</p>
     <p id="stadium">{matchData.stadium}</p>

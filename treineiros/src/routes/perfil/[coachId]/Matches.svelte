@@ -1,5 +1,6 @@
 <script>
-  import { filter } from "/src/lib/stores/matchFilter";
+  import { shortDate } from "$lib/assets/functions";
+  import { profileMatchFilters } from "/src/lib/stores/filters";
 
   export let matches;
 
@@ -20,29 +21,20 @@
 
   $: filteredMatches = matches.filter((m) => {
     if (
-      ($filter.team === "default" ||
+      ($profileMatchFilters.team === "default" ||
         (m.coach === "Mandante" &&
-          $filter.team === m.home_team + "/" + m.home_team_state) ||
+          $profileMatchFilters.team === m.home_team + "/" + m.home_team_state) ||
         (m.coach === "Visitante" &&
-          $filter.team === m.away_team + "/" + m.away_team_state)) &&
-      ($filter.season === "default" ||
-        $filter.season === m.date_time.getFullYear()) &&
-      ($filter.competition === "default" ||
-        $filter.competition === m.competition)
+          $profileMatchFilters.team ===
+            m.away_team + "/" + m.away_team_state)) &&
+      ($profileMatchFilters.season === "default" ||
+        $profileMatchFilters.season === m.date_time.getFullYear()) &&
+      ($profileMatchFilters.competition === "default" ||
+        $profileMatchFilters.competition === m.competition)
     ) {
       return m;
     }
   });
-
-  function shortDate(date) {
-    return (
-      ("0" + date.getDate()).slice(-2) +
-      "/" +
-      ("0" + (date.getMonth() + 1)).slice(-2) +
-      "/" +
-      date.getFullYear()
-    );
-  }
 
   let page = 0;
   $: pages = Math.ceil(filteredMatches.length / 10);
@@ -75,11 +67,11 @@
 <section id="matches">
   <h2>Partidas</h2>
   <div id="filters">
-    <h4>Equipe:</h4>
+    <p class="label">Equipe:</p>
     <select
       name="team"
       id="team"
-      bind:value={$filter.team}
+      bind:value={$profileMatchFilters.team}
       on:change={firstPage}
     >
       <option value="default" selected>Todas</option>
@@ -87,11 +79,11 @@
         <option value={team}>{team}</option>
       {/each}
     </select>
-    <h4>Temporada:</h4>
+    <p class="label">Temporada:</p>
     <select
       name="team"
       id="team"
-      bind:value={$filter.season}
+      bind:value={$profileMatchFilters.season}
       on:change={firstPage}
     >
       <option value="default" selected>Todas</option>
@@ -99,11 +91,11 @@
         <option value={season}>{season}</option>
       {/each}
     </select>
-    <h4>Competição:</h4>
+    <p class="label">Competição:</p>
     <select
       name="team"
       id="team"
-      bind:value={$filter.competition}
+      bind:value={$profileMatchFilters.competition}
       on:change={firstPage}
     >
       <option value="default" selected>Todas</option>
@@ -277,15 +269,12 @@
     color: var(--accent-color);
   }
 
-  h4,
+  .label,
   p {
     font-family: var(--main-font);
     color: var(--main-color);
     font-size: clamp(0.75rem, 1.5vw, 1rem);
-  }
-
-  h4 {
-    margin: 0;
+    font-weight: var(--bold);
   }
 
   a {

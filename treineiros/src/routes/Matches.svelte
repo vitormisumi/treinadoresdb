@@ -1,24 +1,18 @@
 <script>
+  import { shortDate } from "$lib/assets/functions";
   export let matches;
 
-  import calendar from '$lib/assets/images/calendar.png';
+  import calendar from "$lib/assets/images/calendar.png";
 </script>
 
 <section id="matches">
   <h2 id="matches-title">Atualizado diariamente.</h2>
-  <img
-    src={calendar}
-    alt="calendário"
-    id="calendar-icon"
-  />
+  <img src={calendar} alt="calendário" id="calendar-icon" />
   <h3 class="last-added">Últimos jogos adicionados</h3>
   {#each matches as { match_id, date_time, competition, home_team_id, home_team_name, away_team_id, away_team_name, home_score, away_score, home_coach, home_coach_nickname, away_coach, away_coach_nickname }, i}
     <div class="game-card">
       <p class="date">
-        {("0" + date_time.getDate()).slice(-2)}/{(
-          "0" +
-          (date_time.getMonth() + 1)
-        ).slice(-2)}/{date_time.getFullYear()}
+        {shortDate(date_time)}
       </p>
       <p class="competition">{competition}</p>
       {#if home_coach_nickname === null}

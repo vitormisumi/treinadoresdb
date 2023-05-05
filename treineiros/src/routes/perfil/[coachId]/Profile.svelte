@@ -1,5 +1,6 @@
 <script>
-  import fallback from '$lib/assets/images/coaches/default.png';
+  import { age } from "$lib/assets/functions";
+  import fallback from "$lib/assets/images/coaches/default.png";
 
   export let coach;
   export let lastClub;
@@ -10,17 +11,6 @@
   export let pointPercentage;
   export let goalsScoredAvg;
   export let goalsConcededAvg;
-
-  function age(birthdate) {
-    const today = new Date();
-    const age =
-      today.getFullYear() -
-      birthdate.getFullYear() -
-      (today.getMonth() < birthdate.getMonth() ||
-        (today.getMonth() === birthdate.getMonth() &&
-          today.getDate() < birthdate.getDate()));
-    return age;
-  }
 
   const handleError = (ev) => (ev.target.src = fallback);
 </script>
@@ -113,7 +103,7 @@
       "title"
       "image"
       "name"
-      "table" 
+      "table"
       "asterisk";
   }
 
