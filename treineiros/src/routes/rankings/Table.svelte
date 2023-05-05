@@ -1,6 +1,6 @@
 <script>
   import { indicator } from "$lib/stores/indicator";
-  import fallback from "$lib/assets/images/coaches/default.png";
+  import fallback from "$lib/assets/images/defaultCoach.png";
 
   const handleError = (ev) => (ev.target.src = fallback);
 

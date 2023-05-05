@@ -1,5 +1,5 @@
 <script>
-  import fallback from "$lib/assets/images/coaches/default.png";
+  import fallback from "$lib/assets/images/defaultCoach.png";
   import Graph from "./Graph.svelte";
 
   export let coachInfo1;
