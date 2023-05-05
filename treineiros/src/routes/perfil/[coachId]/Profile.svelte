@@ -19,7 +19,7 @@
   <h2 id="title">Perfil</h2>
   <img
     id="image"
-    src="/static/coaches/{coach.coach_id}.png"
+    src={`/static/coaches/${coach.coach_id}.png`}
     on:error={handleError}
     alt={coach.name}
   />
