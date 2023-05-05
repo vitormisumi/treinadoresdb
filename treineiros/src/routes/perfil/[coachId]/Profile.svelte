@@ -11,7 +11,6 @@
   export let pointPercentage;
   export let goalsScoredAvg;
   export let goalsConcededAvg;
-  export let imgPath;
 
   const handleError = (ev) => (ev.target.src = fallback);
 </script>
@@ -20,7 +19,7 @@
   <h2 id="title">Perfil</h2>
   <img
     id="image"
-    src="{imgPath}"
+    src="../src/lib/assets/images/coaches/{coach.coach_id}.png"
     on:error={handleError}
     alt={coach.name}
   />

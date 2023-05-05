@@ -18,7 +18,6 @@
   pointPercentage={data.pointPercentage}
   goalsScoredAvg={data.goalsScoredAvg}
   goalsConcededAvg={data.goalsConcededAvg}
-  imgPath={data.imgPath}
 />
 <History history={data.history} totalHistory={data.totalHistory}/>
 <Matches matches={data.matches} />

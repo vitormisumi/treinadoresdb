@@ -202,11 +202,6 @@ async function totalHistory(coach_id) {
     return rows[0];
 }
 
-function imgPath(id) {
-    let imgPath = "../src/lib/assets/images/coaches/" + id + ".png"
-    return imgPath
-}
-
 export async function load({ params, url }) {
     let groupsParams = url.searchParams.get('groups');
     let groups;
@@ -231,7 +226,6 @@ export async function load({ params, url }) {
         matches: matches(params.coachId),
         history: history(params.coachId, groups),
         totalHistory: totalHistory(params.coachId),
-        imgPath: imgPath(params.coachId),
     };
 };
 
