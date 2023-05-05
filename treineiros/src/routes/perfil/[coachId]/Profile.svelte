@@ -19,7 +19,7 @@
   <h2 id="title">Perfil</h2>
   <img
     id="image"
-    src="../src/lib/assets/images/coaches/{coach.coach_id}.png"
+    src="https://github.com/vitormisumi/treineiros/raw/main/treineiros/src/lib/assets/images/coaches/{coach.coach_id}.png"
     on:error={handleError}
     alt={coach.name}
   />
