@@ -40,7 +40,7 @@
         <td class="position-column">{i + 1}º</td>
         <td class="img-column"
           ><img
-            src="/src/lib/assets/images/coaches/{coach.id}.png"
+            src={`/coaches/${coach.id}.png`}
             alt={coach.name}
             class="coach-img"
             on:error={handleError}

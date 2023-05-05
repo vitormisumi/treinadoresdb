@@ -12,7 +12,7 @@
 <section id="profile">
   <a href="/perfil/{coachInfo1.coach_id}">
     <img
-      src="/src/lib/assets/images/coaches/{coachInfo1.coach_id}.png"
+      src={`/coaches/${coachInfo1.coach_id}.png`}
       alt=""
       id="coach-img1"
       on:error={handleError}
@@ -41,7 +41,7 @@
   {/if}
   <a href="/perfil/{coachInfo2.coach_id}">
     <img
-      src="/src/lib/assets/images/coaches/{coachInfo2.coach_id}.png"
+      src={`/coaches/${coachInfo2.coach_id}.png`}
       alt=""
       id="coach-img2"
       on:error={handleError}

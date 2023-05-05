@@ -11,20 +11,20 @@
   <h2 id="title">Partida</h2>
   <a href="/perfil/{coaches.home_coach_id}" id="home-coach-img-link"
     ><img
-      src="/src/lib/assets/images/coaches/{coaches.home_coach_id}.png"
+      src={`/coaches/${coaches.home_coach_id}.png`}
       alt=""
       id="home-coach-img"
     /></a
   >
-  <img id="home-team-logo" src="/src/lib/assets/images/teams/{teams.home_team_id}.png" alt="" />
+  <img id="home-team-logo" src={`/teams/${teams.home_team_id}.png`} alt="" />
   <a href="/perfil/{coaches.away_coach_id}" id="away-coach-img-link"
     ><img
-      src="/src/lib/assets/images/coaches/{coaches.away_coach_id}.png"
+      src={`/coaches/${coaches.away_coach_id}.png`}
       alt=""
       id="away-coach-img"
     /></a
   >
-  <img id="away-team-logo" src="/src/lib/assets/images/teams/{teams.away_team_id}.png" alt="" />
+  <img id="away-team-logo" src={`/teams/${teams.away_team_id}.png`} alt="" />
   <div id="match-data">
     <p id="date">
       {shortDate(matchData.date_time)}
