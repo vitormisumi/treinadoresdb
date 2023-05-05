@@ -1,5 +1,7 @@
 import { writable } from 'svelte/store';
 
+export const profileHistoryGroups = writable("");
+
 export const profileMatchFilters = writable({
     team: 'default',
     season: 'default',

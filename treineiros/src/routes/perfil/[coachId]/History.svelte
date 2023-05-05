@@ -1,6 +1,6 @@
 <script>
   import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
+  import { profileHistoryGroups } from "$lib/stores/filters";
 
   export let history;
   export let totalHistory;
@@ -16,10 +16,8 @@
     },
   ];
 
-  let groups;
-
   const handleGroupChange = () => {
-    goto(`?groups=${groups}`, {
+    goto(`?groups=${$profileHistoryGroups}`, {
       noScroll: true,
     });
   };
@@ -34,7 +32,7 @@
         <label>
           <input
             type="checkbox"
-            bind:group={groups}
+            bind:group={$profileHistoryGroups}
             name="groups"
             value={group.slug}
             on:change={handleGroupChange}

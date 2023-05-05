@@ -1,6 +1,6 @@
 <script>
   import { age } from "$lib/assets/functions";
-  import fallback from "$lib/assets/images/coaches/default.png";
+  import fallback from "$lib/assets/images/defaultCoach.png";
 
   export let coach;
   export let lastClub;
@@ -19,7 +19,7 @@
   <h2 id="title">Perfil</h2>
   <img
     id="image"
-    src="https://github.com/vitormisumi/treineiros/raw/main/treineiros/src/lib/assets/images/coaches/{coach.coach_id}.png"
+    src={`/static/coaches/${coach.coach_id}.png`}
     on:error={handleError}
     alt={coach.name}
   />
