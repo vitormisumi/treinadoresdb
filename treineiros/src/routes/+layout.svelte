@@ -1,5 +1,6 @@
 <script>
   import { createSearchStore, searchHandler } from "$lib/stores/search";
+  import { profileHistoryGroups } from "$lib/stores/filters.js";
   import { onDestroy } from "svelte";
 
   export let data;
@@ -66,7 +67,7 @@
                   {#if coach.nickname === null}
                     <td
                       ><a
-                        href="/perfil/{coach.coach_id}"
+                        href="/perfil/{coach.coach_id}?groups={$profileHistoryGroups}"
                         class="coach-result"
                         on:click={closeMenu}>{coach.name}</a
                       ></td
@@ -74,7 +75,7 @@
                   {:else}
                     <td
                       ><a
-                        href="/perfil/{coach.coach_id}"
+                        href="/perfil/{coach.coach_id}?groups={$profileHistoryGroups}"
                         class="coach-result"
                         on:click={closeMenu}>{coach.nickname}</a
                       ></td

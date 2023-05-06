@@ -4,20 +4,20 @@
 
   export let matches;
 
-  let allSeasons = matches.map((row) => row.date_time.getFullYear());
-  let seasons = [...new Set(allSeasons)];
+  $: allSeasons = matches.map((row) => row.date_time.getFullYear());
+  $: seasons = [...new Set(allSeasons)];
 
-  let allCompetitions = matches.map((row) => row.competition);
-  let competitions = [...new Set(allCompetitions)];
+  $: allCompetitions = matches.map((row) => row.competition);
+  $: competitions = [...new Set(allCompetitions)];
 
-  let allTeams = matches.map((row) => {
+  $: allTeams = matches.map((row) => {
     if (row.coach === "Mandante") {
       return row.home_team + "/" + row.home_team_state;
     } else {
       return row.away_team + "/" + row.away_team_state;
     }
   });
-  let teams = [...new Set(allTeams)];
+  $: teams = [...new Set(allTeams)];
 
   $: filteredMatches = matches.filter((m) => {
     if (

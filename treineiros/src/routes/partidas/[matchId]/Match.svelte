@@ -1,5 +1,6 @@
 <script>
   import { shortDate } from "$lib/assets/functions"
+  import { profileHistoryGroups } from "$lib/stores/filters";
 
   export let matchData;
   export let competition;
@@ -9,7 +10,7 @@
 
 <section id="match">
   <h2 id="title">Partida</h2>
-  <a href="/perfil/{coaches.home_coach_id}" id="home-coach-img-link"
+  <a href="/perfil/{coaches.home_coach_id}?groups={$profileHistoryGroups}" id="home-coach-img-link"
     ><img
       src={`/coaches/${coaches.home_coach_id}.png`}
       alt=""
@@ -17,7 +18,7 @@
     /></a
   >
   <img id="home-team-logo" src={`/teams/${teams.home_team_id}.png`} alt="" />
-  <a href="/perfil/{coaches.away_coach_id}" id="away-coach-img-link"
+  <a href="/perfil/{coaches.away_coach_id}?groups={$profileHistoryGroups}" id="away-coach-img-link"
     ><img
       src={`/coaches/${coaches.away_coach_id}.png`}
       alt=""
@@ -37,11 +38,11 @@
     {teams.home_team_name}/{teams.home_team_state}
   </p>
   {#if coaches.home_coach_nickname === null}
-    <a href="/perfil/{coaches.home_coach_id}" class="home-coach-name coach"
+    <a href="/perfil/{coaches.home_coach_id}?groups={$profileHistoryGroups}" class="home-coach-name coach"
       >{coaches.home_coach}</a
     >
   {:else}
-    <a href="/perfil/{coaches.home_coach_id}" class="home-coach-name coach"
+    <a href="/perfil/{coaches.home_coach_id}?groups={$profileHistoryGroups}" class="home-coach-name coach"
       >{coaches.home_coach_nickname}</a
     >
   {/if}

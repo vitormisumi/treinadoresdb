@@ -129,7 +129,7 @@
     border-collapse: collapse;
     white-space: nowrap;
   }
-  
+
   #group {
     color: var(--main-color);
     font-family: var(--main-font);

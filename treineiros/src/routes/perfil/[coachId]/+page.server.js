@@ -1,4 +1,6 @@
 import { accessPool } from '$db/db'
+import { get } from 'svelte/store';
+import { profileHistoryGroups } from '$lib/stores/filters.js';
 
 async function getCoaches() {
     const [rows, fields] = await accessPool().query(`
@@ -228,4 +230,3 @@ export async function load({ params, url }) {
         totalHistory: totalHistory(params.coachId),
     };
 };
-

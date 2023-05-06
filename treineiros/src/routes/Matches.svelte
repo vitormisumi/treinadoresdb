@@ -76,9 +76,9 @@
     text-align: center;
     align-items: middle;
     margin: 1vw 2vw;
-    padding: 2vw;
+    padding: 0.5rem;
     background-color: var(--main-color);
-    border-radius: 5vw;
+    border-radius: 3vw;
     grid-template-columns: 5fr 1fr 1fr 1fr 5fr;
     grid-template-areas:
       "date date date date date"
@@ -94,18 +94,18 @@
   .date {
     margin: auto;
     grid-area: date;
-    font-size: clamp(0.75rem, 2vw, 1.5rem);
+    font-size: clamp(0.75rem, 2vw, 1rem);
   }
 
   .competition {
     margin: auto;
     grid-area: competition;
-    font-size: clamp(0.75rem, 2vw, 1.5rem);
+    font-size: clamp(0.75rem, 2vw, 1rem);
   }
 
   .coach {
     margin: auto;
-    font-size: clamp(0.75rem, 2vw, 1.5rem);
+    font-size: clamp(0.75rem, 2vw, 1.25rem);
     font-weight: var(--bold);
   }
 
@@ -132,7 +132,7 @@
 
   .score {
     margin: auto;
-    font-size: clamp(1.5rem, 5vw, 10rem);
+    font-size: clamp(1.5rem, 4vw, 8rem);
   }
 
   .home-score {
@@ -162,7 +162,7 @@
 
   @media (min-width: 768px) {
     .game-card {
-      margin: 1vw 10vw;
+      margin: 1vw 20vw;
     }
   }
 </style>

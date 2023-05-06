@@ -1,5 +1,6 @@
 <script>
   import fallback from "$lib/assets/images/defaultCoach.png";
+  import { profileHistoryGroups } from "$lib/stores/filters";
   import Graph from "./Graph.svelte";
 
   export let coachInfo1;
@@ -10,7 +11,7 @@
 </script>
 
 <section id="profile">
-  <a href="/perfil/{coachInfo1.coach_id}">
+  <a href="/perfil/{coachInfo1.coach_id}?groups={$profileHistoryGroups}">
     <img
       src={`/coaches/${coachInfo1.coach_id}.png`}
       alt=""
@@ -20,13 +21,13 @@
   </a>
   {#if coachInfo1.nickname === null}
     <a
-      href="/perfil/{coachInfo1.coach_id}"
+      href="/perfil/{coachInfo1.coach_id}?groups={$profileHistoryGroups}"
       id="coach-name1"
       class="coach-name">{coachInfo1.name}</a
     >
   {:else}
     <a
-      href="/perfil/{coachInfo1.coach_id}"
+      href="/perfil/{coachInfo1.coach_id}?groups={$profileHistoryGroups}"
       id="coach-name1"
       class="coach-name">{coachInfo1.nickname}</a
     >
@@ -39,7 +40,7 @@
       <Graph {h2h} {coachInfo1} {coachInfo2} />
     <p id="wins2" class="wins">{h2h.coach2_wins}</p>
   {/if}
-  <a href="/perfil/{coachInfo2.coach_id}">
+  <a href="/perfil/{coachInfo2.coach_id}?groups={$profileHistoryGroups}">
     <img
       src={`/coaches/${coachInfo2.coach_id}.png`}
       alt=""
@@ -49,13 +50,13 @@
   </a>
   {#if coachInfo2.nickname === null}
     <a
-      href="/perfil/{coachInfo2.coach_id}"
+      href="/perfil/{coachInfo2.coach_id}?groups={$profileHistoryGroups}"
       id="coach-name2"
       class="coach-name">{coachInfo2.name}</a
     >
   {:else}
     <a
-      href="/perfil/{coachInfo2.coach_id}"
+      href="/perfil/{coachInfo2.coach_id}?groups={$profileHistoryGroups}"
       id="coach-name2"
       class="coach-name">{coachInfo2.nickname}</a
     >

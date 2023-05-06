@@ -1,5 +1,6 @@
 <script>
   import { indicator } from "$lib/stores/indicator";
+  import { profileHistoryGroups } from "$lib/stores/filters";
   import fallback from "$lib/assets/images/defaultCoach.png";
 
   const handleError = (ev) => (ev.target.src = fallback);
@@ -48,11 +49,11 @@
         >
         {#if coach.nickname === null}
           <td class="coach-column"
-            ><a href="/perfil/{coach.id}">{coach.name}</a></td
+            ><a href="/perfil/{coach.id}?groups={$profileHistoryGroups}">{coach.name}</a></td
           >
         {:else}
           <td class="coach-column"
-            ><a href="/perfil/{coach.id}">{coach.nickname}</a></td
+            ><a href="/perfil/{coach.id}?groups={$profileHistoryGroups}">{coach.nickname}</a></td
           >
         {/if}
         <td class="value-column">{coach.value}</td>
