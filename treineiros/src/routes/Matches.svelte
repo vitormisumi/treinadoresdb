@@ -132,7 +132,7 @@
 
   .score {
     margin: auto;
-    font-size: clamp(1.5rem, 4vw, 8rem);
+    font-size: clamp(1.5rem, 3vw, 6rem);
   }
 
   .home-score {

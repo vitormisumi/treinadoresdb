@@ -4,11 +4,11 @@
 
   export let matches;
 
-  let allSeasons = matches.map((row) => row.date_time.getFullYear());
-  let seasons = [...new Set(allSeasons)];
+  $: allSeasons = matches.map((row) => row.date_time.getFullYear());
+  $: seasons = [...new Set(allSeasons)];
 
-  let allCompetitions = matches.map((row) => row.competition);
-  let competitions = [...new Set(allCompetitions)];
+  $: allCompetitions = matches.map((row) => row.competition);
+  $: competitions = [...new Set(allCompetitions)];
 
   $: filteredMatches = matches.filter((m) => {
     if (

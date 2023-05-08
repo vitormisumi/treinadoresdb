@@ -78,11 +78,11 @@
         <td class="col2">{pointPercentage}%</td>
       </tr>
       <tr>
-        <td class="col1">Média Gols Marcados</td>
+        <td class="col1">Gols Feitos/Partida</td>
         <td class="col2">{goalsScoredAvg}</td>
       </tr>
       <tr>
-        <td class="col1">Média Gols Sofridos</td>
+        <td class="col1">Gols Sofridos/Partida</td>
         <td class="col2">{goalsConcededAvg}</td>
       </tr>
     </tbody>

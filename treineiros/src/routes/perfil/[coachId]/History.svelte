@@ -57,7 +57,7 @@
           <th>V</th>
           <th>E</th>
           <th>D</th>
-          <th>GM</th>
+          <th>GF</th>
           <th>GS</th>
           <th>SG</th>
           <th>CA</th>

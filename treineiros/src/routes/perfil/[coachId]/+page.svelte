@@ -18,8 +18,12 @@
   pointPercentage={data.pointPercentage}
   goalsScoredAvg={data.goalsScoredAvg}
   goalsConcededAvg={data.goalsConcededAvg}
+  />
+  <History history={data.history} totalHistory={data.totalHistory} />
+  <Matches matches={data.matches} />
+  <Performance
+  goalsScoredDistribution={data.goalsScoredDistribution}
+  goalsScoredAvg={data.goalsScoredAvg}
+  coach={data.coach}
 />
-<History history={data.history} totalHistory={data.totalHistory}/>
-<Matches matches={data.matches} />
-<Performance />
-<H2H coach={data.coach} coaches={data.coaches}/>
+<H2H coach={data.coach} coaches={data.coaches} />
