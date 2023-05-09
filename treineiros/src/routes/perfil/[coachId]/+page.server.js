@@ -204,12 +204,12 @@ async function totalHistory(coach_id) {
 
 async function goalsScoredDistribution() {
     const [rows, fields] = await accessPool().query(
-        `SELECT FLOOR(goals.goal_scored_average/0.1)*0.1 AS bins, COUNT(*) AS count
+        `SELECT FLOOR(goals.goals_scored_average/0.1)*0.1 AS bins, COUNT(*) AS count
     FROM (
         SELECT home.home_coach_id AS id, 
             home.name, 
             home.nickname, 
-            ROUND((home.home_goals + away.away_goals) / (home.matches + away.matches), 2) AS goal_scored_average
+            ROUND((home.home_goals + away.away_goals) / (home.matches + away.matches), 2) AS goals_scored_average
         FROM 
             (SELECT COUNT(m.match_id) AS matches, 
                 m.home_coach_id, 
@@ -226,6 +226,44 @@ async function goalsScoredDistribution() {
             (SELECT COUNT(m.match_id) AS matches, 
                 m.away_coach_id,
                 SUM(m.away_score) AS away_goals 
+            FROM matches AS m
+            JOIN coaches AS ac
+            ON m.away_coach_id = ac.coach_id
+            JOIN competitions AS c
+            ON m.competition_id = c.competition_id
+            GROUP BY away_coach_id) AS away
+        ON home.home_coach_id = away.away_coach_id
+        WHERE home.matches + away.matches >= 50) AS goals
+    GROUP BY 1 
+    ORDER BY 1;
+    `);
+    return rows;
+}
+
+async function goalsConcededDistribution() {
+    const [rows, fields] = await accessPool().query(
+        `SELECT FLOOR(goals.goals_conceded_average/0.1)*0.1 AS bins, COUNT(*) AS count
+    FROM (
+        SELECT home.home_coach_id AS id, 
+            home.name, 
+            home.nickname, 
+            ROUND((home.away_goals + away.home_goals) / (home.matches + away.matches), 2) AS goals_conceded_average
+        FROM 
+            (SELECT COUNT(m.match_id) AS matches, 
+                m.home_coach_id, 
+                hc.name,
+                hc.nickname,
+                SUM(m.away_score) AS away_goals 
+            FROM matches AS m
+            JOIN coaches AS hc
+            ON m.home_coach_id = hc.coach_id
+            JOIN competitions AS c
+            ON m.competition_id = c.competition_id
+            GROUP BY home_coach_id) AS home
+        JOIN
+            (SELECT COUNT(m.match_id) AS matches, 
+                m.away_coach_id,
+                SUM(m.home_score) AS home_goals 
             FROM matches AS m
             JOIN coaches AS ac
             ON m.away_coach_id = ac.coach_id
@@ -265,5 +303,6 @@ export async function load({ params, url }) {
         history: history(params.coachId, groups),
         totalHistory: totalHistory(params.coachId),
         goalsScoredDistribution: goalsScoredDistribution(),
+        goalsConcededDistribution: goalsConcededDistribution(),
     };
 };

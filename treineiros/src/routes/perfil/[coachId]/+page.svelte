@@ -23,7 +23,9 @@
   <Matches matches={data.matches} />
   <Performance
   goalsScoredDistribution={data.goalsScoredDistribution}
+  goalsConcededDistribution={data.goalsConcededDistribution}
   goalsScoredAvg={data.goalsScoredAvg}
+  goalsConcededAvg={data.goalsConcededAvg}
   coach={data.coach}
 />
 <H2H coach={data.coach} coaches={data.coaches} />
