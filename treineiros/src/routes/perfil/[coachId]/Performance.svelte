@@ -38,7 +38,11 @@
 
 <section id="performance">
   <h2>Desempenho</h2>
-  <div bind:clientWidth={width} class="graph" on:mousemove="{e => mousePosition = { x: e.pageX, y: e.pageY }}">
+  <div
+    bind:clientWidth={width}
+    class="graph"
+    on:mousemove={(e) => (mousePosition = { x: e.pageX, y: e.pageY })}
+  >
     <svg {width} {height}>
       {#each goalsScoredDistribution as { bins, count }, i}
         <g class="bars">
@@ -104,21 +108,32 @@
   </div>
   {#if hoveredData}
     {#if hoveredData.count === 1}
-      <p class="tooltip" style="top: {mousePosition.y}px; left: {mousePosition.x}px;">
-        {hoveredData.count} treinador<br />tem entre {hoveredData.bins.toFixed(
+      <div
+        class="tooltip main"
+        style="top: {mousePosition.y}px; left: {mousePosition.x}px;"
+      >
+        <b>{hoveredData.count}</b> treinador<br />tem entre {hoveredData.bins.toFixed(
           1
         )} e {(hoveredData.bins + 0.1).toFixed(1)}<br />gols feitos/partida
-      </p>
+      </div>
     {:else}
-      <p class="tooltip" style="top: {mousePosition.y}px; left: {mousePosition.x}px;">
-        {hoveredData.count} treinadores<br />tem entre {hoveredData.bins.toFixed(
+      <div
+        class="tooltip main"
+        style="top: {mousePosition.y}px; left: {mousePosition.x}px;"
+      >
+        <b>{hoveredData.count}</b> treinadores<br />tem entre {hoveredData.bins.toFixed(
           1
         )} e {(hoveredData.bins + 0.1).toFixed(1)}<br />gols feitos/partida
-      </p>
+      </div>
     {/if}
   {/if}
   {#if hoverCoach}
-    <div class="tooltip" style="top: {mousePosition.y}px; left: {mousePosition.x}px;">{hoverCoach}:<br>{goalsScoredAvg} gols/partida</div>
+    <div
+      class="tooltip accent"
+      style="top: {mousePosition.y}px; left: {mousePosition.x}px;"
+    >
+      {hoverCoach}:<br /><b>{goalsScoredAvg}</b> gols/partida
+    </div>
   {/if}
 </section>
 
@@ -146,8 +161,12 @@
 
   .bar:hover,
   .coach:hover {
-    fill: var(--main-color);
-    transition: all 500ms ease;
+    transition: all 500ms ease-in-out;
+    cursor: pointer;
+  }
+
+  .bar:hover {
+    fill: var(--table-accent);
   }
 
   .coach {
@@ -162,11 +181,22 @@
 
   .tooltip {
     font-family: var(--main-font);
-    color: var(--main-color);
-    background-color: var(--accent-color);
     text-align: center;
+    border: 1px solid var(--background-color);
     border-radius: 0.5vw;
     padding: 0.5rem;
     position: absolute;
+    pointer-events: none;
+    transition: all 500ms ease-in-out;
+  }
+
+  .main {
+    background-color: var(--main-color);
+    color: var(--background-color);
+  }
+
+  .accent {
+    background-color: var(--accent-color);
+    color: var(--main-color);
   }
 </style>

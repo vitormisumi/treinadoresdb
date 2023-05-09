@@ -98,7 +98,6 @@ async function goalsScoredAvg(coach_id) {
         UNION
         SELECT SUM(away_score) AS goals, COUNT(*) AS matches FROM matches WHERE away_coach_id = ?) AS m;`,
         [coach_id, coach_id]);
-    console.log(rows[0].goal_average);
     return rows[0].goal_average;
 }
 
