@@ -19,18 +19,26 @@
   let height = 450;
 
   $: barWidth = width / goalsScoredDistribution.length;
+
   function y(count) {
     return (count * height) / highestCount.count;
   }
 
   $: coachBar =
-    ((Number(goalsScoredAvg) - Number(lowestBin.bins)) * width) /
+    ((Number(goalsScoredAvg) - Number(lowestBin.bins)) *
+      (((goalsScoredDistribution.length - 1) * width) /
+        goalsScoredDistribution.length)) /
     (Number(highestBin.bins) - Number(lowestBin.bins));
+
+  let hoveredData;
+  let hoverCoach;
+
+  let mousePosition = { x: 0, y: 0 };
 </script>
 
 <section id="performance">
   <h2>Desempenho</h2>
-  <div bind:clientWidth={width} class="graph">
+  <div bind:clientWidth={width} class="graph" on:mousemove="{e => mousePosition = { x: e.pageX, y: e.pageY }}">
     <svg {width} {height}>
       {#each goalsScoredDistribution as { bins, count }, i}
         <g class="bars">
@@ -40,10 +48,32 @@
             width={barWidth}
             height={y(count)}
             class="bar"
+            on:mouseenter={() => {
+              hoveredData = { bins: Number(bins), count: Number(count) };
+            }}
+            on:mouseleave={() => {
+              hoveredData = null;
+            }}
           />
         </g>
       {/each}
-      <rect x={coachBar - 5} y="0" width="10" {height} class="coach" />
+      <rect
+        x={coachBar - 5}
+        y="0"
+        width="10"
+        {height}
+        class="coach"
+        on:mouseenter={() => {
+          if (coach.nickname !== null) {
+            hoverCoach = coach.nickname;
+          } else {
+            hoverCoach = coach.name;
+          }
+        }}
+        on:mouseleave={() => {
+          hoverCoach = null;
+        }}
+      />
       {#each goalsScoredDistribution as { bins, count }, i}
         <g class="ticks">
           <line
@@ -72,6 +102,24 @@
     </svg>
     <p class="x-axis-title">Gols Feitos/Partida</p>
   </div>
+  {#if hoveredData}
+    {#if hoveredData.count === 1}
+      <p class="tooltip" style="top: {mousePosition.y}px; left: {mousePosition.x}px;">
+        {hoveredData.count} treinador<br />tem entre {hoveredData.bins.toFixed(
+          1
+        )} e {(hoveredData.bins + 0.1).toFixed(1)}<br />gols feitos/partida
+      </p>
+    {:else}
+      <p class="tooltip" style="top: {mousePosition.y}px; left: {mousePosition.x}px;">
+        {hoveredData.count} treinadores<br />tem entre {hoveredData.bins.toFixed(
+          1
+        )} e {(hoveredData.bins + 0.1).toFixed(1)}<br />gols feitos/partida
+      </p>
+    {/if}
+  {/if}
+  {#if hoverCoach}
+    <div class="tooltip" style="top: {mousePosition.y}px; left: {mousePosition.x}px;">{hoverCoach}:<br>{goalsScoredAvg} gols/partida</div>
+  {/if}
 </section>
 
 <style>
@@ -110,5 +158,15 @@
     color: var(--main-color);
     margin: 0;
     text-align: center;
+  }
+
+  .tooltip {
+    font-family: var(--main-font);
+    color: var(--main-color);
+    background-color: var(--accent-color);
+    text-align: center;
+    border-radius: 0.5vw;
+    padding: 0.5rem;
+    position: absolute;
   }
 </style>
