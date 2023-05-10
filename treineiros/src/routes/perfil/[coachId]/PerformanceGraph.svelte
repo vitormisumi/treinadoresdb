@@ -1,21 +1,22 @@
 <script>
-  export let goalsConcededDistribution;
-  export let goalsConcededAvg;
+  export let distribution;
+  export let coachData;
   export let coach;
+  export let binSize;
+  export let xLabel;
+  export let decimals;
 
-  const highestCount = goalsConcededDistribution.reduce((previous, current) => {
-    return current.count > previous.count ? current : previous;
+  const highestCount = distribution.reduce((previous, current) => {
+    return Number(current.count) > Number(previous.count) ? current : previous;
   });
 
-  const lowestBin = goalsConcededDistribution.reduce((previous, current) => {
-    return current.bins < previous.bins ? current : previous;
+  const lowestBin = distribution.reduce((previous, current) => {
+    return Number(current.bins) < Number(previous.bins) ? current : previous;
   });
 
-  const highestBin = goalsConcededDistribution.reduce((previous, current) => {
-    return current.bins > previous.bins ? current : previous;
+  const highestBin = distribution.reduce((previous, current) => {
+    return Number(current.bins) > Number(previous.bins) ? current : previous;
   });
-
-  const binSize = 0.1;
 
   let width;
   let height = 450;
@@ -27,12 +28,12 @@
   }
 
   $: coachBar =
-    ((Number(goalsConcededAvg) - Number(lowestBin.bins)) *
-      ((((highestBin.bins - lowestBin.bins) / binSize + 1 - 1) * width) /
+    ((Number(coachData) - lowestBin.bins) *
+      ((((highestBin.bins - lowestBin.bins) / binSize) * width) /
         ((highestBin.bins - lowestBin.bins) / binSize + 1))) /
-    (Number(highestBin.bins) - Number(lowestBin.bins));
+    (highestBin.bins - lowestBin.bins);
 
-  let hoveredData;
+  let hoverBar;
   let hoverCoach;
 
   let mousePosition = { x: 0, y: 0 };
@@ -44,7 +45,7 @@
   on:mousemove={(e) => (mousePosition = { x: e.pageX, y: e.pageY })}
 >
   <svg {width} {height}>
-    {#each goalsConcededDistribution as { bins, count }, i}
+    {#each distribution as { bins, count }, i}
       <g class="bars">
         <rect
           x={((bins - lowestBin.bins) / binSize) * barWidth}
@@ -53,10 +54,10 @@
           height={y(count)}
           class="bar"
           on:mouseenter={() => {
-            hoveredData = { bins: Number(bins), count: Number(count) };
+            hoverBar = { bins: Number(bins), count: Number(count) };
           }}
           on:mouseleave={() => {
-            hoveredData = null;
+            hoverBar = null;
           }}
         />
       </g>
@@ -78,24 +79,23 @@
         hoverCoach = null;
       }}
     />
-    {#each { length: highestBin.bins / binSize + 1 } as _, i}
-      {#if i * binSize > lowestBin.bins + 1}
-        <g class="ticks">
-          <line
-            x1={((i * binSize - lowestBin.bins) / binSize) * barWidth}
-            x2={((i * binSize - lowestBin.bins) / binSize) * barWidth}
-            y1={height}
-            y2={height - 5}
-            class="ticks"
-          />
-        </g>
-        <text
-          x={((i * binSize - lowestBin.bins) / binSize) * barWidth}
-          y={height - 10}
-          text-anchor="middle"
-          class="tick-labels">{(i * binSize).toFixed(1)}</text
-        >
-      {/if}
+    {#each { length: (highestBin.bins - lowestBin.bins) / binSize } as _, i}
+      <g class="ticks">
+        <line
+          x1={(i + 1) * barWidth}
+          x2={(i + 1) * barWidth}
+          y1={height}
+          y2={height - 5}
+          class="ticks"
+        />
+      </g>
+      <text
+        x={(i + 1) * barWidth}
+        y={height - 10}
+        text-anchor="middle"
+        class="tick-labels"
+        >{(Number(lowestBin.bins) + (i + 1) * binSize).toFixed(decimals)}</text
+      >
     {/each}
     <text
       x="0"
@@ -106,26 +106,26 @@
     >
     <line x1="0" x2={width} y1={height} y2={height} class="axis" />
   </svg>
-  <p class="x-axis-title">Gols Sofridos/Partida</p>
+  <p class="x-axis-title title">{xLabel}</p>
 </div>
-{#if hoveredData}
-  {#if hoveredData.count === 1}
+{#if hoverBar}
+  {#if hoverBar.count === 1}
     <div
       class="tooltip main"
       style="top: {mousePosition.y}px; left: {mousePosition.x}px;"
     >
-      <b>{hoveredData.count}</b> treinador<br />tem entre {hoveredData.bins.toFixed(
-        1
-      )} e {(hoveredData.bins + 0.1).toFixed(1)}<br />gols sofridos/partida
+      <b>{hoverBar.count}</b> treinador<br />tem entre {hoverBar.bins.toFixed(
+        decimals
+      )} e {(hoverBar.bins + binSize).toFixed(decimals)}<br />{xLabel}
     </div>
   {:else}
     <div
       class="tooltip main"
       style="top: {mousePosition.y}px; left: {mousePosition.x}px;"
     >
-      <b>{hoveredData.count}</b> treinadores<br />tem entre {hoveredData.bins.toFixed(
-        1
-      )} e {(hoveredData.bins + 0.1).toFixed(1)}<br />gols sofridos/partida
+      <b>{hoverBar.count}</b> treinadores<br />tem entre {hoverBar.bins.toFixed(
+        decimals
+      )} e {(hoverBar.bins + binSize).toFixed(decimals)}<br />{xLabel}
     </div>
   {/if}
 {/if}
@@ -134,7 +134,8 @@
     class="tooltip accent"
     style="top: {mousePosition.y}px; left: {mousePosition.x}px;"
   >
-    {hoverCoach}:<br /><b>{goalsConcededAvg}</b> gols sofridos/partida
+    {hoverCoach}:<br /><b>{coachData}</b>
+    {xLabel}
   </div>
 {/if}
 
@@ -172,6 +173,10 @@
 
   .coach {
     fill: var(--accent-color);
+  }
+
+  .title {
+    text-transform: capitalize;
   }
 
   .x-axis-title {

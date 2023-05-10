@@ -111,6 +111,46 @@ async function goalsConcededAvg(coach_id) {
     return rows[0].goal_average;
 }
 
+async function yellowCardsAvg(coach_id) {
+    const [rows, fields] = await accessPool().query(`
+        SELECT ROUND(SUM(yellow_cards) / SUM(matches), 2) AS yellow_cards_average FROM (
+        SELECT SUM(home_yellow_cards) AS yellow_cards, COUNT(*) AS matches FROM matches WHERE home_coach_id = ?
+        UNION
+        SELECT SUM(away_yellow_cards) AS yellow_cards, COUNT(*) AS matches FROM matches WHERE away_coach_id = ?) AS m;`,
+        [coach_id, coach_id]);
+    return rows[0].yellow_cards_average;
+}
+
+async function redCardsAvg(coach_id) {
+    const [rows, fields] = await accessPool().query(`
+        SELECT ROUND(SUM(red_cards) / SUM(matches), 2) AS red_cards_average FROM (
+        SELECT SUM(home_red_cards) AS red_cards, COUNT(*) AS matches FROM matches WHERE home_coach_id = ?
+        UNION
+        SELECT SUM(away_red_cards) AS red_cards, COUNT(*) AS matches FROM matches WHERE away_coach_id = ?) AS m;`,
+        [coach_id, coach_id]);
+    return rows[0].red_cards_average;
+}
+
+async function preSubGoalDifference(coach_id) {
+    const [rows, fields] = await accessPool().query(`
+        SELECT ROUND(SUM(before_coach_sub) / SUM(matches), 2) AS before_coach_sub_goal_difference FROM (
+        SELECT SUM(home_score_before_home_sub - away_score_before_home_sub) AS before_coach_sub, COUNT(*) AS matches FROM matches WHERE home_coach_id = ?
+        UNION
+        SELECT SUM(away_score_before_away_sub - home_score_before_away_sub) AS before_coach_sub, COUNT(*) AS matches FROM matches WHERE away_coach_id = ?) AS m;`,
+        [coach_id, coach_id]);
+    return rows[0].before_coach_sub_goal_difference;
+}
+
+async function postSubGoalDifference(coach_id) {
+    const [rows, fields] = await accessPool().query(`
+        SELECT ROUND(SUM(after_coach_sub) / SUM(matches), 2) AS after_coach_sub_goal_difference FROM (
+        SELECT SUM(home_score_after_home_sub - away_score_after_home_sub) AS after_coach_sub, COUNT(*) AS matches FROM matches WHERE home_coach_id = ?
+        UNION
+        SELECT SUM(away_score_after_away_sub - home_score_after_away_sub) AS after_coach_sub, COUNT(*) AS matches FROM matches WHERE away_coach_id = ?) AS m;`,
+        [coach_id, coach_id]);
+    return rows[0].after_coach_sub_goal_difference;
+}
+
 async function matches(coach_id) {
     const [rows, fields] = await accessPool().query(`
         SELECT m.match_id, m.date_time, m.stadium, c.name AS competition, ht.name AS home_team, ht.state AS home_team_state, home_score, away_score, at.name AS away_team, at.state AS away_team_state,
@@ -278,6 +318,162 @@ async function goalsConcededDistribution() {
     return rows;
 }
 
+async function yellowCardsDistribution() {
+    const [rows, fields] = await accessPool().query(
+        `SELECT FLOOR(yellow_cards.yellow_cards_average/0.15)*0.15 AS bins, COUNT(*) AS count
+    FROM (
+        SELECT home.home_coach_id AS id, 
+            home.name, 
+            home.nickname, 
+            ROUND((home.home_yellow_cards + away.away_yellow_cards) / (home.matches + away.matches), 2) AS yellow_cards_average
+        FROM 
+            (SELECT COUNT(m.match_id) AS matches, 
+                m.home_coach_id, 
+                hc.name,
+                hc.nickname,
+                SUM(m.home_yellow_cards) AS home_yellow_cards 
+            FROM matches AS m
+            JOIN coaches AS hc
+            ON m.home_coach_id = hc.coach_id
+            JOIN competitions AS c
+            ON m.competition_id = c.competition_id
+            GROUP BY home_coach_id) AS home
+        JOIN
+            (SELECT COUNT(m.match_id) AS matches, 
+                m.away_coach_id,
+                SUM(m.away_yellow_cards) AS away_yellow_cards 
+            FROM matches AS m
+            JOIN coaches AS ac
+            ON m.away_coach_id = ac.coach_id
+            JOIN competitions AS c
+            ON m.competition_id = c.competition_id
+            GROUP BY away_coach_id) AS away
+        ON home.home_coach_id = away.away_coach_id
+        WHERE home.matches + away.matches >= 50) AS yellow_cards
+    GROUP BY 1 
+    ORDER BY 1;
+    `);
+    return rows;
+}
+
+async function redCardsDistribution() {
+    const [rows, fields] = await accessPool().query(`
+        SELECT FLOOR(red_cards.red_cards_average/0.03)*0.03 AS bins, COUNT(*) AS count
+        FROM (
+            SELECT home.home_coach_id AS id, 
+                home.name, 
+                home.nickname, 
+                ROUND((home.home_red_cards + away.away_red_cards) / (home.matches + away.matches), 2) AS red_cards_average
+            FROM 
+                (SELECT COUNT(m.match_id) AS matches, 
+                    m.home_coach_id, 
+                    hc.name,
+                    hc.nickname,
+                    SUM(m.home_red_cards) AS home_red_cards 
+                FROM matches AS m
+                JOIN coaches AS hc
+                ON m.home_coach_id = hc.coach_id
+                JOIN competitions AS c
+                ON m.competition_id = c.competition_id
+                GROUP BY home_coach_id) AS home
+            JOIN
+                (SELECT COUNT(m.match_id) AS matches, 
+                    m.away_coach_id,
+                    SUM(m.away_red_cards) AS away_red_cards 
+                FROM matches AS m
+                JOIN coaches AS ac
+                ON m.away_coach_id = ac.coach_id
+                JOIN competitions AS c
+                ON m.competition_id = c.competition_id
+                GROUP BY away_coach_id) AS away
+            ON home.home_coach_id = away.away_coach_id
+            WHERE home.matches + away.matches >= 50) AS red_cards
+        GROUP BY 1 
+        ORDER BY 1;
+    `);
+    return rows;
+}
+
+async function preSubDistribution() {
+    const [rows, fields] = await accessPool().query(`
+        SELECT FLOOR(subs.goal_difference_before_sub/0.1)*0.1 AS bins, COUNT(*) AS count
+        FROM (
+            SELECT home.home_coach_id AS id, 
+                    home.name, 
+                    home.nickname, 
+                    ROUND((home.coach_score_before_sub_home + away.coach_score_before_sub_away - home.opp_score_before_sub_home - away.opp_score_before_sub_away) / (home.matches + away.matches), 2) AS goal_difference_before_sub
+                FROM
+                    (SELECT COUNT(m.match_id) AS matches, 
+                        m.home_coach_id, 
+                        hc.name,
+                        hc.nickname,
+                        SUM(m.home_score_before_home_sub) AS coach_score_before_sub_home,
+                        SUM(m.away_score_before_home_sub) AS opp_score_before_sub_home
+                    FROM matches AS m
+                    JOIN coaches AS hc
+                    ON m.home_coach_id = hc.coach_id
+                    JOIN competitions AS c
+                    ON m.competition_id = c.competition_id
+                    GROUP BY home_coach_id) AS home
+                JOIN
+                    (SELECT COUNT(m.match_id) AS matches, 
+                        m.away_coach_id,
+                        SUM(m.away_score_before_away_sub) AS coach_score_before_sub_away,
+                        SUM(m.home_score_before_away_sub) AS opp_score_before_sub_away
+                    FROM matches AS m
+                    JOIN coaches AS ac
+                    ON m.away_coach_id = ac.coach_id
+                    JOIN competitions AS c
+                    ON m.competition_id = c.competition_id
+                    GROUP BY away_coach_id) AS away
+                ON home.home_coach_id = away.away_coach_id
+                WHERE home.matches + away.matches >= 50) AS subs
+        GROUP BY 1 
+        ORDER BY 1;
+        `);
+    return rows;
+}
+
+async function postSubDistribution() {
+    const [rows, fields] = await accessPool().query(`
+        SELECT FLOOR(subs.goal_difference_after_sub/0.08)*0.08 AS bins, COUNT(*) AS count
+        FROM (
+            SELECT home.home_coach_id AS id, 
+                    home.name, 
+                    home.nickname, 
+                    ROUND((home.coach_score_after_sub_home + away.coach_score_after_sub_away - home.opp_score_after_sub_home - away.opp_score_after_sub_away) / (home.matches + away.matches), 2) AS goal_difference_after_sub
+                FROM
+                    (SELECT COUNT(m.match_id) AS matches, 
+                        m.home_coach_id, 
+                        hc.name,
+                        hc.nickname,
+                        SUM(m.home_score_after_home_sub) AS coach_score_after_sub_home,
+                        SUM(m.away_score_after_home_sub) AS opp_score_after_sub_home
+                    FROM matches AS m
+                    JOIN coaches AS hc
+                    ON m.home_coach_id = hc.coach_id
+                    JOIN competitions AS c
+                    ON m.competition_id = c.competition_id
+                    GROUP BY home_coach_id) AS home
+                JOIN
+                    (SELECT COUNT(m.match_id) AS matches, 
+                        m.away_coach_id,
+                        SUM(m.away_score_after_away_sub) AS coach_score_after_sub_away,
+                        SUM(m.home_score_after_away_sub) AS opp_score_after_sub_away
+                    FROM matches AS m
+                    JOIN coaches AS ac
+                    ON m.away_coach_id = ac.coach_id
+                    JOIN competitions AS c
+                    ON m.competition_id = c.competition_id
+                    GROUP BY away_coach_id) AS away
+                ON home.home_coach_id = away.away_coach_id
+                WHERE home.matches + away.matches >= 50) AS subs
+        GROUP BY 1 
+        ORDER BY 1;
+        `);
+    return rows;
+}
+
 export async function load({ params, url }) {
     let groupsParams = url.searchParams.get('groups');
     let groups;
@@ -302,7 +498,18 @@ export async function load({ params, url }) {
         matches: matches(params.coachId),
         history: history(params.coachId, groups),
         totalHistory: totalHistory(params.coachId),
+        coach: getCoach(params.coachId),
         goalsScoredDistribution: goalsScoredDistribution(),
+        goalsScoredAvg: goalsScoredAvg(params.coachId),
         goalsConcededDistribution: goalsConcededDistribution(),
+        goalsConcededAvg: goalsConcededAvg(params.coachId),
+        yellowCardsDistribution: yellowCardsDistribution(),
+        yellowCardsAvg: yellowCardsAvg(params.coachId),
+        redCardsDistribution: redCardsDistribution(),
+        redCardsAvg: redCardsAvg(params.coachId),
+        preSubDistribution: preSubDistribution(),
+        preSubGoalDifference: preSubGoalDifference(params.coachId),
+        postSubDistribution: postSubDistribution(),
+        postSubGoalDifference: postSubGoalDifference(params.coachId)
     };
 };
