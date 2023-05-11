@@ -6,32 +6,35 @@
   export let xLabel;
   export let decimals;
 
-  const highestCount = distribution.reduce((previous, current) => {
-    return Number(current.count) > Number(previous.count) ? current : previous;
+  let highestCount = distribution.reduce((previous, current) => {
+    return current.count > previous.count ? current : previous;
   });
+  highestCount = highestCount.count;
 
-  const lowestBin = distribution.reduce((previous, current) => {
+  let lowestBin = distribution.reduce((previous, current) => {
     return Number(current.bins) < Number(previous.bins) ? current : previous;
   });
+  lowestBin = Number(lowestBin.bins);
 
-  const highestBin = distribution.reduce((previous, current) => {
+  let highestBin = distribution.reduce((previous, current) => {
     return Number(current.bins) > Number(previous.bins) ? current : previous;
   });
+  highestBin = Number(highestBin.bins);
 
   let width;
   let height = 450;
 
-  $: barWidth = width / ((highestBin.bins - lowestBin.bins) / binSize + 1);
+  $: barWidth = width / ((highestBin - lowestBin) / binSize + 1);
 
   function y(count) {
-    return (count * height) / highestCount.count;
+    return (count * height) / highestCount;
   }
 
   $: coachBar =
-    ((Number(coachData) - lowestBin.bins) *
-      ((((highestBin.bins - lowestBin.bins) / binSize) * width) /
-        ((highestBin.bins - lowestBin.bins) / binSize + 1))) /
-    (highestBin.bins - lowestBin.bins);
+    ((Number(coachData) - lowestBin) *
+      ((((highestBin - lowestBin) / binSize) * width) /
+        ((highestBin - lowestBin) / binSize + 1))) /
+    (highestBin - lowestBin);
 
   let hoverBar;
   let hoverCoach;
@@ -48,7 +51,7 @@
     {#each distribution as { bins, count }, i}
       <g class="bars">
         <rect
-          x={((bins - lowestBin.bins) / binSize) * barWidth}
+          x={((bins - lowestBin) / binSize) * barWidth}
           y={height - y(count)}
           width={barWidth}
           height={y(count)}
@@ -79,7 +82,7 @@
         hoverCoach = null;
       }}
     />
-    {#each { length: (highestBin.bins - lowestBin.bins) / binSize } as _, i}
+    {#each { length: (highestBin - lowestBin) / binSize } as _, i}
       <g class="ticks">
         <line
           x1={(i + 1) * barWidth}
@@ -94,7 +97,7 @@
         y={height - 10}
         text-anchor="middle"
         class="tick-labels"
-        >{(Number(lowestBin.bins) + (i + 1) * binSize).toFixed(decimals)}</text
+        >{(lowestBin + (i + 1) * binSize).toFixed(decimals)}</text
       >
     {/each}
     <text
@@ -106,7 +109,11 @@
     >
     <line x1="0" x2={width} y1={height} y2={height} class="axis" />
   </svg>
-  <p class="x-axis-title title">{xLabel}</p>
+  <p class="x-axis-title title main-color">{xLabel}</p>
+  <p class="main-color">
+    *Apenas os treinadores com pelo menos 50 partidas cadastradas são incluídos
+    nas análises de desempenho.
+  </p>
 </div>
 {#if hoverBar}
   {#if hoverBar.count === 1}
@@ -131,7 +138,7 @@
 {/if}
 {#if hoverCoach}
   <div
-    class="tooltip accent"
+    class="tooltip accent main-color"
     style="top: {mousePosition.y}px; left: {mousePosition.x}px;"
   >
     {hoverCoach}:<br /><b>{coachData}</b>
@@ -180,7 +187,6 @@
   }
 
   .x-axis-title {
-    color: var(--main-color);
     margin: 0;
     text-align: center;
   }
@@ -203,6 +209,5 @@
 
   .accent {
     background-color: var(--accent-color);
-    color: var(--main-color);
   }
 </style>

@@ -3,6 +3,7 @@
   import PerformanceGraph from "./PerformanceGraph.svelte";
 
   export let coach;
+  export let numberOfMatches;
   export let goalsScoredDistribution;
   export let goalsConcededDistribution;
   export let goalsScoredAvg;
@@ -16,9 +17,9 @@
   export let postSubDistribution;
   export let postSubGoalDifference;
 
-  let graphs = [
+  $: graphs = [
     {
-      name: "Gols Feitos/Partida",
+      name: "Gols Feitos",
       distribution: goalsScoredDistribution,
       coachData: goalsScoredAvg,
       binSize: 0.1,
@@ -26,7 +27,7 @@
       decimals: 1,
     },
     {
-      name: "Gols Sofridos/Partida",
+      name: "Gols Sofridos",
       distribution: goalsConcededDistribution,
       coachData: goalsConcededAvg,
       binSize: 0.1,
@@ -34,7 +35,7 @@
       decimals: 1,
     },
     {
-      name: "Cartões Amarelos/Partida",
+      name: "Cartões Amarelos",
       distribution: yellowCardsDistribution,
       coachData: yellowCardsAvg,
       binSize: 0.15,
@@ -42,10 +43,10 @@
       decimals: 2,
     },
     {
-      name: "Cartões Vermelhos/Partida",
+      name: "Cartões Vermelhos",
       distribution: redCardsDistribution,
       coachData: redCardsAvg,
-      binSize: 0.03,
+      binSize: 0.03125,
       xLabel: "cartões vermelhos/partida",
       decimals: 2,
     },
@@ -70,24 +71,33 @@
 
 <section id="performance">
   <h2>Desempenho</h2>
-  <select name="graph" id="graph" bind:value={$selectedGraph}>
-    <option selected disabled>Indicador</option>
-    {#each graphs as graph}
-      <option value={graph.name}>{graph.name}</option>
-    {/each}
-  </select>
-  {#each graphs as graph}
-    {#if $selectedGraph === graph.name}
-      <PerformanceGraph
-        distribution={graph.distribution}
-        coachData={graph.coachData}
-        {coach}
-        binSize={graph.binSize}
-        xLabel={graph.xLabel}
-        decimals={graph.decimals}
-      />
+  {#if numberOfMatches < 50}
+    {#if coach.nickname !== null}
+      <p class="main-color">
+        As análises de desempenho estão disponíveis apenas para treinadores com
+        pelo menos 50 partidas cadastradas. {coach.nickname} possui apenas {numberOfMatches}
+        partidas.
+      </p>
+    {:else}
+      <p class="main-color">
+        As análises de desempenho estão disponíveis apenas para treinadores com
+        pelo menos 50 partidas cadastradas. {coach.name} possui apenas {numberOfMatches}
+        partidas.
+      </p>
     {/if}
-  {/each}
+  {:else}
+    <select name="graph" id="graph" bind:value={$selectedGraph}>
+      <option selected disabled>Indicador</option>
+      {#each graphs as graph}
+        <option value={graph.name}>{graph.name}</option>
+      {/each}
+    </select>
+    {#each graphs as graph}
+      {#if $selectedGraph === graph.name}
+        <PerformanceGraph {...graph} {coach} />
+      {/if}
+    {/each}
+  {/if}
 </section>
 
 <style>

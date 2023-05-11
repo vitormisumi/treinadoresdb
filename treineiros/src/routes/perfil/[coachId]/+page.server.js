@@ -277,6 +277,7 @@ async function goalsScoredDistribution() {
     GROUP BY 1 
     ORDER BY 1;
     `);
+    console.log(rows);
     return rows;
 }
 
@@ -358,7 +359,7 @@ async function yellowCardsDistribution() {
 
 async function redCardsDistribution() {
     const [rows, fields] = await accessPool().query(`
-        SELECT FLOOR(red_cards.red_cards_average/0.03)*0.03 AS bins, COUNT(*) AS count
+        SELECT FLOOR(red_cards.red_cards_average/0.03125)*0.03125 AS bins, COUNT(*) AS count
         FROM (
             SELECT home.home_coach_id AS id, 
                 home.name, 
