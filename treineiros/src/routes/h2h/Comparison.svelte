@@ -1,28 +1,8 @@
 <script>
+  import { age, shortDate } from "$lib/assets/functions";
   export let coachInfo1;
   export let coachInfo2;
   export let h2h;
-
-  function age(birthdate) {
-    const today = new Date();
-    let age =
-      today.getFullYear() -
-      birthdate.getFullYear() -
-      (today.getMonth() < birthdate.getMonth() ||
-        (today.getMonth() === birthdate.getMonth() &&
-          today.getDate() < birthdate.getDate()));
-    return age;
-  }
-
-  function shortDate(date) {
-    return (
-      ("0" + date.getDate()).slice(-2) +
-      "/" +
-      ("0" + (date.getMonth() + 1)).slice(-2) +
-      "/" +
-      date.getFullYear()
-    );
-  }
 </script>
 
 <section id="comparison">
@@ -149,33 +129,35 @@
       </tr>
     </tbody>
   </table>
-  <table class="table" id="h2h">
-    <thead>
-      <tr>
-        <th />
-        <th class="col2">Confrontos</th>
-        <th />
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="col1">{h2h.coach1_goals}</td>
-        <td class="col2">Gols</td>
-        <td class="col3">{h2h.coach2_goals}</td>
-      </tr>
-      <tr>
-        <td class="col1">{h2h.coach1_yellow_cards}</td>
-        <td class="col2">Cartões Amarelos</td>
-        <td class="col3">{h2h.coach2_yellow_cards}</td>
-      </tr>
-      <tr>
-        <td class="col1">{h2h.coach1_red_cards}</td>
-        <td class="col2">Cartões Vermelhos</td>
-        <td class="col3">{h2h.coach2_red_cards}</td>
-      </tr>
-    </tbody>
-  </table>
-  <p id="asterisk">
+  {#if Object.values(h2h)[0] !== ""}
+    <table class="table" id="h2h">
+      <thead>
+        <tr>
+          <th />
+          <th class="col2">Confrontos</th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col1">{h2h.coach1_goals}</td>
+          <td class="col2">Gols</td>
+          <td class="col3">{h2h.coach2_goals}</td>
+        </tr>
+        <tr>
+          <td class="col1">{h2h.coach1_yellow_cards}</td>
+          <td class="col2">Cartões Amarelos</td>
+          <td class="col3">{h2h.coach2_yellow_cards}</td>
+        </tr>
+        <tr>
+          <td class="col1">{h2h.coach1_red_cards}</td>
+          <td class="col2">Cartões Vermelhos</td>
+          <td class="col3">{h2h.coach2_red_cards}</td>
+        </tr>
+      </tbody>
+    </table>
+  {/if}
+  <p class="asterisk">
     *Considerando apenas jogos das Séries A, B, C e D e da Copa do Brasil desde
     2014. <a href="/sobre">Clique aqui</a> para mais informações.
   </p>
@@ -183,19 +165,19 @@
 
 <style>
   .table {
-    width: 100%;
-    border-collapse: collapse;
+    table-layout: fixed;
     margin: 5vh 0;
+    white-space:inherit;
   }
 
   .col1 {
-    width: 30%;
+    width: 35%;
     font-weight: var(--bold);
+    text-align: left;
   }
 
   .col2 {
-    text-align: center;
-    width: 40%;
+    width: 30%;
     background-color: var(--table-background);
   }
 
@@ -209,35 +191,18 @@
   }
 
   .col3 {
-    text-align: right;
-    width: 30%;
+    width: 35%;
     font-weight: var(--bold);
-  }
-
-  tr {
-    height: clamp(30px, 5vh, 50px);
+    text-align: right;
   }
 
   th {
-    font-family: var(--main-font);
-    font-size: clamp(1rem, 3.5vw, 2rem);
-    font-weight: var(--bold);
-    color: var(--main-color);
     border: 1px solid;
     border-color: var(--background-color) var(--background-color) #e5e5e525;
   }
 
   td {
-    font-family: var(--main-font);
-    font-size: clamp(0.75rem, 3vw, 1.5rem);
-    color: var(--main-color);
     border: 1px solid;
     border-color: var(--background-color) var(--background-color) #e5e5e525;
-  }
-
-  #asterisk {
-    font-family: var(--main-font);
-    font-size: clamp(0.75rem, 1.5vw, 1rem);
-    color: var(--main-color);
   }
 </style>

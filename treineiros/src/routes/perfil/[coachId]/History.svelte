@@ -27,7 +27,7 @@
   <h2>Histórico</h2>
   <form>
     <div id="groups">
-      <p id="group">Agrupar por:</p>
+      <p class="group main-color">Agrupar por:</p>
       {#each groupMenu as group}
         <label>
           <input
@@ -43,26 +43,26 @@
     </div>
   </form>
   <div id="table">
-    <table>
+    <table class="table main-color">
       <thead>
         <tr>
-          <th>Ano</th>
+          <th class="headers">Ano</th>
           {#if history[0].team !== undefined}
-            <th>Clube</th>
+            <th class="headers">Clube</th>
           {/if}
           {#if history[0].competition !== undefined}
-            <th>Campeonato</th>
+            <th class="headers">Campeonato</th>
           {/if}
-          <th>P</th>
-          <th>V</th>
-          <th>E</th>
-          <th>D</th>
-          <th>GF</th>
-          <th>GS</th>
-          <th>SG</th>
-          <th>CA</th>
-          <th>CV</th>
-          <th>%</th>
+          <th class="headers">P</th>
+          <th class="headers">V</th>
+          <th class="headers">E</th>
+          <th class="headers">D</th>
+          <th class="headers">GF</th>
+          <th class="headers">GS</th>
+          <th class="headers">SG</th>
+          <th class="headers">CA</th>
+          <th class="headers">CV</th>
+          <th class="headers">%</th>
         </tr>
       </thead>
       <tbody>
@@ -122,45 +122,20 @@
     gap: 2%;
   }
 
-  table {
-    color: var(--main-color);
-    font-family: var(--main-font);
-    font-size: clamp(0.75rem, 2vw, 1.25rem);
-    border-collapse: collapse;
-    white-space: nowrap;
-  }
-
-  #group {
-    color: var(--main-color);
+  .group {
     font-family: var(--main-font);
     font-size: clamp(0.75rem, 1.5vw, 1rem);
     font-weight: var(--bold);
     margin: 0;
   }
 
-  table {
-    width: 100%;
-    text-align: center;
-  }
+  tr:nth-last-of-type(2n) {
+		background-color: var(--table-background);
+	}
 
   #table {
     max-width: 100%;
     overflow-x: auto;
-  }
-
-  th {
-    text-transform: uppercase;
-    background-color: var(--main-color);
-    color: var(--background-color);
-  }
-
-  th,
-  td {
-    padding: 0.25rem;
-  }
-
-  tr:nth-last-of-type(2n) {
-    background-color: var(--table-background);
   }
 
   #total-row {

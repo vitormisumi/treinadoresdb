@@ -23,19 +23,19 @@
   <h2>H2H</h2>
   <div id="main">
     {#if coach.nickname !== null}
-      <p id="coach-name">{coach.nickname} vs</p>
+      <p class="coach-name main-color">{coach.nickname} vs</p>
     {:else}
-      <p id="coach-name">{coach.name} vs</p>
+      <p class="coach-name main-color">{coach.name} vs</p>
     {/if}
     <div id="search">
       <form id="search-bar">
         <input
           type="search"
           placeholder="Busque um treinador"
-          class="search-text"
+          class="search-text main-color"
           bind:value={$searchStore.search}
         />
-        <i class="fa fa-search search-button" />
+        <i class="fa fa-search search-button main-color" />
       </form>
       <table id="search-results">
         <tbody>
@@ -47,7 +47,7 @@
                     <td
                       ><a
                         href="/h2h?coach1={coach.coach_id}&coach2={h2hcoach.coach_id}"
-                        class="coach-result" 
+                        class="coach-result main-color" 
                         on:click={updateCoaches(coach.coach_id, h2hcoach.coach_id)}>{h2hcoach.nickname}</a
                       ></td
                     >
@@ -55,7 +55,7 @@
                     <td
                       ><a
                         href="/h2h?coach1={coach.coach_id}&coach2={h2hcoach.coach_id}"
-                        class="coach-result"
+                        class="coach-result main-color"
                         on:click={updateCoaches(coach.coach_id, h2hcoach.coach_id)}>{h2hcoach.name}</a
                       ></td
                     >
@@ -76,11 +76,10 @@
     justify-content: center;
   }
 
-  #coach-name {
+  .coach-name {
     align-self: center;
     font-family: var(--main-font);
     font-size: clamp(1rem, 5vw, 1.5rem);
-    color: var(--main-color);
     margin: 0;
     padding-right: 10px;
   }
@@ -103,7 +102,6 @@
     font-size: clamp(0.75rem, 1vw, 1.5rem);
     background-color: transparent;
     border: none;
-    color: var(--main-color);
   }
 
   ::placeholder {
@@ -122,7 +120,6 @@
     border: none;
     padding: 0 2vw 0 0;
     background-color: transparent;
-    color: var(--main-color);
     font-size: clamp(1rem, 2vw, 1.5rem);
   }
 
@@ -154,7 +151,6 @@
     cursor: pointer;
     background-color: transparent;
     border-color: transparent;
-    color: var(--main-color);
     font-family: var(--main-font);
   }
 

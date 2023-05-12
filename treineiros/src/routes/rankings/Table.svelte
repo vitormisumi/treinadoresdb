@@ -38,8 +38,8 @@
   <tbody>
     {#each tableData as coach, i}
       <tr>
-        <td class="position-column">{i + 1}º</td>
-        <td class="img-column"
+        <td class="position-column main-color">{i + 1}º</td>
+        <td class="img-column main-color"
           ><img
             src={`/coaches/${coach.id}.png`}
             alt={coach.name}
@@ -48,11 +48,11 @@
           /></td
         >
         {#if coach.nickname === null}
-          <td class="coach-column"
+          <td class="coach-column main-color"
             ><a href="/perfil/{coach.id}?groups={$profileHistoryGroups}">{coach.name}</a></td
           >
         {:else}
-          <td class="coach-column"
+          <td class="coach-column main-color"
             ><a href="/perfil/{coach.id}?groups={$profileHistoryGroups}">{coach.nickname}</a></td
           >
         {/if}
@@ -94,10 +94,6 @@
     text-align: left;
   }
 
-  a {
-    color: var(--main-color);
-  }
-
   #col1,
   #col2,
   #col4 {
@@ -108,12 +104,7 @@
     width: auto;
   }
 
-  .position-column {
-    color: var(--main-color);
-  }
-
   .coach-column {
-    color: var(--main-color);
     background-color: var(--table-background);
   }
 

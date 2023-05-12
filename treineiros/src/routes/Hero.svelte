@@ -6,8 +6,8 @@
 <section id="hero">
   <div id="field-fade" />
   <img src={field} alt="campo de futebol" id="field-img" />
-  <h2 id="main-title">O portal da análise de treinadores do Brasil</h2>
-  <h2 id="description">
+  <h2 class="main-title main-color">O portal da análise de treinadores do Brasil</h2>
+  <h2 class="description main-color">
     Dados únicos para conhecer mais a fundo os comandantes das equipes
     brasileiras
   </h2>
@@ -41,24 +41,22 @@
     object-fit: cover;
   }
 
-  #main-title {
+  .main-title {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     font-size: clamp(1.5rem, 7vw, 3rem);
     text-align: center;
-    color: var(--main-color);
     text-shadow: 0px 3px 5px var(--background-color);
     padding: 5%;
     z-index: 9999;
   }
 
-  #description {
+  .description {
     font-family: var(--main-font);
     grid-column: 2 / 3;
     grid-row: 3 / 4;
     z-index: 1000;
     font-size: clamp(1rem, 4vw, 1.5rem);
-    color: var(--main-color);
     text-shadow: 0px 3px 5px var(--background-color);
     padding: 5%;
     align-self: top;

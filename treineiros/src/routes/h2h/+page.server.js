@@ -181,6 +181,7 @@ async function h2h(coach_id1, coach_id2) {
     FROM matches;`,
         [coach_id1, coach_id2, coach_id1, coach_id2, coach_id2, coach_id1, coach_id2, coach_id1]);
     const finalRows = Object.assign(rows2[0], rows3[0], rows4[0], rows5[0]);
+    console.log(finalRows);
     return finalRows;
 };
 

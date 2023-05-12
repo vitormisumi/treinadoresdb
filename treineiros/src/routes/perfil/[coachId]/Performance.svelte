@@ -86,7 +86,7 @@
       </p>
     {/if}
   {:else}
-    <select name="graph" id="graph" bind:value={$selectedGraph}>
+    <select name="graph" bind:value={$selectedGraph}>
       <option selected disabled>Indicador</option>
       {#each graphs as graph}
         <option value={graph.name}>{graph.name}</option>
@@ -101,7 +101,13 @@
 </section>
 
 <style>
-  #graph {
-    margin: 10px;
+  select {
+    margin-bottom: 10px;
+    max-width: 300px;
+    height: 40px;
+    background-color: var(--main-color);
+    border-color: var(--accent-color);
+    border-radius: 5px;
+    color: var(--background-color);
   }
 </style>

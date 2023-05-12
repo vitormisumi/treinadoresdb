@@ -59,6 +59,10 @@
     width: 5vw;
   }
 
+  p {
+    color: var(--background-color);
+  }
+
   .last-added {
     font-style: normal;
     font-weight: var(--bold);

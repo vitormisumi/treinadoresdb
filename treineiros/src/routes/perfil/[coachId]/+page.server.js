@@ -277,7 +277,6 @@ async function goalsScoredDistribution() {
     GROUP BY 1 
     ORDER BY 1;
     `);
-    console.log(rows);
     return rows;
 }
 

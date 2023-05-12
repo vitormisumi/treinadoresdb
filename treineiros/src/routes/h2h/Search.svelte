@@ -45,10 +45,10 @@
       <input
         type="search"
         placeholder="Busque um treinador"
-        class="search-text"
+        class="search-text main-color"
         bind:value={$searchStore1.search}
       />
-      <i class="fa fa-search search-button" />
+      <i class="fa fa-search search-button main-color" />
     </form>
     <table id="search-results1" class="search-results">
       <tbody>
@@ -59,7 +59,7 @@
                 {#if coach.nickname === null}
                   <td
                     ><button
-                      class="coach-result"
+                      class="coach-result main-color"
                       on:click={updateCoach1(coach.coach_id)}
                       >{coach.name}</button
                     ></td
@@ -67,7 +67,7 @@
                 {:else}
                   <td
                     ><button
-                      class="coach-result"
+                      class="coach-result main-color"
                       on:click={updateCoach1(coach.coach_id)}
                       >{coach.nickname}</button
                     ></td
@@ -86,9 +86,9 @@
         bind:value={$searchStore2.search}
         type="search"
         placeholder="Busque um treinador"
-        class="search-text"
+        class="search-text main-color"
       />
-      <i class="fa fa-search search-button" />
+      <i class="fa fa-search search-button main-color" />
     </form>
     <table id="search-results2" class="search-results">
       <tbody>
@@ -99,7 +99,7 @@
                 {#if coach.nickname === null}
                   <td
                     ><button
-                      class="coach-result"
+                      class="coach-result main-color"
                       on:click={updateCoach2(coach.coach_id)}
                       >{coach.name}</button
                     ></td
@@ -107,7 +107,7 @@
                 {:else}
                   <td
                     ><button
-                      class="coach-result"
+                      class="coach-result main-color"
                       on:click={updateCoach2(coach.coach_id)}
                       >{coach.nickname}</button
                     ></td
@@ -166,7 +166,6 @@
     font-size: clamp(0.75rem, 2vw, 1.5rem);
     background-color: transparent;
     border: none;
-    color: var(--main-color);
   }
 
   ::placeholder {
@@ -185,7 +184,6 @@
     border: none;
     padding: 0 2vw 0 0;
     background-color: transparent;
-    color: var(--main-color);
     font-size: clamp(1rem, 2vw, 1.5rem);
   }
 
@@ -225,7 +223,6 @@
     cursor: pointer;
     background-color: transparent;
     border-color: transparent;
-    color: var(--main-color);
     font-family: var(--main-font);
   }
 

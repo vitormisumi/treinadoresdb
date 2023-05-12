@@ -52,13 +52,13 @@
     <a
       href="/perfil/{coachInfo2.coach_id}?groups={$profileHistoryGroups}"
       id="coach-name2"
-      class="coach-name">{coachInfo2.name}</a
+      class="coach-name main-color">{coachInfo2.name}</a
     >
   {:else}
     <a
       href="/perfil/{coachInfo2.coach_id}?groups={$profileHistoryGroups}"
       id="coach-name2"
-      class="coach-name">{coachInfo2.nickname}</a
+      class="coach-name main-color">{coachInfo2.nickname}</a
     >
   {/if}
 </section>
@@ -119,6 +119,5 @@
   .coach-name {
     font-size: clamp(1rem, 4vw, 2rem);
     font-family: var(--main-font);
-    color: var(--main-color);
   }
 </style>

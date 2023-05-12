@@ -24,11 +24,11 @@
     alt={coach.name}
   />
   {#if coach.nickname === null}
-    <p id="name">{coach.name}</p>
+    <h3 class="name main-color">{coach.name}</h3>
   {:else}
-    <p id="name">{coach.nickname}</p>
+    <h3 class="name main-color">{coach.nickname}</h3>
   {/if}
-  <table id="coach-table">
+  <table class="table coach">
     <tbody>
       <tr>
         <td class="col1">Idade</td>
@@ -87,7 +87,7 @@
       </tr>
     </tbody>
   </table>
-  <p id="asterisk">
+  <p class="asterisk">
     *Considerando apenas jogos de Copa do Brasil e séries A, B, C e D desde
     2014.
     <a href="/sobre">Clique aqui</a> para mais informações.
@@ -116,25 +116,23 @@
     width: 50%;
   }
 
-  #name {
+  .name {
     grid-area: name;
-    color: var(--main-color);
-    font-size: clamp(1.25rem, 4vw, 2.5rem);
     text-align: center;
     margin: 0;
   }
 
-  #coach-table {
+  .coach {
     grid-area: table;
     font-family: var(--main-font);
     font-size: clamp(0.75rem, 2.5vw, 2rem);
-    color: var(--main-color);
     border-collapse: collapse;
   }
 
   .col1 {
     background-color: var(--table-background);
     width: 50%;
+    text-align: left;
   }
 
   .col2 {
@@ -148,19 +146,17 @@
     border-color: transparent transparent #e5e5e525;
   }
 
-  #coach-table tr:first-child td {
+  .coach tr:first-child td {
     border-radius: 1vw 1vw 0 0;
   }
 
-  #coach-table tr:last-child td {
+  .coach tr:last-child td {
     border-radius: 0 0 1vw 1vw;
     border: 0;
   }
 
-  #asterisk {
+  .asterisk {
     grid-area: asterisk;
-    color: var(--main-color);
-    font-size: clamp(0.75rem, 2vw, 1rem);
   }
 
   @media (min-width: 768px) {

@@ -35,6 +35,7 @@
   {#each buttons as button}
     <button
       id={button.name}
+      class="main-color"
       class:selected={current === button.name}
       on:click={() => (current = button.name)}
     >
@@ -87,7 +88,6 @@
     font-family: var(--main-font);
     font-weight: 400;
     font-size: clamp(0.5rem, 3.5vw, 2.25rem);
-    color: var(--main-color);
     margin: 0;
   }
 

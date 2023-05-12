@@ -54,19 +54,16 @@
 </script>
 
 <!-- INDICATOR -->
-<select
-  bind:value={$indicator}
-  id="indicator"
->
+<select bind:value={$indicator} id="indicator">
   <option selected disabled>Indicador</option>
   {#each indicators as indicator}
     <option value={indicator}>{indicator}</option>
   {/each}
 </select>
 <CollapsibleCard>
-  <h3 slot="header" class="header">
+  <p slot="header" class="label right">
     Filtros <i class="fa-solid fa-arrow-down" />
-  </h3>
+  </p>
   <div slot="body" class="body">
     <!-- VALUE FILTER -->
     {#if !["Partidas", "Aproveitamento (%)"].includes($indicator)}
@@ -151,22 +148,17 @@
 </CollapsibleCard>
 
 <style>
-  #indicator {
-    height: 50px;
-    width: 100%;
-  }
-
-  .header {
-    margin-bottom: 10px;
-    text-align: right;
-    font-family: var(--main-font);
-    font-weight: var(--bold);
-    color: var(--main-color);
+  select {
+    height: 40px;
+    background-color: var(--main-color);
+    border-color: var(--accent-color);
+    border-radius: 5px;
+    color: var(--background-color);
   }
 
   .body {
     margin-bottom: 5vh;
-    display: grid;
+    display: block;
     gap: 1.5vh;
   }
 
@@ -179,15 +171,8 @@
     border-radius: 1vw;
   }
 
-  #minmatches {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  #value-options {
-    display: flex;
-    justify-content: space-evenly;
+  label {
+    display: block;
   }
 
   #min-matches-input {
@@ -197,14 +182,6 @@
   .filter-heading {
     font-size: clamp(0.75rem, 2vw, 1.25rem);
     font-family: var(--main-font);
-    color: var(--main-color);
-    text-align: center;
-  }
-
-  label {
-    font-size: clamp(0.75rem, 1.5vw, 1rem);
-    color: var(--main-color);
-    font-family: var(--main-font);
-    display: block;
+    padding-left: 1vw;
   }
 </style>

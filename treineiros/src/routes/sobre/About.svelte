@@ -33,20 +33,3 @@
     nos sites das federações.
   </p>
 </section>
-
-<style>
-  #about {
-    max-width: 800px;
-  }
-  h3 {
-    color: var(--main-color);
-    font-family: "Roboto Condensed";
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-  }
-
-  p {
-    color: var(--main-color);
-    font-family: "Roboto Condensed";
-    font-size: clamp(1rem, 3vw, 2rem);
-  }
-</style>

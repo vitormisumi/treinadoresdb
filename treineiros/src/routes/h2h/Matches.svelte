@@ -40,7 +40,7 @@
     </select>
   </div>
   <div id="table">
-    <table id="matches-table">
+    <table class="table">
       <thead>
         <tr>
           <th class="headers">Data</th>
@@ -97,22 +97,6 @@
   #table {
     max-width: 100%;
     overflow-x: auto;
-  }
-
-  #matches-table {
-    text-align: center;
-    font-family: var(--main-font);
-    font-size: clamp(0.75rem, 2vw, 1.25rem);
-    color: var(--main-color);
-    border-radius: 5px;
-    width: 100%;
-    white-space: nowrap;
-    border-collapse: collapse;
-  }
-
-  th,
-  td {
-    padding: 0.25rem;
   }
 
   tr:nth-last-of-type(2n) {

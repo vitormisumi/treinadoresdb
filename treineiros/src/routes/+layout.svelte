@@ -1,5 +1,6 @@
 <script>
   import { createSearchStore, searchHandler } from "$lib/stores/search";
+  import { coach1, coach2 } from "$lib/stores/h2hCoaches";
   import { profileHistoryGroups } from "$lib/stores/filters.js";
   import { onDestroy } from "svelte";
 
@@ -21,6 +22,11 @@
     menu = true;
     $searchStore.search = "";
   }
+
+  function reseth2hCoaches() {
+    coach1.set(0);
+    coach2.set(0);
+  }
 </script>
 
 <header>
@@ -38,7 +44,12 @@
         <a href="/sobre" class="menu-link" on:click={closeMenu}>Sobre</a>
       </li>
       <li class="menu-item">
-        <a href="/h2h" class="menu-link" on:click={closeMenu}>H2H</a>
+        <a
+          href="/h2h"
+          class="menu-link"
+          on:click={closeMenu}
+          on:click={reseth2hCoaches}>H2H</a
+        >
       </li>
       <li class="menu-item">
         <a
@@ -68,7 +79,7 @@
                     <td
                       ><a
                         href="/perfil/{coach.coach_id}?groups={$profileHistoryGroups}"
-                        class="coach-result"
+                        class="coach-result main-color"
                         on:click={closeMenu}>{coach.name}</a
                       ></td
                     >
@@ -76,7 +87,7 @@
                     <td
                       ><a
                         href="/perfil/{coach.coach_id}?groups={$profileHistoryGroups}"
-                        class="coach-result"
+                        class="coach-result main-color"
                         on:click={closeMenu}>{coach.nickname}</a
                       ></td
                     >
@@ -233,10 +244,6 @@
 
   #search-results tr:last-child td {
     border: 0;
-  }
-
-  .coach-result {
-    color: var(--main-color);
   }
 
   .coach-result:hover {

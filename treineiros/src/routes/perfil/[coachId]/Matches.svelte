@@ -105,7 +105,7 @@
     </select>
   </div>
   <div id="table">
-    <table id="matches-table">
+    <table class="table">
       <thead>
         <tr>
           <th class="headers">Data</th>
@@ -162,11 +162,11 @@
       </tbody>
     </table>
   </div>
-  <p>*Equipe comandada pelo treinador em negrito</p>
+  <p class="asterisk main-color">*Equipe comandada pelo treinador em negrito</p>
   {#if pages > 1}
     <div id="pagination">
-      <button id="first-page" on:click={firstPage}>&lt;&lt;&lt;</button>
-      <button id="back-page" on:click={backPage}>&lt;</button>
+      <button class="main-color" on:click={firstPage}>&lt;&lt;&lt;</button>
+      <button class="main-color" on:click={backPage}>&lt;</button>
       {#if page > 2}
         <p class="ellipsis">...</p>
       {/if}
@@ -182,11 +182,11 @@
       {/if}
       {#each { length: pages } as _, i}
         {#if i === page}
-          <button class="page current" on:click={() => updatePage(i)}
+          <button class="main-color current" on:click={() => updatePage(i)}
             >{i + 1}</button
           >
         {:else if i < page + 3 && i > page - 3}
-          <button class="page" on:click={() => updatePage(i)}>{i + 1}</button>
+          <button class="main-color" on:click={() => updatePage(i)}>{i + 1}</button>
         {/if}
       {/each}
       {#if pages > page + 3}
@@ -202,8 +202,8 @@
       {:else if pages - page === 3}
         <p class="empty" />
       {/if}
-      <button id="next-page" on:click={nextPage}>&gt;</button>
-      <button id="last-page" on:click={lastPage}>&gt;&gt;&gt;</button>
+      <button class="main-color" on:click={nextPage}>&gt;</button>
+      <button class="main-color" on:click={lastPage}>&gt;&gt;&gt;</button>
     </div>
   {/if}
 </section>
@@ -224,34 +224,12 @@
 
   #table {
     max-width: 100%;
-    overflow-x: auto;
-  }
-
-  #matches-table {
-    text-align: center;
-    font-family: var(--main-font);
-    font-size: clamp(0.75rem, 2vw, 1.25rem);
-    color: var(--main-color);
-    border-radius: 5px;
-    width: 100%;
-    white-space: nowrap;
-    border-collapse: collapse;
-  }
-
-  th,
-  td {
-    padding: 0.25rem;
+    overflow: auto;
   }
 
   tr:nth-last-of-type(2n) {
-    background-color: var(--table-background);
-  }
-
-  .headers {
-    text-transform: uppercase;
-    background-color: var(--main-color);
-    color: var(--background-color);
-  }
+		background-color: var(--table-background);
+	}
 
   .coach-team {
     font-weight: var(--bold);
@@ -269,18 +247,6 @@
     color: var(--accent-color);
   }
 
-  .label,
-  p {
-    font-family: var(--main-font);
-    color: var(--main-color);
-    font-size: clamp(0.75rem, 1.5vw, 1rem);
-    font-weight: var(--bold);
-  }
-
-  a {
-    color: var(--main-color);
-  }
-
   #pagination {
     padding: 0;
     display: flex;
@@ -291,7 +257,6 @@
   button {
     cursor: pointer;
     background-color: var(--table-background);
-    color: var(--main-color);
     font-family: var(--main-font);
     width: clamp(25px, 3vw, 40px);
     height: clamp(25px, 3vw, 40px);
