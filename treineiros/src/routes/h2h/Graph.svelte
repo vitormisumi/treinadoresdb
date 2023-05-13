@@ -45,7 +45,7 @@
       cy={radius}
       stroke={hoveredData1 ? hoverCoach2Color : coach2Color}
       stroke-width={radius / 1.5}
-      stroke-dasharray={drawDashArray}
+      stroke-dasharray="0"
       on:mouseenter={() => {
         hoveredData1 = h2h.coach2_wins;
       }}
@@ -93,23 +93,40 @@
 </div>
 {#if hoveredData1}
   {#if coachInfo2.nickname !== null}
-    <div class="tooltip red" style="top: {mousePosition.y}px; left: {mousePosition.x}px;">
+    <div
+      class="tooltip red"
+      style="top: {mousePosition.y}px; left: {mousePosition.x}px;"
+    >
       Vitórias<br />{coachInfo2.nickname}:<br />{hoveredData1}
     </div>
   {:else}
-    <div class="tooltip red" style="top: {mousePosition.y}px; left: {mousePosition.x}px;">
+    <div
+      class="tooltip red"
+      style="top: {mousePosition.y}px; left: {mousePosition.x}px;"
+    >
       Vitórias<br />{coachInfo2.name}:<br />{hoveredData1}
     </div>
   {/if}
 {:else if hoveredData2}
-  <div class="tooltip grey" style="top: {mousePosition.y}px; left: {mousePosition.x}px;">Empates:<br />{hoveredData2}</div>
+  <div
+    class="tooltip grey"
+    style="top: {mousePosition.y}px; left: {mousePosition.x}px;"
+  >
+    Empates:<br />{hoveredData2}
+  </div>
 {:else if hoveredData3}
   {#if coachInfo1.nickname !== null}
-    <div class="tooltip green" style="top: {mousePosition.y}px; left: {mousePosition.x}px;">
+    <div
+      class="tooltip green"
+      style="top: {mousePosition.y}px; left: {mousePosition.x}px;"
+    >
       Vitórias<br />{coachInfo1.nickname}:<br />{hoveredData3}
     </div>
   {:else}
-    <div class="tooltip green" style="top: {mousePosition.y}px; left: {mousePosition.x}px;">
+    <div
+      class="tooltip green"
+      style="top: {mousePosition.y}px; left: {mousePosition.x}px;"
+    >
       Vitórias<br />{coachInfo1.name}:<br />{hoveredData3}
     </div>
   {/if}

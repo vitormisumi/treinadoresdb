@@ -119,12 +119,11 @@
 
   header {
     display: flex;
-    position: sticky;
-    top: 0;
-    flex-wrap: wrap;
-    background-color: var(--main-color);
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    background-color: var(--main-color);
     width: 100%;
     height: clamp(75px, 10vh, 125px);
     z-index: 10000;
@@ -156,24 +155,24 @@
     text-align: right;
     top: clamp(75px, 10vh, 125px);
     width: 100%;
-    padding: 0;
+    height: 40vh;
+    min-height: 250px;
     background-color: rgba(229, 229, 229, 0.95);
     z-index: 99999;
   }
-
-  .menu {
-    display: none;
-  }
-
+  
   ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     list-style: none;
-    margin: 2vw;
-    padding: 0;
+    height: 100%;
+    margin: 5vw;
   }
 
   .menu-link:link,
   .menu-link:visited {
-    padding: clamp(5px, 2vw, 10px);
+    padding: clamp(5px, 1.5vw, 25px);
     font-family: "Roboto Condensed";
     font-size: clamp(1.25rem, 2.5vw, 2rem);
     text-transform: uppercase;
@@ -186,29 +185,24 @@
 
   #search-bar {
     display: grid;
-    padding-left: clamp(10px, 3vw, 30px);
+    padding-left: clamp(10px, 2vw, 30px);
     align-self: center;
     justify-items: center;
     align-items: center;
     grid-template-columns: 80% 20%;
-    margin: 2vw;
+    margin: 0 5vw 5vw 0;
     background-color: var(--accent-color);
     border-radius: 2rem;
     z-index: 100;
-    width: clamp(175px, 15vw, 300px);
+    width: clamp(190px, 5vw, 250px);
     height: clamp(30px, 7vh, 40px);
   }
 
   #search-text {
     font-family: "Roboto Condensed";
-    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
     background-color: transparent;
     border: none;
-  }
-
-  ::placeholder {
-    color: var(--main-color);
-    opacity: 0.7;
   }
 
   input:focus {
@@ -225,11 +219,9 @@
   #search-results {
     position: absolute;
     table-layout: fixed;
-    width: clamp(175px, 15vw, 300px);
+    width: clamp(190px, 5vw, 250px);
     border-collapse: collapse;
     text-align: left;
-    font-family: var(--main-font);
-    font-size: clamp(1rem, 2vw, 1.25rem);
     background-color: var(--table-background);
     border-radius: 1vw;
   }
@@ -255,52 +247,28 @@
   }
 
   @media (min-width: 768px) {
-    header {
-      align-items: center;
-    }
-
     #menu-button {
       display: none;
-    }
-
-    .menu {
-      display: flex;
     }
 
     nav {
       position: relative;
       flex-direction: row;
+      background-color: transparent;
+      align-items: center;
+      top: 0;
       width: auto;
       height: auto;
-      background-color: transparent;
-      top: 0;
-      padding: 0 2vw;
+      min-height: none;
     }
-
+    
     ul {
-      margin: auto;
-    }
-
-    .menu-item {
-      display: inline;
-      padding: 0.65vw;
-      margin: auto;
+      flex-direction: row;
+      margin: 0;
     }
 
     #search-bar {
-      margin: 0;
-    }
-
-    #search-results {
-      margin: 0;
-    }
-  }
-
-  @media (max-height: 400px) {
-    ul {
-      display: flex;
-      flex-direction: row;
-      align-self: center;
+      margin: 0 2vw 0 1vw;
     }
   }
 </style>

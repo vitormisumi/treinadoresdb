@@ -75,11 +75,6 @@
     justify-items: center;
   }
 
-  ::placeholder {
-    color: var(--main-color);
-    opacity: 0.7;
-  }
-
   #coach-img1 {
     grid-area: coach-img1;
     width: 100%;

@@ -89,6 +89,11 @@
     	accent-color: var(--accent-color);
   	}
 
+	::placeholder {
+    	color: var(--main-color);
+    	opacity: 0.7;
+  	}
+
 	label,
 	.label {
     	font-family: var(--main-font);
@@ -162,9 +167,13 @@
 		color: var(--main-color);
 		font-family: var(--main-font);
 	}
-
+	
 	#slider > .rangePips > .pipSelected {
 		color: var(--accent-color);
+	}
+	
+	.rangeSlider > .rangeHandle.active {
+		font-family: var(--main-font);
 	}
 
 </style>

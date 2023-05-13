@@ -182,6 +182,6 @@
   .filter-heading {
     font-size: clamp(0.75rem, 2vw, 1.25rem);
     font-family: var(--main-font);
-    padding-left: 1vw;
+    padding: 1vw 0 0 1vw;
   }
 </style>
