@@ -12,6 +12,8 @@
   export let yellowCardsAvg;
   export let redCardsDistribution;
   export let redCardsAvg;
+  export let pointPercentage;
+  export let pointPercentageDistribution;
   export let preSubDistribution;
   export let preSubGoalDifference;
   export let postSubDistribution;
@@ -49,6 +51,14 @@
       binSize: 0.03125,
       xLabel: "cartões vermelhos/partida",
       decimals: 2,
+    },
+    {
+      name: "Aproveitamento",
+      distribution: pointPercentageDistribution,
+      coachData: pointPercentage,
+      binSize: 3,
+      xLabel: "% de pontos conquistados",
+      decimals: 0,
     },
     {
       name: "Saldo de Gols Pré Substituição",

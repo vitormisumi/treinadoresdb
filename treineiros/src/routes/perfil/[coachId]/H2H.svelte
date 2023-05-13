@@ -104,11 +104,6 @@
     border: none;
   }
 
-  ::placeholder {
-    color: var(--main-color);
-    opacity: 0.7;
-  }
-
   input:focus {
     outline: none;
   }
