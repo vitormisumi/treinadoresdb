@@ -170,6 +170,10 @@
     margin: 5vw;
   }
 
+  .menu {
+    display: none;
+  }
+
   .menu-link:link,
   .menu-link:visited {
     padding: clamp(5px, 1.5vw, 25px);
