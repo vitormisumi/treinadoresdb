@@ -1,5 +1,5 @@
 <script>
-  import fallback from "$lib/assets/images/defaultCoach.png";
+  import fallback from "$lib/assets/images/default-coach.png";
   import { profileHistoryGroups } from "$lib/stores/filters";
   import Graph from "./Graph.svelte";
 

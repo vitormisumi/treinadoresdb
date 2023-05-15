@@ -1,9 +1,12 @@
 <script>
-  let current = "h2h";
+  import h2hIcon from "$lib/assets/images/h2h-icon.png";
+  import h2h from "$lib/assets/images/h2h.png";
+  import rankingIcon from "$lib/assets/images/ranking-icon.png";
+  import ranking from "$lib/assets/images/ranking.png";
+  import historyIcon from "$lib/assets/images/history-icon.png";
+  import history from "$lib/assets/images/history.png";
 
-  import h2h from "$lib/assets/images/h2h-icon.png";
-  import ranking from "$lib/assets/images/ranking-icon.png";
-  import history from "$lib/assets/images/history-icon.png";
+  let current = "h2h";
 
   let buttons = [
     {
@@ -11,21 +14,24 @@
       alt: "confronto",
       span: "Compare os",
       b: "Confrontos",
-      src: h2h,
+      src: h2hIcon,
+      image: h2h,
     },
     {
       name: "ranking",
       alt: "ranking",
       span: "Veja os",
       b: "Rankings",
-      src: ranking,
+      src: rankingIcon,
+      image: ranking,
     },
     {
       name: "history",
       alt: "histórico",
       span: "Analise o",
       b: "Histórico",
-      src: history,
+      src: historyIcon,
+      image: history,
     },
   ];
 </script>
@@ -42,8 +48,10 @@
       <img src={button.src} alt={button.alt} class="button-icon" />
       <span class="button-text">{button.span}</span><b>{button.b}</b>
     </button>
+    {#if button.name === current}
+      <img src={button.image} alt={current} id="img" />
+    {/if}
   {/each}
-  <img src="/src/lib/assets/images/{current}-img.png" alt={current} id="img" />
 </section>
 
 <style>
@@ -75,6 +83,9 @@
     grid-row: 3 / 4;
     width: 100%;
     height: 100%;
+    box-shadow: 0 0 10px -5px var(--main-color);
+    object-fit: scale-down;
+    border-radius: 2vw;
   }
 
   button {

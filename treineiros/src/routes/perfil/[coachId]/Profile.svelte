@@ -1,6 +1,6 @@
 <script>
   import { age } from "$lib/assets/functions";
-  import fallback from "$lib/assets/images/defaultCoach.png";
+  import fallback from "$lib/assets/images/default-coach.png";
 
   export let coach;
   export let lastClub;
@@ -30,7 +30,7 @@
   {/if}
   <table class="table coach">
     <tbody>
-      <tr>
+      <tr class="table-lines">
         <td class="col1">Idade</td>
         {#if coach.date_of_birth === null}
           <td class="col2">-</td>
@@ -38,7 +38,7 @@
           <td class="col2">{age(coach.date_of_birth)} anos</td>
         {/if}
       </tr>
-      <tr>
+      <tr class="table-lines">
         <td class="col1">País de Origem</td>
         {#if coach.country_of_birth === null}
           <td class="col2">-</td>
@@ -46,11 +46,11 @@
           <td class="col2">{coach.country_of_birth}</td>
         {/if}
       </tr>
-      <tr>
+      <tr class="table-lines">
         <td class="col1">Clube Atual/Mais Recente</td>
         <td class="col2">{lastClub}</td>
       </tr>
-      <tr>
+      <tr class="table-lines">
         <td class="col1">Última Partida</td>
         <td class="col2"
           >{("0" + lastMatch.getDate()).slice(-2)}/{(
@@ -59,25 +59,25 @@
           ).slice(-2)}/{lastMatch.getFullYear()}</td
         >
       </tr>
-      <tr>
+      <tr class="table-lines">
         <td class="col1">Clubes</td>
         <td class="col2">{numberOfClubs}</td>
       </tr>
-      <tr>
+      <tr class="table-lines">
         <td class="col1">Partidas</td>
         <td class="col2">{numberOfMatches}</td>
       </tr>
-      <tr>
+      <tr class="table-lines">
         <td class="col1">Mais Partidas</td>
         <td class="col2"
           >{mostMatches.name}/{mostMatches.state} ({mostMatches.count})</td
         >
       </tr>
-      <tr>
+      <tr class="table-lines">
         <td class="col1">Aproveitamento</td>
         <td class="col2">{pointPercentage}%</td>
       </tr>
-      <tr>
+      <tr class="table-lines">
         <td class="col1">Gols Feitos/Partida</td>
         <td class="col2">{goalsScoredAvg}</td>
       </tr>
@@ -139,11 +139,6 @@
     text-align: right;
     width: 50%;
     font-weight: var(--bold);
-  }
-
-  td {
-    border: 1px solid;
-    border-color: transparent transparent #e5e5e525;
   }
 
   .coach tr:first-child td {

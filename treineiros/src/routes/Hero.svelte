@@ -95,13 +95,13 @@
       grid-column: 1 / 2;
     }
 
-    #main-title {
+    .main-title {
       grid-column: 2 / 3;
       grid-row: 2 / 3;
       text-align: right;
     }
 
-    #description {
+    .description {
       text-align: right;
       grid-column: 2 / 3;
       grid-row: 3 / 4;

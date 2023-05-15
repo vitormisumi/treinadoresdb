@@ -1,11 +1,16 @@
 <script>
   import { shortDate } from "$lib/assets/functions";
   import { profileHistoryGroups } from "$lib/stores/filters";
+  import teamFallback from "$lib/assets/images/default-team.png";
+  import coachFallback from "$lib/assets/images/default-coach.png";
 
   export let matchData;
   export let competition;
   export let teams;
   export let coaches;
+
+  const handleTeamError = (ev) => (ev.target.src = teamFallback);
+  const handleCoachError = (ev) => (ev.target.src = coachFallback);
 </script>
 
 <section id="match">
@@ -17,9 +22,15 @@
       src={`/coaches/${coaches.home_coach_id}.png`}
       alt=""
       class="home-coach image"
+      on:error={handleCoachError}
     /></a
   >
-  <img class="home-team-logo logo" src={`/teams/${teams.home_team_id}.png`} alt="" />
+  <img
+    class="home-team-logo logo"
+    src={`/teams/${teams.home_team_id}.png`}
+    alt={teams.home_team_name}
+    on:error={handleTeamError}
+  />
   <a
     href="/perfil/{coaches.away_coach_id}?groups={$profileHistoryGroups}"
     class="away-coach-img-link"
@@ -27,9 +38,15 @@
       src={`/coaches/${coaches.away_coach_id}.png`}
       alt=""
       class="away-coach image"
+      on:error={handleCoachError}
     /></a
   >
-  <img class="away-team-logo logo" src={`/teams/${teams.away_team_id}.png`} alt="" />
+  <img
+    class="away-team-logo logo"
+    src={`/teams/${teams.away_team_id}.png`}
+    alt={teams.away_team_name}
+    on:error={handleTeamError}
+  />
   <div class="match-data">
     <p class="date">
       {shortDate(matchData.date_time)}
@@ -56,46 +73,44 @@
     {teams.away_team_name}/{teams.away_team_state}
   </p>
   {#if coaches.away_coach_nickname === null}
-    <a
-      href="/perfil/{coaches.away_coach_id}"
-      class="away-coach coach right">{coaches.away_coach}</a
+    <a href="/perfil/{coaches.away_coach_id}" class="away-coach coach right"
+      >{coaches.away_coach}</a
     >
   {:else}
-    <a
-      href="/perfil/{coaches.away_coach_id}"
-      class="away-coach coach right">{coaches.away_coach_nickname}</a
+    <a href="/perfil/{coaches.away_coach_id}" class="away-coach coach right"
+      >{coaches.away_coach_nickname}</a
     >
   {/if}
   <table class="match table">
     <thead>
-      <tr>
+      <tr class="table-lines">
         <th />
         <th class="col2">Dados Gerais</th>
         <th />
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td class="col1 left">{matchData.home_yellow_cards}</td>
+      <tr class="table-lines">
+        <td class="col1">{matchData.home_yellow_cards}</td>
         <td class="col2">Cartões Amarelos</td>
-        <td class="col3 right">{matchData.away_yellow_cards}</td>
+        <td class="col3">{matchData.away_yellow_cards}</td>
       </tr>
-      <tr>
-        <td class="col1 left">{matchData.home_red_cards}</td>
+      <tr class="table-lines">
+        <td class="col1">{matchData.home_red_cards}</td>
         <td class="col2">Cartões Vermelhos</td>
-        <td class="col3 right">{matchData.away_red_cards}</td>
+        <td class="col3">{matchData.away_red_cards}</td>
       </tr>
-      <tr>
-        <td class="col1 left">{matchData.home_subs}</td>
+      <tr class="table-lines">
+        <td class="col1">{matchData.home_subs}</td>
         <td class="col2">Substituições</td>
-        <td class="col3 right">{matchData.away_subs}</td>
+        <td class="col3">{matchData.away_subs}</td>
       </tr>
       <tr>
-        <td class="col1 left"
+        <td class="col1"
           >{matchData.first_home_sub_minute}'{matchData.first_home_sub_half}</td
         >
         <td class="col2">Momento da 1ª Sub</td>
-        <td class="col3 right"
+        <td class="col3"
           >{matchData.first_away_sub_minute}'{matchData.first_away_sub_half}</td
         >
       </tr>
@@ -125,12 +140,13 @@
   .competition,
   .stadium {
     margin: 0;
+    font-size: clamp(0.5rem, 2vw, 1.5rem);
   }
 
   .score {
     font-family: "Inter";
     font-weight: 700;
-    font-size: clamp(2rem, 7vw, 4rem);
+    font-size: clamp(1.5rem, 7vw, 4rem);
     margin: 10px 0 0 0;
   }
 
@@ -185,7 +201,7 @@
   .team,
   .coach {
     margin: 0;
-    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-size: clamp(0.75rem, 2vw, 1.25rem);
   }
 
   .coach {
@@ -198,6 +214,8 @@
 
   .col1 {
     width: 30%;
+    font-weight: var(--bold);
+    text-align: left;
   }
 
   .col2 {
@@ -207,6 +225,8 @@
 
   .col3 {
     width: 30%;
+    font-weight: var(--bold);
+    text-align: right;
   }
 
   .match tr:first-child th {

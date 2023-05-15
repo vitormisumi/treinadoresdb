@@ -1,7 +1,7 @@
 <script>
   import { indicator } from "$lib/stores/indicator";
   import { profileHistoryGroups } from "$lib/stores/filters";
-  import fallback from "$lib/assets/images/defaultCoach.png";
+  import fallback from "$lib/assets/images/default-coach.png";
 
   const handleError = (ev) => (ev.target.src = fallback);
 

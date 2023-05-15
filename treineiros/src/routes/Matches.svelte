@@ -1,13 +1,16 @@
 <script>
   import { shortDate } from "$lib/assets/functions";
+  import calendar from "$lib/assets/images/calendar.png";
+  import fallback from "$lib/assets/images/deafult-team.png";
+  
   export let matches;
 
-  import calendar from "$lib/assets/images/calendar.png";
+  const handleError = (ev) => (ev.target.src = fallback);
 </script>
 
 <section id="matches">
   <h2 id="matches-title">Atualizado diariamente.</h2>
-  <img src={calendar} alt="calendário" id="calendar-icon" />
+  <img src={calendar} alt="calendário" class="calendar" />
   <h3 class="last-added">Últimos jogos adicionados</h3>
   {#each matches as { match_id, date_time, competition, home_team_id, home_team_name, away_team_id, away_team_name, home_score, away_score, home_coach, home_coach_nickname, away_coach, away_coach_nickname }, i}
     <div class="game-card">
@@ -27,16 +30,20 @@
       {/if}
       <p class="home-score score">{home_score}</p>
       <p class="away-score score">{away_score}</p>
+      <p class="home-team-name team-name">{home_team_name}</p>
+      <p class="away-team-name team-name">{away_team_name}</p>
       <a href="/partidas/{match_id}" class="x">X<span class="match-link" /></a>
       <img
         src={`/teams/${home_team_id}.png`}
         alt={home_team_name}
         class="home-team team"
+        on:error={handleError}
       />
       <img
         src={`/teams/${away_team_id}.png`}
         alt={away_team_name}
         class="away-team team"
+        on:error={handleError}
       />
     </div>
   {/each}
@@ -55,8 +62,8 @@
     color: var(--background-color);
   }
 
-  #calendar-icon {
-    width: 5vw;
+  .calendar {
+    width: 4vw;
   }
 
   p {
@@ -89,6 +96,7 @@
       "date date date date date"
       "competition competition competition competition competition"
       "home-team home-score x away-score away-team"
+      "home-team-name home-score x away-score away-team-name"
       "home-coach home-score x away-score away-coach";
   }
 
@@ -133,6 +141,18 @@
 
   .away-team {
     grid-area: away-team;
+  }
+
+  .team-name {
+    margin: 0;
+  }
+
+  .home-team-name {
+    grid-area: home-team-name;
+  }
+
+  .away-team-name {
+    grid-area: away-team-name;
   }
 
   .score {
