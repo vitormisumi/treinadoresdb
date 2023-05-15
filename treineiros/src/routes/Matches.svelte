@@ -1,7 +1,7 @@
 <script>
   import { shortDate } from "$lib/assets/functions";
   import calendar from "$lib/assets/images/calendar.png";
-  import fallback from "$lib/assets/images/deafult-team.png";
+  import fallback from "$lib/assets/images/default-team.png";
   
   export let matches;
 
