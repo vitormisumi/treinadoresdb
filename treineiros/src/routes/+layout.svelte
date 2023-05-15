@@ -160,7 +160,7 @@
     background-color: rgba(229, 229, 229, 0.95);
     z-index: 99999;
   }
-  
+
   ul {
     display: flex;
     flex-direction: column;
@@ -251,6 +251,10 @@
   }
 
   @media (min-width: 768px) {
+    .menu {
+      display: flex;
+    }
+
     #menu-button {
       display: none;
     }
@@ -265,7 +269,7 @@
       height: auto;
       min-height: none;
     }
-    
+
     ul {
       flex-direction: row;
       margin: 0;

@@ -65,6 +65,7 @@
 
   .last-added {
     font-style: normal;
+    color: var(--background-color);
     font-weight: var(--bold);
     font-size: clamp(0.75rem, 2vw, 3rem);
     font-family: var(--main-font);
