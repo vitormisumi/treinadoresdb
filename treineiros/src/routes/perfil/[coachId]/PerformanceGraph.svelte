@@ -5,6 +5,7 @@
   export let binSize;
   export let xLabel;
   export let decimals;
+  export let help;
 
   let highestCount = distribution.reduce((previous, current) => {
     return current.count > previous.count ? current : previous;
@@ -38,8 +39,10 @@
 
   let hoverBar;
   let hoverCoach;
+  let hoverHelp = null;
 
   let mousePosition = { x: 0, y: 0 };
+  let helpWidth;
 </script>
 
 <div
@@ -82,7 +85,7 @@
         hoverCoach = null;
       }}
     />
-    {#each { length: (highestBin - lowestBin) / binSize } as _, i}
+    {#each { length: Math.round((highestBin - lowestBin) / binSize) } as _, i}
       <g class="ticks">
         <line
           x1={(i + 1) * barWidth}
@@ -107,6 +110,29 @@
       text-anchor="end"
       alignment-baseline="before-edge"># de treinadores</text
     >
+    <text
+      x={width - 6}
+      y="1"
+      class="help"
+      text-anchor="end"
+      alignment-baseline="before-edge">?</text
+    >
+    <circle
+      cx={width - 10}
+      cy="10"
+      r="9"
+      class="help-circle"
+      on:mouseenter={() => {
+        if (coach.nickname !== null) {
+          hoverHelp = coach.nickname;
+        } else {
+          hoverHelp = coach.name;
+        }
+      }}
+      on:mouseleave={() => {
+        hoverHelp = null;
+      }}
+    />
     <line x1="0" x2={width} y1={height} y2={height} class="axis" />
   </svg>
   <p class="x-axis-title title main-color">{xLabel}</p>
@@ -145,13 +171,26 @@
     {xLabel}
   </div>
 {/if}
+{#if hoverHelp}
+  <div
+    bind:offsetWidth={helpWidth}
+    class="tooltip main main-color help-tooltip"
+    style="top: {mousePosition.y}px; left: {mousePosition.x - helpWidth}px;"
+  >
+    <b>O que esse gráfico mostra?</b><br />
+    Esse gráfico apresenta a distribuição de {xLabel} entre todos os treinadores
+    com pelo menos 50 partidas disputadas. A barra vermelha representa o posicionamento
+    de {hoverHelp} em relação a essa distribuição.<br />
+    {help}
+  </div>
+{/if}
 
 <style>
   .tick-labels,
   .y-axis-label,
   .x-axis-title {
     font-family: var(--main-font);
-    font-size: clamp(0.75rem, 1.5vw, 1.5rem);
+    font-size: clamp(0.6rem, 1.5vw, 1.5rem);
     fill: var(--main-color);
   }
 
@@ -169,7 +208,8 @@
   }
 
   .bar:hover,
-  .coach:hover {
+  .coach:hover,
+  .help-circle:hover {
     transition: all 500ms ease-in-out;
     cursor: pointer;
   }
@@ -202,6 +242,11 @@
     transition: all 500ms ease-in-out;
   }
 
+  .help-tooltip {
+    width: 200px;
+    text-align: left;
+  }
+
   .main {
     background-color: var(--main-color);
     color: var(--background-color);
@@ -209,5 +254,15 @@
 
   .accent {
     background-color: var(--accent-color);
+  }
+
+  .help {
+    fill: var(--main-color);
+    font-family: var(--main-font);
+  }
+
+  .help-circle {
+    fill: transparent;
+    stroke: var(--main-color);
   }
 </style>

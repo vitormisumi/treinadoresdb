@@ -320,7 +320,7 @@ async function goalsConcededDistribution() {
 
 async function yellowCardsDistribution() {
     const [rows, fields] = await accessPool().query(
-        `SELECT FLOOR(yellow_cards.yellow_cards_average/0.15)*0.15 AS bins, COUNT(*) AS count
+        `SELECT FLOOR(yellow_cards.yellow_cards_average/0.2)*0.2 AS bins, COUNT(*) AS count
     FROM (
         SELECT home.home_coach_id AS id, 
             home.name, 
@@ -358,7 +358,7 @@ async function yellowCardsDistribution() {
 
 async function redCardsDistribution() {
     const [rows, fields] = await accessPool().query(`
-        SELECT FLOOR(red_cards.red_cards_average/0.03125)*0.03125 AS bins, COUNT(*) AS count
+        SELECT FLOOR(red_cards.red_cards_average/0.03)*0.03 AS bins, COUNT(*) AS count
         FROM (
             SELECT home.home_coach_id AS id, 
                 home.name, 
@@ -396,7 +396,7 @@ async function redCardsDistribution() {
 
 async function pointPercentageDistribution() {
     const [rows, fields] = await accessPool().query(`
-        SELECT FLOOR(points.point_percentage/3)*3 AS bins, COUNT(*) AS count
+        SELECT FLOOR(points.point_percentage/4)*4 AS bins, COUNT(*) AS count
         FROM (
             SELECT home.home_coach_id AS id, 
                 home.name, 

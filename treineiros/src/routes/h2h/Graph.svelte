@@ -3,7 +3,7 @@
   export let coachInfo1;
   export let coachInfo2;
 
-  let width = 60;
+  let width;
   const coach1Color = "rgb(100, 100, 0)";
   const hoverCoach1Color = "rgb(300, 300, 0)";
   const drawColor = "rgb(100, 100, 100)";
@@ -38,7 +38,7 @@
   class="graph"
   on:mousemove={(e) => (mousePosition = { x: e.pageX, y: e.pageY })}
 >
-  <svg {width} height={width}>
+  <svg viewBox="0 0 {width} {width}" {width} height={width}>
     <circle
       r={radius / 2}
       cx={radius}

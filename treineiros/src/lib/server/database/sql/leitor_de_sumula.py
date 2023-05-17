@@ -1,11 +1,13 @@
+from datetime import date
 import smtplib
 import ssl
 from email.message import EmailMessage
 from PyPDF2 import PdfReader
 import requests
 import mysql.connector
-from os import path
-from datetime import date
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class PDF:
@@ -16,6 +18,7 @@ class PDF:
         file_name: name of PDF file.
         year: the year of the match, as matches are separated in directories for each year in CBF website.
     """
+
     def __init__(self, url):
         """Initializes PDF instance.
 
@@ -31,14 +34,14 @@ class PDF:
         Raises:
             Exception: no file is found.
         """
-        if path.exists('sumulas/{}/{}'.format(self.year, self.file_name)):
+        if os.path.exists('treineiros/src/lib/server/database/sumulas/{}/{}'.format(self.year, self.file_name)):
             print('PDF file {}/{} already downloaded'.format(self.year, self.file_name))
             return
         else:
             response = requests.get(self.url)
             if response.status_code == requests.codes.ok:
-                pdf = open('sumulas/{}/{}'.format(self.year,
-                                                  self.file_name), 'wb')
+                pdf = open('treineiros/src/lib/server/database/sumulas/{}/{}'.format(self.year,
+                                                                                     self.file_name), 'wb')
                 pdf.write(response.content)
                 pdf.close()
                 print('PDF file {}/{} downloaded'.format(self.year, self.file_name))
@@ -54,6 +57,7 @@ class Sumula:
         text: joined text of all PDF pages.
         lower: text turned into lowercase format with a few text replacements for functions to properly read some of the data.
     """
+
     def __init__(self, pdf):
         """Initializes sumula instance.
 
@@ -350,7 +354,7 @@ class Sumula:
         """
         count = 0
         text = self.lower[self.lower.find('\ncartões vermelhos\n'):
-                         self.lower.find('ocorrências / observações')].split(sep='\n')
+                          self.lower.find('ocorrências / observações')].split(sep='\n')
         home_team = self.home_team().lower()
         home_team_state = '/' + self.home_team_state().lower()
         for line in text:
@@ -642,6 +646,7 @@ class Connection:
         p: sumula instance.
         file_name: name of PDF file.
     """
+
     def __init__(self, file_name):
         """Initializes connection instance to register information from PDF file into database.
 
@@ -649,11 +654,10 @@ class Connection:
             file_name (str): name of PDF file to be passed to Sumula class.
         """
         self.cnx = mysql.connector.connect(
-            host='containers-us-west-35.railway.app',
-            port='6058',
-            user='root',
-            password='wx8vG4YqewXLCoxFTLZ5',
-            database='railway'
+            host=os.getenv("HOST"),
+            user=os.getenv("USERNAME"),
+            passwd=os.getenv("PASSWORD"),
+            db=os.getenv("DATABASE"),
         )
         self.cur = self.cnx.cursor()
         self.p = Sumula(file_name)
@@ -841,7 +845,7 @@ class Connection:
                       self.p.away_score_after_home_sub(),
                       self.p.home_score_after_away_sub(),
                       self.p.away_score_after_away_sub(),
-                      self.file_name)
+                      '/'.join(self.file_name.split(sep='/')[-3:]))
             self.cur.execute(
                 """INSERT INTO matches (
                     competition_id,
@@ -877,6 +881,7 @@ class Connection:
                     %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                 values)
             self.cnx.commit()
+            print("{} file added to matches".format(self.file_name))
             return 1
 
     def close_connection(self):
@@ -896,7 +901,8 @@ def insert_into_database(url):
     except:
         print('PDF file {}/{} does not exist'.format(pdf.year, pdf.file_name))
         return
-    connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
+    connect = Connection(
+        'treineiros/src/lib/server/database/sumulas/{}/{}'.format(pdf.year, pdf.file_name))
     global coaches_inserted
     try:
         coaches_inserted += connect.insert_home_coach()
@@ -941,10 +947,11 @@ for year in range(2023, 2024):
                 year, code, n)
             insert_into_database(url)
 
-# url = 'https://conteudo.cbf.com.br/sumulas/2017/4241se.pdf'
-# pdf = PDF(url)
-# connect = Connection('sumulas/{}/{}'.format(pdf.year, pdf.file_name))
-# print(connect.p.home_red_cards())
+url = 'https://conteudo.cbf.com.br/sumulas/2023/4241se.pdf'
+pdf = PDF(url)
+connect = Connection(
+    'treineiros/src/lib/server/database/sumulas/{}/{}'.format(pdf.year, pdf.file_name))
+print('/'.join(connect.file_name.split(sep='/')[-3:]))
 
 if coach_errors or team_errors or competitions_errors or match_errors:
     subject = 'Database import summary {} - Errors'.format(date.today())
@@ -958,7 +965,7 @@ if coach_errors or team_errors or competitions_errors or match_errors:
     {} competition insertion problems: {}
     {} match insertion problems: {}
     """.format(coaches_inserted, teams_inserted, competitions_inserted, matches_inserted,
-               len(coach_errors), coach_errors, len(team_errors), team_errors, 
+               len(coach_errors), coach_errors, len(team_errors), team_errors,
                len(competitions_errors), competitions_errors, len(match_errors), match_errors)
 else:
     subject = 'Database import summary {} - No errors'.format(date.today())
