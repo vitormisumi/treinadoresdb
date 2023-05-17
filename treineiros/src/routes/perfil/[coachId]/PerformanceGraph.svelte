@@ -136,10 +136,6 @@
     <line x1="0" x2={width} y1={height} y2={height} class="axis" />
   </svg>
   <p class="x-axis-title title main-color">{xLabel}</p>
-  <p class="main-color">
-    *Apenas os treinadores com pelo menos 50 partidas cadastradas são incluídos
-    nas análises de desempenho.
-  </p>
 </div>
 {#if hoverBar}
   {#if hoverBar.count === 1}

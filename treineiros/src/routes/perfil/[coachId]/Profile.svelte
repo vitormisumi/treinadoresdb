@@ -24,9 +24,9 @@
     alt={coach.name}
   />
   {#if coach.nickname === null}
-    <h3 class="name main-color">{coach.name}</h3>
+    <h4 class="name">{coach.name}</h4>
   {:else}
-    <h3 class="name main-color">{coach.nickname}</h3>
+    <h4 class="name">{coach.nickname}</h4>
   {/if}
   <table class="table coach">
     <tbody>
