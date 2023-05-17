@@ -82,35 +82,40 @@
     >
   {/if}
   <table class="match table">
+    <colgroup>
+      <col class="col1" />
+      <col class="col2" />
+      <col class="col3" />
+    </colgroup>
     <thead>
       <tr class="table-lines">
         <th />
-        <th class="col2">Dados Gerais</th>
+        <th>Dados Gerais</th>
         <th />
       </tr>
     </thead>
     <tbody>
       <tr class="table-lines">
-        <td class="col1">{matchData.home_yellow_cards}</td>
-        <td class="col2">Cartões Amarelos</td>
-        <td class="col3">{matchData.away_yellow_cards}</td>
+        <td>{matchData.home_yellow_cards}</td>
+        <td>Cartões Amarelos</td>
+        <td>{matchData.away_yellow_cards}</td>
       </tr>
       <tr class="table-lines">
-        <td class="col1">{matchData.home_red_cards}</td>
-        <td class="col2">Cartões Vermelhos</td>
-        <td class="col3">{matchData.away_red_cards}</td>
+        <td>{matchData.home_red_cards}</td>
+        <td>Cartões Vermelhos</td>
+        <td>{matchData.away_red_cards}</td>
       </tr>
       <tr class="table-lines">
-        <td class="col1">{matchData.home_subs}</td>
-        <td class="col2">Substituições</td>
-        <td class="col3">{matchData.away_subs}</td>
+        <td>{matchData.home_subs}</td>
+        <td>Substituições</td>
+        <td>{matchData.away_subs}</td>
       </tr>
       <tr>
-        <td class="col1"
+        <td
           >{matchData.first_home_sub_minute}'{matchData.first_home_sub_half}</td
         >
-        <td class="col2">Momento da 1ª Sub</td>
-        <td class="col3"
+        <td>Momento da 1ª Sub</td>
+        <td
           >{matchData.first_away_sub_minute}'{matchData.first_away_sub_half}</td
         >
       </tr>
@@ -214,6 +219,9 @@
 
   .col1 {
     width: 30%;
+  }
+
+  td:first-child {
     font-weight: var(--bold);
     text-align: left;
   }
@@ -225,6 +233,9 @@
 
   .col3 {
     width: 30%;
+  }
+
+  td:last-child {
     font-weight: var(--bold);
     text-align: right;
   }

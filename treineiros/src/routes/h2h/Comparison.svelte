@@ -7,98 +7,99 @@
 
 <section id="comparison">
   <table class="table" id="generalData">
+    <colgroup>
+      <col class="col1" />
+      <col class="col2" />
+      <col class="col3" />
+    </colgroup>
     <thead>
       <tr>
         <th />
-        <th class="col2">Dados Gerais</th>
+        <th>Dados Gerais</th>
         <th />
       </tr>
     </thead>
     <tbody>
       <tr>
         {#if coachInfo1.date_of_birth === ""}
-          <td class="col1" />
+          <td />
         {:else if coachInfo1.date_of_birth === null}
-          <td class="col1">-</td>
+          <td>-</td>
         {:else}
-          <td class="col1">{age(coachInfo1.date_of_birth)} anos</td>
+          <td>{age(coachInfo1.date_of_birth)} anos</td>
         {/if}
-        <td class="col2">Idade</td>
+        <td>Idade</td>
         {#if coachInfo2.date_of_birth === ""}
-          <td class="col3" />
+          <td />
         {:else if coachInfo2.date_of_birth === null}
-          <td class="col3">-</td>
+          <td>-</td>
         {:else}
-          <td class="col3">{age(coachInfo2.date_of_birth)} anos</td>
+          <td>{age(coachInfo2.date_of_birth)} anos</td>
         {/if}
       </tr>
       <tr>
         {#if coachInfo1.country_of_birth === null}
-          <td class="col1">-</td>
+          <td>-</td>
         {:else}
-          <td class="col1">{coachInfo1.country_of_birth}</td>
+          <td>{coachInfo1.country_of_birth}</td>
         {/if}
-        <td class="col2">País de Origem</td>
+        <td>País de Origem</td>
         {#if coachInfo2.country_of_birth === null}
-          <td class="col3">-</td>
+          <td>-</td>
         {:else}
-          <td class="col3">{coachInfo2.country_of_birth}</td>
+          <td>{coachInfo2.country_of_birth}</td>
         {/if}
       </tr>
       <tr>
         {#if coachInfo1.last_team_name === ""}
-          <td class="col1" />
+          <td />
         {:else}
-          <td class="col1"
-            >{coachInfo1.last_team_name}/{coachInfo1.last_team_state}</td
-          >
+          <td>{coachInfo1.last_team_name}/{coachInfo1.last_team_state}</td>
         {/if}
-        <td class="col2">Último Clube/Mais Recente</td>
+        <td>Último Clube/Mais Recente</td>
         {#if coachInfo2.last_team_name === ""}
-          <td class="col3" />
+          <td />
         {:else}
-          <td class="col3"
-            >{coachInfo2.last_team_name}/{coachInfo2.last_team_state}</td
-          >
+          <td>{coachInfo2.last_team_name}/{coachInfo2.last_team_state}</td>
         {/if}
       </tr>
       <tr>
         {#if coachInfo1.last_match_date !== ""}
-          <td class="col1">{shortDate(coachInfo1.last_match_date)}</td>
+          <td>{shortDate(coachInfo1.last_match_date)}</td>
         {:else}
-          <td class="col1" />
+          <td />
         {/if}
-        <td class="col2">Última Partida</td>
+        <td>Última Partida</td>
         {#if coachInfo2.last_match_date !== ""}
-          <td class="col3">{shortDate(coachInfo2.last_match_date)}</td>
+          <td>{shortDate(coachInfo2.last_match_date)}</td>
         {:else}
-          <td class="col3" />
+          <td />
         {/if}
       </tr>
       <tr>
-        <td class="col1">{coachInfo1.teams}</td>
-        <td class="col2">Clubes</td>
-        <td class="col3">{coachInfo2.teams}</td>
+        <td>{coachInfo1.teams}</td>
+        <td>Clubes</td>
+        <td>{coachInfo2.teams}</td>
       </tr>
       <tr>
-        <td class="col1">{coachInfo1.matches}</td>
-        <td class="col2">Partidas</td>
-        <td class="col3">{coachInfo2.matches}</td>
+        <td>{coachInfo1.matches}</td>
+        <td>Partidas</td>
+        <td>{coachInfo2.matches}</td>
       </tr>
       <tr>
         {#if coachInfo1.most_matches_team === ""}
-          <td class="col1" />
+          <td />
         {:else}
-          <td class="col1"
+          <td
             >{coachInfo1.most_matches_team}/{coachInfo1.most_matches_team_state}
             ({coachInfo1.most_matches})</td
           >
         {/if}
-        <td class="col2">Mais Partidas</td>
+        <td>Mais Partidas</td>
         {#if coachInfo2.most_matches_team === ""}
-          <td class="col3" />
+          <td />
         {:else}
-          <td class="col3"
+          <td
             >{coachInfo2.most_matches_team}/{coachInfo2.most_matches_team_state}
             ({coachInfo2.most_matches})</td
           >
@@ -106,53 +107,58 @@
       </tr>
       <tr>
         {#if coachInfo1.point_percentage !== ""}
-          <td class="col1">{coachInfo1.point_percentage}%</td>
+          <td>{coachInfo1.point_percentage}%</td>
         {:else}
-          <td class="col1" />
+          <td />
         {/if}
-        <td class="col2">Aproveitamento</td>
+        <td>Aproveitamento</td>
         {#if coachInfo2.point_percentage !== ""}
-          <td class="col3">{coachInfo2.point_percentage}%</td>
+          <td>{coachInfo2.point_percentage}%</td>
         {:else}
-          <td class="col3" />
+          <td />
         {/if}
       </tr>
       <tr>
-        <td class="col1">{coachInfo1.goals_scored_average}</td>
-        <td class="col2">Média de Gols Marcados</td>
-        <td class="col3">{coachInfo2.goals_scored_average}</td>
+        <td>{coachInfo1.goals_scored_average}</td>
+        <td>Média de Gols Marcados</td>
+        <td>{coachInfo2.goals_scored_average}</td>
       </tr>
       <tr>
-        <td class="col1">{coachInfo1.goals_conceded_average}</td>
-        <td class="col2">Média de Gols Sofridos</td>
-        <td class="col3">{coachInfo2.goals_conceded_average}</td>
+        <td>{coachInfo1.goals_conceded_average}</td>
+        <td>Média de Gols Sofridos</td>
+        <td>{coachInfo2.goals_conceded_average}</td>
       </tr>
     </tbody>
   </table>
   {#if Object.values(h2h)[0] !== ""}
     <table class="table" id="h2h">
+      <colgroup>
+        <col class="col1" />
+        <col class="col2" />
+        <col class="col3" />
+      </colgroup>
       <thead>
         <tr>
           <th />
-          <th class="col2">Confrontos</th>
+          <th>Confrontos</th>
           <th />
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="col1">{h2h.coach1_goals}</td>
-          <td class="col2">Gols</td>
-          <td class="col3">{h2h.coach2_goals}</td>
+          <td>{h2h.coach1_goals}</td>
+          <td>Gols</td>
+          <td>{h2h.coach2_goals}</td>
         </tr>
         <tr>
-          <td class="col1">{h2h.coach1_yellow_cards}</td>
-          <td class="col2">Cartões Amarelos</td>
-          <td class="col3">{h2h.coach2_yellow_cards}</td>
+          <td>{h2h.coach1_yellow_cards}</td>
+          <td>Cartões Amarelos</td>
+          <td>{h2h.coach2_yellow_cards}</td>
         </tr>
         <tr>
-          <td class="col1">{h2h.coach1_red_cards}</td>
-          <td class="col2">Cartões Vermelhos</td>
-          <td class="col3">{h2h.coach2_red_cards}</td>
+          <td>{h2h.coach1_red_cards}</td>
+          <td>Cartões Vermelhos</td>
+          <td>{h2h.coach2_red_cards}</td>
         </tr>
       </tbody>
     </table>
@@ -167,13 +173,16 @@
   .table {
     table-layout: fixed;
     margin: 5vh 0;
-    white-space:inherit;
+    white-space: inherit;
   }
 
   .col1 {
     width: 35%;
-    font-weight: var(--bold);
+  }
+
+  td:first-child {
     text-align: left;
+    font-weight: var(--bold);
   }
 
   .col2 {
@@ -192,6 +201,9 @@
 
   .col3 {
     width: 35%;
+  }
+
+  td:last-child {
     font-weight: var(--bold);
     text-align: right;
   }

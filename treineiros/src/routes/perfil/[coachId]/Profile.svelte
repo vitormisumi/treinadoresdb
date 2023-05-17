@@ -1,5 +1,5 @@
 <script>
-  import { age } from "$lib/assets/functions";
+  import { age, shortDate } from "$lib/assets/functions";
   import fallback from "$lib/assets/images/default-coach.png";
 
   export let coach;
@@ -29,61 +29,58 @@
     <h4 class="name">{coach.nickname}</h4>
   {/if}
   <table class="table coach">
+    <colgroup>
+      <col class="col1" />
+      <col class="col2" />
+    </colgroup>
     <tbody>
       <tr class="table-lines">
-        <td class="col1">Idade</td>
+        <td>Idade</td>
         {#if coach.date_of_birth === null}
-          <td class="col2">-</td>
+          <td>-</td>
         {:else}
-          <td class="col2">{age(coach.date_of_birth)} anos</td>
+          <td>{age(coach.date_of_birth)} anos</td>
         {/if}
       </tr>
       <tr class="table-lines">
-        <td class="col1">País de Origem</td>
+        <td>País de Origem</td>
         {#if coach.country_of_birth === null}
-          <td class="col2">-</td>
+          <td>-</td>
         {:else}
-          <td class="col2">{coach.country_of_birth}</td>
+          <td>{coach.country_of_birth}</td>
         {/if}
       </tr>
       <tr class="table-lines">
-        <td class="col1">Clube Atual/Mais Recente</td>
-        <td class="col2">{lastClub}</td>
+        <td>Clube Atual/Mais Recente</td>
+        <td>{lastClub}</td>
       </tr>
       <tr class="table-lines">
-        <td class="col1">Última Partida</td>
-        <td class="col2"
-          >{("0" + lastMatch.getDate()).slice(-2)}/{(
-            "0" +
-            (lastMatch.getMonth() + 1)
-          ).slice(-2)}/{lastMatch.getFullYear()}</td
-        >
+        <td>Última Partida</td>
+        <td>{shortDate(lastMatch)}</td>
       </tr>
       <tr class="table-lines">
-        <td class="col1">Clubes</td>
-        <td class="col2">{numberOfClubs}</td>
+        <td>Clubes</td>
+        <td>{numberOfClubs}</td>
       </tr>
       <tr class="table-lines">
-        <td class="col1">Partidas</td>
-        <td class="col2">{numberOfMatches}</td>
+        <td>Partidas</td>
+        <td>{numberOfMatches}</td>
       </tr>
       <tr class="table-lines">
-        <td class="col1">Mais Partidas</td>
-        <td class="col2"
-          >{mostMatches.name}/{mostMatches.state} ({mostMatches.count})</td
-        >
+        <td>Mais Partidas</td>
+        <td>{mostMatches.name}/{mostMatches.state} ({mostMatches.count})</td>
       </tr>
       <tr class="table-lines">
-        <td class="col1">Aproveitamento</td>
-        <td class="col2">{pointPercentage}%</td>
+        <td>Aproveitamento</td>
+        <td>{pointPercentage}%</td>
       </tr>
       <tr class="table-lines">
-        <td class="col1">Gols Feitos/Partida</td>
-        <td class="col2">{goalsScoredAvg}</td>
+        <td>Gols Feitos/Partida</td>
+        <td>{goalsScoredAvg}</td>
       </tr>
       <tr>
-        <td class="col1">Gols Sofridos/Partida</td>
-        <td class="col2">{goalsConcededAvg}</td>
+        <td>Gols Sofridos/Partida</td>
+        <td>{goalsConcededAvg}</td>
       </tr>
     </tbody>
   </table>
@@ -132,13 +129,19 @@
   .col1 {
     background-color: var(--table-background);
     width: 50%;
+  }
+
+  td:first-child {
     text-align: left;
   }
 
-  .col2 {
+  td:last-child {
     text-align: right;
-    width: 50%;
     font-weight: var(--bold);
+  }
+
+  .col2 {
+    width: 50%;
   }
 
   .coach tr:first-child td {
