@@ -14,7 +14,6 @@ async function lastMatches() {
     return rows;
 }
 
-/** @type {import('./$types').PageServerLoad} */
 export async function load() {
     return {
         matches: lastMatches(),
