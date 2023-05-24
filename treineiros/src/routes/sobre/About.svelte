@@ -29,7 +29,19 @@
     Os dados aqui publicados são extraídos de forma automática das súmulas das
     competições no site da CBF, que são padronizadas e disponíveis desde a
     temporada 2014. Infelizmente as súmulas dos campeonatos regionais e
-    competições sulamericanas não seguem o mesmo padrão e/ou não estão disponíveis
-    nos sites das federações.
+    competições sulamericanas não seguem o mesmo padrão e/ou não estão
+    disponíveis nos sites das federações.
+  </p>
+  <h3>
+    Um treinador aparenta ter menos partidas cadastradas do que de fato
+    comandou. Qual a razão disso?
+  </h3>
+  <p>
+    Como os dados são extraídos automaticamente das súmulas, caso o treinador
+    não esteja na súmula, essa partida não contará para a sua contagem. Nas
+    partidas em que o treinador esteve suspenso ou ausente por COVID por exemplo
+    ele não estará na súmula. No entanto, é possível que tenha ocorrido um erro
+    na importação da súmula. Caso perceba algum erro, por favor entre em contato
+    utilizando o formulário no final da página.
   </p>
 </section>
