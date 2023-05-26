@@ -3,6 +3,7 @@
   import { coach1, coach2 } from "$lib/stores/h2hCoaches";
   import { profileHistoryGroups } from "$lib/stores/filters.js";
   import { onDestroy } from "svelte";
+  import Footer from "./Footer.svelte";
 
   export let data;
   const searchCoaches = data.coaches.map((field) => ({
@@ -101,8 +102,8 @@
     </div>
   </nav>
 </header>
-
 <slot />
+<Footer />
 
 <style>
   .visually-hidden {

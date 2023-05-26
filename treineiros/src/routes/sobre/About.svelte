@@ -2,7 +2,7 @@
 </script>
 
 <section id="about">
-  <h3>O que é o Treineiros?</h3>
+  <h4>O que é o Treineiros?</h4>
   <p>
     Treineiros é um site de consulta de informações dos treinadores do Brasil.
     Aqui você encontrará dados de gols, cartões e substituições de todos os
@@ -10,7 +10,7 @@
     esses dados poderá analisar quais treinadores tem melhor desempenho em
     diversos indicadores ou analisar os confrontos entre cada um deles.
   </p>
-  <h3>Como são coletados os dados?</h3>
+  <h4>Como são coletados os dados?</h4>
   <p>
     Um script foi construído para analisar os arquivos PDF das súmulas digitais
     de cada jogo. Esse script é rodado diariamente para buscar as súmulas mais
@@ -21,10 +21,10 @@
     Essa checagem é feita de forma manual e os erros corrigidos no banco de
     dados.
   </p>
-  <h3>
+  <h4>
     Por quê apenas dados das competições nacionais e não das regionais ou
     sulamericanas?
-  </h3>
+  </h4>
   <p>
     Os dados aqui publicados são extraídos de forma automática das súmulas das
     competições no site da CBF, que são padronizadas e disponíveis desde a
@@ -32,10 +32,10 @@
     competições sulamericanas não seguem o mesmo padrão e/ou não estão
     disponíveis nos sites das federações.
   </p>
-  <h3>
+  <h4>
     Um treinador aparenta ter menos partidas cadastradas do que de fato
     comandou. Qual a razão disso?
-  </h3>
+  </h4>
   <p>
     Como os dados são extraídos automaticamente das súmulas, caso o treinador
     não esteja na súmula, essa partida não contará para a sua contagem. Nas
@@ -45,3 +45,10 @@
     utilizando o formulário no final da página.
   </p>
 </section>
+
+
+<style>
+  h4 {
+    margin-bottom: 0;
+  }
+</style>

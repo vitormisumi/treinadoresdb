@@ -31,3 +31,24 @@
       <a href="/rankings">Rankings</a>
   </div>
 </section>
+
+<style>
+  #footer {
+    background-color: var(--main-color);
+    margin: 0;
+    padding: 5%;
+  }
+  
+  h3, p, label, a {
+    color: var(--background-color);
+  }
+
+  h3 {
+    margin-top: 0;
+  }
+
+  textarea {
+    width: min(75%, 300px);
+    height: 100px;
+  }
+</style>
