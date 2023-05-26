@@ -3,7 +3,7 @@
   export let coachInfo1;
   export let coachInfo2;
 
-  let width;
+  let width = 50;
   const coach1Color = "rgb(100, 100, 0)";
   const hoverCoach1Color = "rgb(300, 300, 0)";
   const drawColor = "rgb(100, 100, 100)";
@@ -34,7 +34,6 @@
 </script>
 
 <div
-  bind:offsetWidth={width}
   class="graph"
   on:mousemove={(e) => (mousePosition = { x: e.pageX, y: e.pageY })}
 >

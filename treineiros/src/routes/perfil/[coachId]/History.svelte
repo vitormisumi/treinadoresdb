@@ -51,7 +51,7 @@
             <th class="headers">Clube</th>
           {/if}
           {#if history[0].competition !== undefined}
-            <th class="headers">Campeonato</th>
+            <th class="headers">Competição</th>
           {/if}
           <th class="headers">P</th>
           <th class="headers">V</th>

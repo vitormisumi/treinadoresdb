@@ -23,7 +23,8 @@
     if (
       ($profileMatchFilters.team === "default" ||
         (m.coach === "Mandante" &&
-          $profileMatchFilters.team === m.home_team + "/" + m.home_team_state) ||
+          $profileMatchFilters.team ===
+            m.home_team + "/" + m.home_team_state) ||
         (m.coach === "Visitante" &&
           $profileMatchFilters.team ===
             m.away_team + "/" + m.away_team_state)) &&
@@ -67,42 +68,48 @@
 <section id="matches">
   <h2>Partidas</h2>
   <div id="filters">
-    <p class="label">Equipe:</p>
-    <select
-      name="team"
-      id="team"
-      bind:value={$profileMatchFilters.team}
-      on:change={firstPage}
-    >
-      <option value="default" selected>Todas</option>
-      {#each teams as team}
-        <option value={team}>{team}</option>
-      {/each}
-    </select>
-    <p class="label">Temporada:</p>
-    <select
-      name="team"
-      id="team"
-      bind:value={$profileMatchFilters.season}
-      on:change={firstPage}
-    >
-      <option value="default" selected>Todas</option>
-      {#each seasons as season}
-        <option value={season}>{season}</option>
-      {/each}
-    </select>
-    <p class="label">Competição:</p>
-    <select
-      name="team"
-      id="team"
-      bind:value={$profileMatchFilters.competition}
-      on:change={firstPage}
-    >
-      <option value="default" selected>Todas</option>
-      {#each competitions as competition}
-        <option value={competition}>{competition}</option>
-      {/each}
-    </select>
+    <div class="filter">
+      <p class="label">Equipe:</p>
+      <select
+        name="team"
+        id="team"
+        bind:value={$profileMatchFilters.team}
+        on:change={firstPage}
+      >
+        <option value="default" selected>Todas</option>
+        {#each teams as team}
+          <option value={team}>{team}</option>
+        {/each}
+      </select>
+    </div>
+    <div class="filter">
+      <p class="label">Temporada:</p>
+      <select
+        name="team"
+        id="team"
+        bind:value={$profileMatchFilters.season}
+        on:change={firstPage}
+      >
+        <option value="default" selected>Todas</option>
+        {#each seasons as season}
+          <option value={season}>{season}</option>
+        {/each}
+      </select>
+    </div>
+    <div class="filter">
+      <p class="label">Competição:</p>
+      <select
+        name="team"
+        id="team"
+        bind:value={$profileMatchFilters.competition}
+        on:change={firstPage}
+      >
+        <option value="default" selected>Todas</option>
+        {#each competitions as competition}
+          <option value={competition}>{competition}</option>
+        {/each}
+      </select>
+    </div>
   </div>
   <div id="table">
     <table class="table">
@@ -186,7 +193,9 @@
             >{i + 1}</button
           >
         {:else if i < page + 3 && i > page - 3}
-          <button class="main-color" on:click={() => updatePage(i)}>{i + 1}</button>
+          <button class="main-color" on:click={() => updatePage(i)}
+            >{i + 1}</button
+          >
         {/if}
       {/each}
       {#if pages > page + 3}
@@ -215,11 +224,21 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 2%;
-    padding: 0 0 1rem 0;
+    padding: 0 0 0.5rem 0;
   }
 
   select {
-    width: 200px;
+    width: clamp(100px, 15vw, 200px);
+    margin: 2.5px 0 2.5px 5px;
+  }
+
+  .filter {
+    display: flex;
+  }
+
+  p {
+    margin: 0;
+    align-self: center;
   }
 
   #table {
@@ -228,8 +247,8 @@
   }
 
   tr:nth-last-of-type(2n) {
-		background-color: var(--table-background);
-	}
+    background-color: var(--table-background);
+  }
 
   .coach-team {
     font-weight: var(--bold);

@@ -66,7 +66,7 @@
 <style>
   #profile {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: 2fr 1fr 1fr 1fr 2fr;
     grid-template-rows: auto;
     grid-template-areas:
       "coach-img1 wins1 graph wins2 coach-img2"
@@ -107,12 +107,12 @@
 
   #coach-name2 {
     grid-area: coach-name2;
-    text-align: right;
     margin: 0;
   }
-
+  
   .coach-name {
     font-size: clamp(1rem, 4vw, 2rem);
     font-family: var(--main-font);
+    text-align: center;
   }
 </style>

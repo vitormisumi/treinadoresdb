@@ -31,7 +31,7 @@
 </script>
 
 <header>
-  <p id="logo">TREINEIROS.COM</p>
+  <p id="logo">treinadores<span class="db">DB</span></p>
   <button on:click={toggle} id="menu-button" aria-controls="menu"
     ><span class="visually-hidden">Menu</span>
     <i class={menu ? "fa-solid fa-bars" : "fa-solid fa-xmark"} />
@@ -141,6 +141,10 @@
     z-index: 100000;
   }
 
+  .db {
+    color: var(--accent-color);
+  }
+
   #menu-button {
     border: none;
     background-color: transparent;
@@ -208,6 +212,7 @@
     font-size: clamp(1rem, 1.5vw, 1.25rem);
     background-color: transparent;
     border: none;
+    padding-left: 10px;
   }
 
   input:focus {
